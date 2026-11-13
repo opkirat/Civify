@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ rec.item_id }}{% endblock %}
+{% block body %}
+<h1>{{ rec.title }}</h1>
+<p class="muted">Item {{ rec.item_id }} · <a href="{{ rec.official_url }}">Official item page</a> · records retrieved {{ rec.retrieved }}</p>
+
+<h2>Where this stands</h2>
+<ol class="stage">
+{% for s in rec.stages %}
+  <li class="{{ 'current' if s.stage == rec.current_stage }}">
+    <strong>{{ s.stage.replace('_',' ')|capitalize }}</strong> · {{ s.date or 'date not found' }}{% if s.status %} · {{ s.status }}{% endif %}
+    {% if s.stage == 'council_decision' and s.votes %}
+      {% for v in s.votes if v.on == 'Adopt Item as Amended' %}<div class="muted">Vote: {{ v.yes.count }} yes, {{ v.no.count }} no, {{ v.absent.count }} absent</div>{% endfor %}
+      {% if s.declared_interests %}<div class="muted">Declared interest: {{ s.declared_interests }}</div>{% endif %}
+    {% endif %}
+    <div class="muted">Source: {{ s.source.file }}</div>
+  </li>
+{% endfor %}
+</ol>
+
+<h2>Can I still have a say?</h2>
+<div class="panel">
+  {% if rec.participation.council_has_decided %}
+    <p><strong>City Council has already decided this item.</strong> <span class="muted">({{ rec.participation.basis }})</span></p>
+  {% else %}
+    <p><strong>Check the official item page for how to take part.</strong></p>
+  {% endif %}
+  <p class="muted">The Clerk's notice said:</p>
+  <blockquote>{{ rec.participation.written_comments_rule }}</blockquote>
+  <blockquote>{{ rec.participation.speaker_registration_rule }}</blockquote>
+  <p class="muted">Always confirm on the <a href="{{ rec.official_url }}">official item page</a>. {{ rec.public_letters }} letters from the public are on file there.</p>
+</div>
+
+
+{% set council = rec.stages[-1] %}
+{% if council.motions %}
+<h2>What changed at Council</h2>
+<p class="muted">Council did not simply adopt the committee's recommendation. These motions, from the official record, say what was changed:</p>
+{% for m in council.motions %}
+<div class="panel">
+  <strong>{{ m.motion }}</strong> · moved by {{ m.moved_by }} · <span class="{{ 'ok' if m.result == 'Carried' else 'warn' }}">{{ m.result }}</span>
+  <blockquote style="white-space: pre-line">{{ m.text }}</blockquote>
+</div>
+{% endfor %}
+{% endif %}
+<h2>What is proposed</h2>
+{% if claims %}
+<ol>
+{% for c in claims %}
+  <li>{{ c.sentence }}
+    <details><summary class="muted">Source</summary>
+      <blockquote>“{{ c.quote }}” — {{ c.source_file }}, page {{ c.page }}</blockquote>
+    </details>
+  </li>
+{% endfor %}
+</ol>
+<p class="muted">Every sentence above was checked against the staff report and approved by City staff.</p>
+{% else %}
+<p class="muted">No approved explanation yet. Staff are reviewing the drafts.</p>
+{% endif %}
+{% endblock %}

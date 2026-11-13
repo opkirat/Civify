@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Council items</h1>
+<p><a href="/near"><strong>Residents: what's being decided near me?</strong></a></p>
+{% for it in items %}
+<div class="panel">
+  <strong>{{ it.title }}</strong>
+  <div class="muted">Stage: {{ it.current_stage.replace('_',' ') }} · {{ it.claims|length }} draft sentences, {{ it.approved }} approved, {{ it.reviewed }} reviewed</div>
+  <p><a href="/staff/{{ it.item_id }}">Staff review</a> · <a href="/items/{{ it.item_id }}">Resident view</a> · <a href="{{ it.official_url }}">Official item page</a></p>
+</div>
+{% else %}
+<p>No items yet. Run the pipeline on a folder in <code>data/</code>.</p>
+{% endfor %}
+{% endblock %}

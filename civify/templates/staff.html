@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Staff review · {{ rec.item_id }}{% endblock %}
+{% block body %}
+<h1>Staff review: {{ rec.title }}</h1>
+<p class="muted">Each sentence below was drafted by an AI model and then checked by code against the staff report.
+A green check means the quote exists in the report and the numbers match. <strong>Code cannot check meaning</strong>:
+read each sentence against its quote before approving. Only approved sentences reach residents.</p>
+
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+
+<div class="panel">
+  <strong>Stages (from the record)</strong>
+  <ol class="stage">
+  {% for s in rec.stages %}
+    <li class="{{ 'current' if s.stage == rec.current_stage }}">
+      <strong>{{ s.stage.replace('_',' ')|capitalize }}</strong> · {{ s.date or 'date not found' }}
+      {% if s.status %} · {{ s.status }}{% endif %}
+      <div class="muted">{{ s.body }} · source: {{ s.source.file }}</div>
+    </li>
+  {% endfor %}
+  </ol>
+</div>
+
+<div class="panel">
+  <strong>Participation (quoted from the Clerk's notice, {{ rec.participation.source.file if rec.participation.source else 'no notice found' }})</strong>
+  <blockquote>{{ rec.participation.written_comments_rule or 'No written-comments rule found.' }}</blockquote>
+  <blockquote>{{ rec.participation.speaker_registration_rule or 'No speaker-registration rule found.' }}</blockquote>
+  <div>Council has decided: <strong>{{ 'yes' if rec.participation.council_has_decided else 'no' }}</strong>
+    <span class="muted">(basis: “{{ rec.participation.basis }}”)</span></div>
+  <div class="muted">{{ rec.participation.note }}</div>
+</div>
+
+
+{% set council = rec.stages[-1] %}
+{% if council.motions %}
+<h2>What changed at Council</h2>
+<p class="muted">Council did not simply adopt the committee's recommendation. These motions, from the official record, say what was changed:</p>
+{% for m in council.motions %}
+<div class="panel">
+  <strong>{{ m.motion }}</strong> · moved by {{ m.moved_by }} · <span class="{{ 'ok' if m.result == 'Carried' else 'warn' }}">{{ m.result }}</span>
+  <blockquote style="white-space: pre-line">{{ m.text }}</blockquote>
+</div>
+{% endfor %}
+{% endif %}
+<h2>Draft sentences ({{ rows|length }})</h2>
+{% for r in rows %}
+<section class="claim {{ r.review.status if r.review }}" id="claim-{{ r.index }}" aria-labelledby="s{{ r.index }}">
+  <p id="s{{ r.index }}"><strong>{{ r.index + 1 }}.</strong>
+    {% if r.verified %}<span class="ok" title="quote found, numbers match">✓ verified</span>{% else %}<span class="warn">⚠ unverified: {{ r.reason }}</span>{% endif %}
+    {% if r.review %} · <em>{{ r.review.status }} by {{ r.review.reviewer }} at {{ r.review.reviewed_at }}</em>{% endif %}
+  </p>
+  <p>{{ r.review.sentence if r.review else r.sentence }}</p>
+  <blockquote>“{{ r.quote }}” <span class="muted">— {{ r.source_file }}{% if r.page %}, page {{ r.page }}{% endif %}</span></blockquote>
+  <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
+    <label>Reviewer <input type="text" name="reviewer" required value="{{ r.review.reviewer if r.review else '' }}"></label>
+    <button class="primary" name="action" value="approve">Approve as written</button>
+    <button name="action" value="reject">Reject</button>
+    <details style="flex-basis:100%">
+      <summary>Edit, then approve</summary>
+      <textarea name="sentence" rows="2" aria-label="Edited sentence">{{ r.review.sentence if r.review else r.sentence }}</textarea>
+      <button name="action" value="edit">Approve edited sentence</button>
+      <span class="muted">The edit is re-checked against the same quote.</span>
+    </details>
+  </form>
+</section>
+{% endfor %}
+<p><a href="/items/{{ rec.item_id }}">See what residents see</a></p>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Near me{% endblock %}
+{% block body %}
+<h1>What's being decided near me?</h1>
+<form method="get" action="/near" class="panel">
+  <p><label for="address"><strong>Your street address</strong> (Toronto only; we look up the ward and keep nothing)</label><br>
+    <input type="text" id="address" name="address" value="{{ address or '' }}" placeholder="e.g. 100 Queen St W" style="width:100%;max-width:28rem"></p>
+  <p><label for="ward"><strong>Or choose your ward</strong></label><br>
+    <select id="ward" name="ward" style="font:inherit;padding:6px">
+      <option value="">—</option>
+      {% for num, name in wards.items() %}<option value="{{ num|int }}" {{ 'selected' if ward == num|int|string }}>{{ num|int }} · {{ name }}</option>{% endfor %}
+    </select></p>
+  <button class="primary" type="submit">Find items</button>
+  <p class="muted">Don't know your ward? Pick the address option; the City's address lookup tells us the ward.</p>
+</form>
+
+{% if searched %}
+  {% if me %}
+    <p>You're in <strong>Ward {{ me.ward }}, {{ me.ward_name }}</strong>{% if me.address %} ({{ me.address }}){% endif %}.</p>
+  {% elif address %}
+    <p class="error" role="alert">We couldn't find that address in the City's address list. Try the house number and street name only, or pick your ward.</p>
+  {% endif %}
+
+  {% if results %}
+  <h2>Items</h2>
+  {% for r in results %}
+  <div class="panel">
+    <strong><a href="/items/{{ r.rec.item_id }}">{{ r.rec.title }}</a></strong>
+    <div class="muted">
+      {% if r.same_ward %}<span class="ok">In your ward</span>{% else %}Ward {{ r.rec.ward or '?' }}{% endif %}
+      {% if r.km is not none %} · about {{ '%.1f'|format(r.km) }} km from your address{% endif %}
+      · stage: {{ r.rec.current_stage.replace('_',' ') }}
+      · {{ 'Council has decided' if r.rec.participation.council_has_decided else 'check the official page for how to take part' }}
+    </div>
+  </div>
+  {% endfor %}
+  {% elif me %}
+  <p>No items on file for your ward yet.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}
