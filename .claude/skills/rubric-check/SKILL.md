@@ -11,15 +11,7 @@ description: Score Civify's current state (code, docs, report, video script) aga
 
 | Criterion (points) | Current score (1/3/5) | Evidence (file or line) | Gap to 5 | Fix (smallest next step) |
 
-4. Check the brief's hard constraints separately as pass or fail, with evidence:
-   - Staff recommendation, committee decision and council decision are distinguished
-   - Source and date shown for each explanation
-   - Every summary links to the exact source passage, and unverified AI text is never shown as fact
-   - Deadlines come only from the official item page, never inferred from a meeting date
-   - Conditions and uncertainty are preserved
-   - Plain, accessible, neutral language, with no unnecessary personal info
-   - Tested on 2–3 real agenda items
-   - A municipal leader can use it without the team present
+4. Check each constraint and success criterion in brief.md separately as pass or fail, with evidence.
 5. End with the **top 3 actions ranked by points gained per hour**, given the two-day limit.
 
 Be strict, the way a judge would be. Don't round up.
