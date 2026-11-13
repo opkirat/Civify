@@ -63,7 +63,8 @@ def plain_text(h: str | None) -> str:
     t = re.sub(r"</p\s*>|<br\s*/?>", "\n", h or "")
     t = re.sub(r"<[^>]+>", " ", t)
     t = html.unescape(t)
-    return re.sub(r"[ \t]+", " ", re.sub(r"\n\s*\n+", "\n", t)).strip()
+    lines = [re.sub(r"[ \t]+", " ", l).strip() for l in t.splitlines()]
+    return "\n".join(l for l in lines if l)
 
 
 def _coord(value) -> float | None:

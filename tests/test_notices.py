@@ -9,11 +9,11 @@ import pytest
 from civify.notices import build, normalize, plain_text
 
 ROW = {
-    "noticeId": 9001, "title": "Notice of Public Meeting - 1 Example Rd", "noticeDate": "1762128000000",
+    "noticeId": 9001, "title": "Notice of Public Meeting - 1 Example Rd", "noticeDate": "1793707200000",
     "noticeHeadingType": "Public Notice", "decisionBody": "Scarborough Community Council", "signedBy": "City Clerk",
     "noticeDescription": "<p><strong>MAKE YOUR VIEWS KNOWN</strong></p><p>Ward 20 &ndash; Scarborough Southwest</p>"
                          "<p>please register by e-mail, no later than 12:00 p.m. on November 24, 2026 . If you register, we will contact you.</p>",
-    "eventList": json.dumps([{"startDateTime": 1764000000000, "locationName": "Scarborough Civic Centre", "streetAddress": "150 Borough Dr"}]),
+    "eventList": json.dumps([{"startDateTime": 1795527000000, "locationName": "Scarborough Civic Centre", "streetAddress": "150 Borough Dr"}]),
     "addressList": json.dumps([{"streetAddress": "1 Example Rd", "postalCode": "M1K 1A1", "latitudeCoordinate": "43.7157,", "longitudeCoordinate": "-79.2608"},
                                {"streetAddress": "bad", "latitudeCoordinate": "n/a", "longitudeCoordinate": ""}]),
     "otherReferenceList": json.dumps([{"description": "2026.SC1.5 - 1 Example Rd", "url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.SC1.5"}]),
