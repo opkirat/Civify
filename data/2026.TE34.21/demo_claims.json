@@ -1,0 +1,51 @@
+[
+  {
+    "sentence": "Staff recommend approving a change that would raise the building from 31 to 45 storeys.",
+    "file": "backgroundfile-288412.pdf",
+    "quote": "This Report recommends approval of an application to amend Official Plan Amendment 731 and Site-Specific Zoning By-law 1166-2025 to permit an increase in height from 31 to 45 storeys",
+    "expect_verified": true
+  },
+  {
+    "sentence": "The number of homes would rise from 490 to 684, and 545 would be affordable rentals.",
+    "file": "backgroundfile-288412.pdf",
+    "quote": "an increase from 490 to 684 residential dwelling units, including 545 affordable rental units",
+    "expect_verified": true
+  },
+  {
+    "sentence": "Council decided the changes it made were minor, so no further public notice was required.",
+    "file": "Agenda_Item_History.pdf",
+    "quote": "City Council determine that these amendments are minor in nature, and pursuant to section 34(17) of the Planning Act, no further notice is required.",
+    "expect_verified": true
+  },
+  {
+    "sentence": "The Mayor did not vote because she lives near the site.",
+    "file": "Agenda_Item_History.pdf",
+    "quote": "Mayor Olivia Chow - as she lives near the site that is the subject of Official Plan and Zoning By-law Amendment.",
+    "expect_verified": true
+  },
+  {
+    "sentence": "Staff recommend refusing the application.",
+    "file": "backgroundfile-288412.pdf",
+    "quote": "This Report recommends refusal of an application to amend Official Plan Amendment 731",
+    "expect_verified": false
+  },
+  {
+    "sentence": "The number of homes would rise from 490 to 864.",
+    "file": "backgroundfile-288412.pdf",
+    "quote": "an increase from 490 to 684 residential dwelling units, including 545 affordable rental units",
+    "expect_verified": false
+  },
+  {
+    "sentence": "The building would get taller.",
+    "file": "backgroundfile-288412.pdf",
+    "quote": "increase in height",
+    "expect_verified": false
+  },
+  {
+    "sentence": "Staff recommend refusing the application.",
+    "file": "backgroundfile-288412.pdf",
+    "quote": "This Report recommends approval of an application to amend Official Plan Amendment 731",
+    "expect_verified": true,
+    "note": "KNOWN GAP: the quote is real but the sentence contradicts it. Code cannot catch this; only staff review can. Shown in the demo on purpose."
+  }
+]
