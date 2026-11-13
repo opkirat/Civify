@@ -1,0 +1,65 @@
+# Architecture decisions
+
+Each entry: the choice, the alternatives considered, and the trade-off. Written as the decision was made, not after.
+
+## D-01 · Verify quotes in code; let the AI only propose
+
+**Choice.** The model returns sentence + exact quote; deterministic code checks the quote exists and the numbers match; a human approves.
+**Alternatives.** (a) Trust the AI summary. (b) Ask a second model to grade the first. (c) No AI: staff write every summary.
+**Trade-off.** (a) is what the brief warns against. (b) is AI checking AI and costs double. (c) doesn't scale to weekly council volume. The chosen design catches invented quotes and changed numbers with certainty, and routes the remaining risk (meaning drift) to a human with the evidence side by side. Tested: 0 false claims passed on the demo item.
+
+## D-02 · Exact (normalised) matching, not fuzzy
+
+**Choice.** Drop whitespace and dashes, straighten quotes, casefold, then exact substring.
+**Alternatives.** Edit-distance or embedding similarity.
+**Trade-off.** Fuzzy matching would accept a quote with "not" removed. Exact matching occasionally rejects a true quote (we saw one, across a page footer) — that fails safe. We then fixed the specific cause (strip running headers/footers; allow one page break) rather than loosening the match.
+
+## D-03 · Cross-check numbers between sentence and quote
+
+**Choice.** Every number in the sentence must appear in the quote.
+**Why.** Numbers (storeys, units, dollars, dates) are the highest-stakes details and the easiest to distort while keeping a real quote. Caught "684 → 864" in the demo.
+**Limit.** Numbers written as words and meaning changes without numbers are not caught; see D-01.
+
+## D-04 · pypdf for extraction
+
+**Alternatives.** PyMuPDF (faster, better layout, but AGPL — a real obstacle for a municipality), pdfplumber (MIT, heavier), hosted document AI (sends documents out, per-page cost).
+**Trade-off.** pypdf is pure Python, BSD, and read all 35 pages of the demo report cleanly. It cannot OCR scans; those come back `unknown`. Extraction is one function, so swapping is a one-file change.
+
+## D-05 · Classify by first-page template, in code
+
+**Choice.** Pattern-match Toronto's fixed templates (`REPORT FOR ACTION`, Clerk letterhead, `BY-LAW`, `Tracking Status`); letters by the City's own filename prefix.
+**Alternative.** Ask the model to classify.
+**Trade-off.** Code classification is free, instant, explainable ("because page 1 starts with REPORT FOR ACTION") and testable. It is Toronto-shaped; another city adds rules. Unknown files go to staff rather than being guessed (we removed a loose content fallback after it mislabelled a fake Clerk document as a public letter).
+
+## D-06 · Gemini with a JSON schema at temperature 0, raw reply saved
+
+**Choice.** Structured output so parsing never guesses; temperature 0 so quotes are stable; the raw reply is committed so anyone can replay without a key.
+**Alternatives.** Any other LLM (the call is one 15-line function); free-text output parsed by regex.
+**Trade-off.** Model names change (configurable via `GEMINI_MODEL`). Free-tier terms may allow Google to use inputs; acceptable for public staff reports, not for a pilot.
+
+## D-07 · JSON files as the pipeline contract; SQLite only for human decisions
+
+**Choice.** Each step writes a file (`item.json` → `drafts.json` → `record.json`); the app reads `record.json`; only staff decisions live in SQLite.
+**Alternatives.** A database for everything; or an in-memory pipeline.
+**Trade-off.** Files are inspectable, diffable and re-runnable — committed outputs caught a page-attribution bug when 14 page numbers shifted. SQLite keeps the audit trail (who approved what, when) durable with zero setup. Scaling: a city with thousands of items would move the records into the database and keep the same shapes.
+
+## D-08 · FastAPI + Jinja2 server-rendered HTML, no JavaScript framework
+
+**Alternatives.** React/Vue single-page app; Streamlit.
+**Trade-off.** Server-rendered pages are accessible by default (real forms, real links, works without JS), testable with one HTTP client, and understandable by the whole team. A SPA would be prettier and slower to build. Streamlit can't do the approval workflow cleanly.
+
+## D-09 · Geocode via the City's own API; store nothing
+
+**Choice.** Send the typed address to Toronto's Address Points API for one request; use the ward and coordinate; keep no record.
+**Alternatives.** (a) Download the full address dataset (~500k rows) and match locally. (b) A third-party geocoder (Google, Nominatim). (c) Postal-code prefixes.
+**Trade-off.** (a) is heavy for a hackathon but is the pilot answer (no outbound call). (b) sends residents' addresses to a third party. (c) is too coarse (a 3-character prefix spans wards). The City already holds every address, so asking it which ward one is in adds no new exposure.
+
+## D-10 · Hand ingestion of items; everything after is automated
+
+**Why.** `secure.toronto.ca` returns 403 to automated clients and there is no public API. Rather than scrape around it, the demo ingests saved pages and PDFs by hand and states this. A pilot gets items from the Clerk's office by upload or feed. The pipeline from upload onward is fully automated and generic.
+
+## D-11 · "What changed" from the motions, not a text diff
+
+**Choice.** Show Council's motions with their text.
+**Alternative.** Diff committee recommendations against the Council decision.
+**Trade-off.** The diff was noisy (flagged "191-199" vs "191 to 199") and missed the substantive change; the motions state exactly what was altered, by whom, and whether it carried — and they are the record's own explanation.
