@@ -1,0 +1,292 @@
+{
+  "item_id": "2026.TE34.21",
+  "title": "TE34.21 - 191-199 College Street and 74-76 Henry Street - Official Plan and Zoning By-law Amendment Application - Decision Report - Approval",
+  "ward": "11",
+  "location": {
+    "address": "191 College St",
+    "ward": "11",
+    "ward_name": "University-Rosedale",
+    "lat": 43.6586796454236,
+    "lon": -79.394797577481
+  },
+  "retrieved": "2026-11-13",
+  "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.TE34.21",
+  "current_stage": "council_decision",
+  "stages": [
+    {
+      "stage": "staff_recommendation",
+      "body": "Acting Director, Community Planning, Toronto and East York District",
+      "date": "June 19, 2026",
+      "ward": "11 - University-Rosedale",
+      "application_number": "26 120321 STE 11 OZ",
+      "summary": "This Report recommends approval of an application to amend Official Plan Amendment 731 and Site-\nSpecific Zoning By-law 1166-2025 to permit an increase in height from 31 to 45 storeys (90 to 158.5\nmetres, excluding mechanical penthouse), changes to the building massing, and an increase from 490\nto 684 residential dwelling units, including 545 affordable rental units.\n \nAn Official Plan Amendment is required to amend policies within Chapter 7 Site and Area Specific\nPolicy (SASP) 533 to reflect the revised building height.",
+      "source": {
+        "file": "backgroundfile-288412.pdf",
+        "sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
+        "page": 1
+      }
+    },
+    {
+      "stage": "committee_decision",
+      "body": "Toronto and East York Community Council",
+      "date": "July 8 and 9, 2026",
+      "status": "Amended",
+      "recommendations": "The Toronto and East York Community Council recommends that:\n \n1. City Council amend the Official Plan for the lands municipally known as 191-199 College Street and\n74-76 Henry Street substantially in accordance with the draft Official Plan Amendment included as\nAttachment 7 to the report (June 19, 2026) from the Acting Director, Community Planning, Toronto and\nEast York District.\n \n2. City Council amend City of Toronto Zoning By-law 569-2013 for the lands municipally known as 191-\n199 College Street and 74-76 Henry Street substantially in accordance with the draft Zoning By-law\nAmendment included as Attachment 8 to the report (June 19, 2026) from the Acting Director,\nCommunity Planning, Toronto and East York District.\n \n3. City Council authorize the City Solicitor to make such stylistic and technical changes to the draft\nOfficial Plan Amendment and draft Zoning By-law Amendment as may be required.\n \n4. City Council authorize the City Solicitor to amend or replace the existing agreements related to the\ndwelling room replacement requirements, affordable housing provisions and the securing of additional\naffordable housing units, including:\na. the Dwelling Room Replacement and Tenant Relocation and Assistance Agreement to the\nsatisfaction of the Chief Planner and Executive Director, City Planning and the City Solicitor; and\nb. the Municipal Housing Project Facilities Agreement (the “Contribution Agreement”) with the\nHousing Secretariat to confirm the financial assistance being provided and set out the terms of\noperation of the affordable housing units, on terms and conditions satisfactory to the Executive\nDirector, Housing Secretariat, and in a form satisfactory to the City Solicitor.\n \n5. City Council request the Executive Director, Development Review to consider securing the following\nas part of the site plan agreement:\n \na. a Transportation Impact Study, in consultation with the community, that includes a traffic mitigation\nand loading strategy to limit the impacts",
+      "public_meeting": "The Toronto and East York Community Council held a statutory public meeting on July 8, 2026 and\nnotice was given in accordance with the Planning Act.",
+      "source": {
+        "file": "Agenda_Item_History.pdf",
+        "sha256": "f3d702ae4da7721c241f260eea8b0e39b4856b11211ccc6e5c84939ae3facaaa"
+      }
+    },
+    {
+      "stage": "council_decision",
+      "body": "City Council",
+      "date": "July 29 and 30, 2026",
+      "outcome": "City Council adopted this item on July 29 and 30, 2026 with amendments.",
+      "decision_text": "City Council on July 29 and 30, 2026, adopted the following:\n \n1. City Council amend the Official Plan for the lands municipally known as 191 to 199 College Street\nand 74 to 76 Henry Street substantially in accordance with the draft Official Plan Amendment included\nas Attachment 7 to the report (June 19, 2026) from the Acting Director, Community Planning, Toronto\nand East York District.\n \n2. City Council amend City of Toronto Zoning By-law 569-2013 for the lands municipally known as 191-\n199 College Street and 74-76 Henry Street substantially in accordance with the draft Zoning By-law\nAmendment included as Attachment 1 to motion 1.\n \n3. City Council authorize the City Solicitor to make such stylistic and technical changes to the draft\nOfficial Plan Amendment and draft Zoning By-law Amendment as may be required.\n \n4. City Council authorize the City Solicitor to amend or replace the existing agreements related to the\ndwelling room replacement requirements, affordable housing provisions and the securing of additional\naffordable housing units, including:\na. the Dwelling Room Replacement and Tenant Relocation and Assistance Agreement to the\nsatisfaction of the Chief Planner and Executive Director, City Planning and the City Solicitor; and\nb. the Municipal Housing Project Facilities Agreement (the “Contribution Agreement”) with the\nHousing Secretariat to confirm the financial assistance being provided and set out the terms of\noperation of the affordable housing units, on terms and conditions satisfactory to the Executive\nDirector, Housing Secretariat, and in a form satisfactory to the City Solicitor.\n \n5. City Council request the Executive Director, Development Review to consider securing the following\nas part of the site plan agreement:\n \na. a Transportation Impact Study, in consultation with the community, that includes a traffic mitigation\nand loading strategy to limit the impacts on the surrounding road network.\n \nJul-29-2026 2:26 PM\n6. City Council determine that th",
+      "motions": [
+        {
+          "motion": "Motion to Amend Item",
+          "moved_by": "Councillor Dianne Saxe",
+          "result": "Carried",
+          "text": "That:\n \n1. City Council amend Toronto and East York Community Council Recommendation 2 by deleting the\nwords \"Attachment 8 to the report (June 19, 2026) from the Acting Director, Community Planning,\nToronto and East York District\" and replacing them with the words \"Attachment 1 to this motion”, so that\nit now reads as follows:\n \n2. City Council amend City of Toronto Zoning By-law 569-2013 for the lands municipally known as\n191-199 College Street and 74-76 Henry Street substantially in accordance with the draft Zoning By-\nlaw Amendment included as Attachment 1 to this motion.\n2. City Council determine that these amendments are minor in nature, and pursuant to section 34(17) of\nthe Planning Act, no further notice is required."
+        },
+        {
+          "motion": "Motion to Amend Item (Additional)",
+          "moved_by": "Councillor Dianne Saxe",
+          "result": "Carried",
+          "text": "That:\n \n1. City Council request the Executive Director, Development Review to consider securing the following\nas part of the site plan agreement:\n \na. a Transportation Impact Study, in consultation with the community, that includes a traffic mitigation\nand loading strategy to limit the impacts on the surrounding road network."
+        }
+      ],
+      "votes": [
+        {
+          "on": "Amend Item",
+          "yes": {
+            "count": 22,
+            "members": "Paul Ainslie, Brad Bradford, Alejandra Bravo, Shelley Carroll, Rachel Chernos Lin, Mike Colle, Vincent Crisanti, Paula Fletcher, Stephen Holyday, Parthi Kandavel, Ausma Malik, Nick Mantas, Josh Matlow, Chris Moise, Amber Morley, Jamaal Myers, Frances Nunziata (Chair), James Pasternak, Gord Perks, Dianne Saxe, Neethan Shan, Michael Thompson"
+          },
+          "no": {
+            "count": 0,
+            "members": "Absent: 4 Jon Burnside, Lily Cheng, Olivia Chow (Interest Declared), Anthony Perruzza"
+          },
+          "absent": {
+            "count": 4,
+            "members": "Jon Burnside, Lily Cheng, Olivia Chow (Interest Declared), Anthony Perruzza"
+          },
+          "result": "Carried Majority Required - TE34.21 - Saxe - motion 1"
+        },
+        {
+          "on": "Adopt Item as Amended",
+          "yes": {
+            "count": 23,
+            "members": "Paul Ainslie, Brad Bradford, Alejandra Bravo, Shelley Carroll, Lily Cheng, Rachel Chernos Lin, Mike Colle, Vincent Crisanti, Paula Fletcher, Stephen Holyday, Parthi Kandavel, Ausma Malik, Nick Mantas, Josh Matlow, Chris Moise, Amber Morley, Jamaal Myers, Frances Nunziata (Chair), James Pasternak, Gord Perks, Dianne Saxe, Neethan Shan, Michael Thompson"
+          },
+          "no": {
+            "count": 0,
+            "members": "Absent: 3 Jon Burnside, Olivia Chow (Interest Declared), Anthony Perruzza"
+          },
+          "absent": {
+            "count": 3,
+            "members": "Jon Burnside, Olivia Chow (Interest Declared), Anthony Perruzza"
+          },
+          "result": "Carried Majority Required - TE34.21 - Adopt the Item as amended"
+        }
+      ],
+      "declared_interests": "Mayor Olivia Chow - as she lives near the site that is the subject of Official Plan and Zoning By-law\nAmendment.",
+      "source": {
+        "file": "Agenda_Item_History.pdf",
+        "sha256": "f3d702ae4da7721c241f260eea8b0e39b4856b11211ccc6e5c84939ae3facaaa"
+      }
+    }
+  ],
+  "participation": {
+    "written_comments_rule": "You can submit written comments up until City Council gives final consideration to the proposal.",
+    "speaker_registration_rule": "please register by e-mail to teycc@toronto.ca or by phone at 416-392-7033, no later than 12:00 p.m. on July 7, 2026.",
+    "public_meeting": {
+      "Date": "July 8, 2026",
+      "Time": "10:00 a.m., or as soon as possible thereafter",
+      "Place": "Committee Room 1, Toronto City Hall and by Video Conference"
+    },
+    "council_has_decided": true,
+    "basis": "City Council adopted this item on July 29 and 30, 2026 with amendments.",
+    "source": {
+      "file": "backgroundfile-288413.pdf",
+      "sha256": "29840f1e88f766f8bf40212618914fbc3391c98f2d67c516e2940ece475968f2"
+    },
+    "note": "Staff must confirm current participation status on the official item page before publishing."
+  },
+  "public_letters": 4,
+  "claims": [
+    {
+      "sentence": "The site is at the southwest corner of College Street and Henry Street, covering about 1,617 square metres.",
+      "quote": "The site is located on the southwest corner of College and Henry Streets. It is generally square in shape with an area of approximately 1,617 square metres",
+      "verified": true,
+      "reason": "ok",
+      "page": 4,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "The application proposes to increase the approved building height from 31 storeys to 45 storeys.",
+      "quote": "This Report recommends approval of an application to amend Official Plan Amendment 731 and Site-Specific Zoning By-law 1166-2025 to permit an increase in height from 31 to 45 storeys (90 to 158.5 metres, excluding mechanical penthouse)",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "The proposal increases the total number of residential units from 490 to 684, which includes 545 affordable rental units.",
+      "quote": "and an increase from 490 to 684 residential dwelling units, including 545 affordable rental units.",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "The proposal adds 137 affordable two-bedroom rental units, which would have affordable rents for 40 years.",
+      "quote": "The current proposal builds on this approval by introducing 137 additional affordable two-bedroom rental units, representing approximately 20 percent of the 684 proposed residential units. These units would be secured through the Rental Housing Supply Program (RHSP) Affordable Rental and Rent-Controlled Housing Incentives (ARRCHI) stream, with rents set at the City’s Affordable Rent levels for a 40-year affordability period.",
+      "verified": true,
+      "reason": "ok",
+      "page": 7,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "The 137 additional affordable units may qualify for financial incentives from the City, such as waived fees and charges.",
+      "quote": "The 137 additional affordable dwelling units may be eligible for financial incentives under the RHSP's ARRCHI stream, including waivers of planning application and building permit fees, and an exemption of Development Charges (DCs), Community Benefits Charges (CBCs), and parkland dedication (where not already exempted under provincial legislation).",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "The proposed building will also include 1,931 square metres of retail space on the first three levels.",
+      "quote": "The proposal includes 1,931 square metres of retail space located at-grade fronting College Street and on second and third levels.",
+      "verified": true,
+      "reason": "ok",
+      "page": 7,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "The development will continue to provide 12 replacement rental dwelling rooms, and eligible tenants would keep the right to return at similar rents.",
+      "quote": "Consistent with the 2024 approval for the site and the existing Dwelling Room Replacement and Tenant Relocation and Assistance Agreement, a total of 12 replacement rental dwelling rooms will continue to be provided in the proposed development, representing a full replacement of the existing rental dwelling room gross floor area being demolished. Eligible tenants would reserve the right to return to replacement rental housing at similar rents and the replacement dwelling rooms will be secured as rental housing.",
+      "verified": true,
+      "reason": "ok",
+      "page": 7,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "The designated heritage properties on the site are to be kept and built into the new development.",
+      "quote": "The designated properties at 191–199 College Street and 74–76 Henry Street are to be retained and incorporated into the proposed development, with no new or additional heritage impacts identified.",
+      "verified": true,
+      "reason": "ok",
+      "page": 14,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "The proposal includes 6 vehicle parking spaces at ground level.",
+      "quote": "The proposal includes a total of 6 vehicular parking spaces (including 1 accessible space) at-grade.",
+      "verified": true,
+      "reason": "ok",
+      "page": 8,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "A total of 695 bicycle parking spaces are proposed for the building.",
+      "quote": "A total of 695 bicycle parking spaces are proposed, including 70 short-term spaces located at-grade and 625 long-term spaces located below grade.",
+      "verified": true,
+      "reason": "ok",
+      "page": 8,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "An Official Plan Amendment is needed to change Site and Area Specific Policy 533 to allow the new building height.",
+      "quote": "The Official Plan Amendment is required to amend Site and Area Specific Policy 533 to allow the revised building height.",
+      "verified": true,
+      "reason": "ok",
+      "page": 8,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "A Zoning By-law Amendment is needed to change Exception CR 1010 to allow the increased density, height, massing, and other standards.",
+      "quote": "The Zoning By-law Amendment is required to amend the existing Exception CR 1010 to allow for the increased density, height, massing, in addition to other performance standards.",
+      "verified": true,
+      "reason": "ok",
+      "page": 8,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "Staff recommend that City Council amend the Official Plan for 191-199 College Street and 74-76 Henry Street.",
+      "quote": "1. City Council amend the Official Plan for the lands municipally known as 191-199 College Street and 74-76 Henry Street substantially in accordance with the draft Official Plan Amendment included as Attachment 7 to this Report.",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "Staff recommend that City Council amend Zoning By-law 569-2013 for the site.",
+      "quote": "2. City Council amend City of Toronto Zoning By-law 569-2013 for the lands municipally known as 191-199 College Street and 74-76 Henry Street substantially in accordance with the draft Zoning By-law Amendment included as Attachment 8 to this Report.",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "Staff recommend that City Council allow the City Solicitor to update or replace existing agreements for dwelling room replacement and affordable housing.",
+      "quote": "4. City Council authorize the City Solicitor to amend or replace the existing agreements related to the dwelling room replacement requirements, affordable housing provisions, and the securing of additional affordable housing units",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "Staff recommend putting a holding provision on the Zoning By-law until the Functional Servicing and Stormwater Management Report is revised, reviewed, and accepted.",
+      "quote": "Staff are recommending that the Zoning By-law be subject to a holding provision pending the revision, review, and acceptance of the Functional Servicing and Stormwater Management Report to the satisfaction of the Director, Engineering Review, Development Review.",
+      "verified": true,
+      "reason": "ok",
+      "page": 15,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "If the accepted servicing report shows that new or upgraded municipal infrastructure is needed, the owner must secure it with financial securities or build it before the holding provision is removed.",
+      "quote": "ii. If the accepted and satisfactory Functional Servicing and Stormwater Management Report from (i) above identifies any new required municipal infrastructure or upgrades to existing municipal infrastructure to support the development, then either: a. The owner or applicant has secured the design, construction, and provision of financial securities for any new municipal infrastructure, or any upgrades or required improvements to the existing municipal infrastructure identified in the accepted Functional Servicing and Stormwater Management Report, to support the development, in a financial secured agreement, all to the satisfaction of the Director, Engineering Review, Development Review; or, b. The required new municipal infrastructure or upgrades to existing municipal infrastructure to support the development in the accepted and satisfactory Functional Servicing and Stormwater Management Report in (i) above are constructed and operational, all to the satisfaction of the Director, Engineering Review, Development Review.",
+      "verified": true,
+      "reason": "ok",
+      "page": 16,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "The owner must pay cash-in-lieu for parkland dedication before the first above-ground building permit is issued.",
+      "quote": "The owner is required to satisfy the parkland dedication requirement through cash-in lieu. As per Toronto Municipal Code Chapter 415-29, the appraisal of the cash-in-lieu will be determined under the direction of the Executive Director, Corporate Real Estate Management. Additionally, the Toronto Municipal Code Chapter 415-28, requires that the payment be made prior to the issuance of the first above-ground building permit for the land to be developed.",
+      "verified": true,
+      "reason": "ok",
+      "page": 16,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    },
+    {
+      "sentence": "Nine new City street trees are proposed to be planted, and cash-in-lieu will be required if it is not physically possible to plant all required replacement trees.",
+      "quote": "A total of 9 new City street trees are proposed to be planted. Tree protection measures and replacement planting will be secured through the tree permit process to the satisfaction of Urban Forestry, Tree Protection and Plan Review, Environment, Climate and Forestry. If not physically possible to plant all required replacement trees, the payment of cash-in-lieu will be required.",
+      "verified": true,
+      "reason": "ok",
+      "page": 15,
+      "source_file": "backgroundfile-288412.pdf",
+      "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+    }
+  ]
+}
