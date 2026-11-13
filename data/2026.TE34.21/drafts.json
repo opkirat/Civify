@@ -1,0 +1,173 @@
+[
+  {
+    "sentence": "The site is at the southwest corner of College Street and Henry Street, covering about 1,617 square metres.",
+    "quote": "The site is located on the southwest corner of College and Henry Streets. It is generally square in shape with an area of approximately 1,617 square metres",
+    "verified": true,
+    "reason": "ok",
+    "page": 4,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "The application proposes to increase the approved building height from 31 storeys to 45 storeys.",
+    "quote": "This Report recommends approval of an application to amend Official Plan Amendment 731 and Site-Specific Zoning By-law 1166-2025 to permit an increase in height from 31 to 45 storeys (90 to 158.5 metres, excluding mechanical penthouse)",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "The proposal increases the total number of residential units from 490 to 684, which includes 545 affordable rental units.",
+    "quote": "and an increase from 490 to 684 residential dwelling units, including 545 affordable rental units.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "The proposal adds 137 affordable two-bedroom rental units, which would have affordable rents for 40 years.",
+    "quote": "The current proposal builds on this approval by introducing 137 additional affordable two-bedroom rental units, representing approximately 20 percent of the 684 proposed residential units. These units would be secured through the Rental Housing Supply Program (RHSP) Affordable Rental and Rent-Controlled Housing Incentives (ARRCHI) stream, with rents set at the City’s Affordable Rent levels for a 40-year affordability period.",
+    "verified": true,
+    "reason": "ok",
+    "page": 7,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "The 137 additional affordable units may qualify for financial incentives from the City, such as waived fees and charges.",
+    "quote": "The 137 additional affordable dwelling units may be eligible for financial incentives under the RHSP's ARRCHI stream, including waivers of planning application and building permit fees, and an exemption of Development Charges (DCs), Community Benefits Charges (CBCs), and parkland dedication (where not already exempted under provincial legislation).",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "The proposed building will also include 1,931 square metres of retail space on the first three levels.",
+    "quote": "The proposal includes 1,931 square metres of retail space located at-grade fronting College Street and on second and third levels.",
+    "verified": true,
+    "reason": "ok",
+    "page": 7,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "The development will continue to provide 12 replacement rental dwelling rooms, and eligible tenants would keep the right to return at similar rents.",
+    "quote": "Consistent with the 2024 approval for the site and the existing Dwelling Room Replacement and Tenant Relocation and Assistance Agreement, a total of 12 replacement rental dwelling rooms will continue to be provided in the proposed development, representing a full replacement of the existing rental dwelling room gross floor area being demolished. Eligible tenants would reserve the right to return to replacement rental housing at similar rents and the replacement dwelling rooms will be secured as rental housing.",
+    "verified": true,
+    "reason": "ok",
+    "page": 7,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "The designated heritage properties on the site are to be kept and built into the new development.",
+    "quote": "The designated properties at 191–199 College Street and 74–76 Henry Street are to be retained and incorporated into the proposed development, with no new or additional heritage impacts identified.",
+    "verified": true,
+    "reason": "ok",
+    "page": 14,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "The proposal includes 6 vehicle parking spaces at ground level.",
+    "quote": "The proposal includes a total of 6 vehicular parking spaces (including 1 accessible space) at-grade.",
+    "verified": true,
+    "reason": "ok",
+    "page": 8,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "A total of 695 bicycle parking spaces are proposed for the building.",
+    "quote": "A total of 695 bicycle parking spaces are proposed, including 70 short-term spaces located at-grade and 625 long-term spaces located below grade.",
+    "verified": true,
+    "reason": "ok",
+    "page": 8,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "An Official Plan Amendment is needed to change Site and Area Specific Policy 533 to allow the new building height.",
+    "quote": "The Official Plan Amendment is required to amend Site and Area Specific Policy 533 to allow the revised building height.",
+    "verified": true,
+    "reason": "ok",
+    "page": 8,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "A Zoning By-law Amendment is needed to change Exception CR 1010 to allow the increased density, height, massing, and other standards.",
+    "quote": "The Zoning By-law Amendment is required to amend the existing Exception CR 1010 to allow for the increased density, height, massing, in addition to other performance standards.",
+    "verified": true,
+    "reason": "ok",
+    "page": 8,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "Staff recommend that City Council amend the Official Plan for 191-199 College Street and 74-76 Henry Street.",
+    "quote": "1. City Council amend the Official Plan for the lands municipally known as 191-199 College Street and 74-76 Henry Street substantially in accordance with the draft Official Plan Amendment included as Attachment 7 to this Report.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "Staff recommend that City Council amend Zoning By-law 569-2013 for the site.",
+    "quote": "2. City Council amend City of Toronto Zoning By-law 569-2013 for the lands municipally known as 191-199 College Street and 74-76 Henry Street substantially in accordance with the draft Zoning By-law Amendment included as Attachment 8 to this Report.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "Staff recommend that City Council allow the City Solicitor to update or replace existing agreements for dwelling room replacement and affordable housing.",
+    "quote": "4. City Council authorize the City Solicitor to amend or replace the existing agreements related to the dwelling room replacement requirements, affordable housing provisions, and the securing of additional affordable housing units",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "Staff recommend putting a holding provision on the Zoning By-law until the Functional Servicing and Stormwater Management Report is revised, reviewed, and accepted.",
+    "quote": "Staff are recommending that the Zoning By-law be subject to a holding provision pending the revision, review, and acceptance of the Functional Servicing and Stormwater Management Report to the satisfaction of the Director, Engineering Review, Development Review.",
+    "verified": true,
+    "reason": "ok",
+    "page": 15,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "If the accepted servicing report shows that new or upgraded municipal infrastructure is needed, the owner must secure it with financial securities or build it before the holding provision is removed.",
+    "quote": "ii. If the accepted and satisfactory Functional Servicing and Stormwater Management Report from (i) above identifies any new required municipal infrastructure or upgrades to existing municipal infrastructure to support the development, then either: a. The owner or applicant has secured the design, construction, and provision of financial securities for any new municipal infrastructure, or any upgrades or required improvements to the existing municipal infrastructure identified in the accepted Functional Servicing and Stormwater Management Report, to support the development, in a financial secured agreement, all to the satisfaction of the Director, Engineering Review, Development Review; or, b. The required new municipal infrastructure or upgrades to existing municipal infrastructure to support the development in the accepted and satisfactory Functional Servicing and Stormwater Management Report in (i) above are constructed and operational, all to the satisfaction of the Director, Engineering Review, Development Review.",
+    "verified": true,
+    "reason": "ok",
+    "page": 16,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "The owner must pay cash-in-lieu for parkland dedication before the first above-ground building permit is issued.",
+    "quote": "The owner is required to satisfy the parkland dedication requirement through cash-in lieu. As per Toronto Municipal Code Chapter 415-29, the appraisal of the cash-in-lieu will be determined under the direction of the Executive Director, Corporate Real Estate Management. Additionally, the Toronto Municipal Code Chapter 415-28, requires that the payment be made prior to the issuance of the first above-ground building permit for the land to be developed.",
+    "verified": true,
+    "reason": "ok",
+    "page": 16,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  },
+  {
+    "sentence": "Nine new City street trees are proposed to be planted, and cash-in-lieu will be required if it is not physically possible to plant all required replacement trees.",
+    "quote": "A total of 9 new City street trees are proposed to be planted. Tree protection measures and replacement planting will be secured through the tree permit process to the satisfaction of Urban Forestry, Tree Protection and Plan Review, Environment, Climate and Forestry. If not physically possible to plant all required replacement trees, the payment of cash-in-lieu will be required.",
+    "verified": true,
+    "reason": "ok",
+    "page": 15,
+    "source_file": "backgroundfile-288412.pdf",
+    "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331"
+  }
+]
