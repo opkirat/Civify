@@ -13,7 +13,7 @@ Running log. Each entry says what the gap is, whether it fails safe, and what a 
 - **Rules were fitted to one item (2026.TE34.21).** Staff report and Clerk's notice rules rest on City templates and should carry over; the by-law, declaration-of-interest and item-page parsers are the likely ones to break on other items. Unrecognised files come back `unknown` (safe) rather than mislabelled.
 - **The record parser is Toronto-shaped.** It keys on TMMIS headings ("City Council Decision", "Community Council Recommendations", "Vote (...)"). Another municipality needs its own parser producing the same `record.json` shape.
 - **Image-only (scanned) PDFs are not read.** They come back `unknown` with a note that OCR is needed.
-- **The "council bill" is not the enacted by-law.** It still has placeholders (`[###]`). Enacted by-laws (e.g. 1064-2026, 1234-2026) are separate downloads, not yet fetched.
+- **The "council bill" is not the enacted by-law.** It still has placeholders (`[###]`). The enacted by-laws are fetched separately (`civify/fetch.py`) and form the fourth stage, which is also where Strong Mayor written approval ("Mayoral Decision N-YYYY") is recorded.
 
 ## Participation
 
@@ -22,7 +22,7 @@ Running log. Each entry says what the gap is, whether it fails safe, and what a 
 
 ## Data and access
 
-- **Toronto's council site blocks automated access** (HTTP 403). Item pages and PDFs are saved by hand. *Pilot:* the Clerk's office uploads, or provides a feed.
+- **Toronto's council site blocks automated access** (HTTP 403), and we do not try to get around that (a headless-browser workaround was considered and rejected). A person saves the item or agenda page; `civify/fetch.py` then downloads every PDF it links to from the open `legdocs` host. *Pilot:* the Clerk's office uploads pages, or provides a feed.
 - **Source PDFs are not in the public repo** because public letters carry residents' names. `item.json`, `drafts.json` and `record.json` are tracked; they contain no resident names (letters are counted, not named).
 - **The Gemini model name is configurable (`GEMINI_MODEL`)** because Google renames models; the default worked on first run but may lapse.
 - **Free-tier Gemini keys may permit Google to use inputs.** Staff reports are public records, so acceptable for the demo; a pilot should use a paid tier or an on-premise model.

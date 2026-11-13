@@ -31,7 +31,7 @@ read each sentence against its quote before approving. Only approved sentences r
 </div>
 
 
-{% set council = rec.stages[-1] %}
+{% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
 {% if council.motions %}
 <h2>What changed at Council</h2>
 <p class="muted">Council did not simply adopt the committee's recommendation. These motions, from the official record, say what was changed:</p>

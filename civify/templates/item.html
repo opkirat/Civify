@@ -9,6 +9,9 @@
 {% for s in rec.stages %}
   <li class="{{ 'current' if s.stage == rec.current_stage }}">
     <strong>{{ s.stage.replace('_',' ')|capitalize }}</strong> · {{ s.date or 'date not found' }}{% if s.status %} · {{ s.status }}{% endif %}
+    {% if s.stage == 'enacted' %}
+      <div class="muted">By-laws {{ s.bylaws | map(attribute='number') | join(', ') }}{% if s.mayoral_decision %} · written approval by Mayoral Decision {{ s.mayoral_decision }} ({{ s.mayoral_decision_date }}) under Strong Mayor powers{% endif %}</div>
+    {% endif %}
     {% if s.stage == 'council_decision' and s.votes %}
       {% for v in s.votes if v.on == 'Adopt Item as Amended' %}<div class="muted">Vote: {{ v.yes.count }} yes, {{ v.no.count }} no, {{ v.absent.count }} absent</div>{% endfor %}
       {% if s.declared_interests %}<div class="muted">Declared interest: {{ s.declared_interests }}</div>{% endif %}
@@ -32,7 +35,7 @@
 </div>
 
 
-{% set council = rec.stages[-1] %}
+{% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
 {% if council.motions %}
 <h2>What changed at Council</h2>
 <p class="muted">Council did not simply adopt the committee's recommendation. These motions, from the official record, say what was changed:</p>

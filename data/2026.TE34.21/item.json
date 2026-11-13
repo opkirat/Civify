@@ -115,6 +115,36 @@
       "fields": {
         "date": "July 6, 2026"
       }
+    },
+    {
+      "filename": "law1064.pdf",
+      "sha256": "7047de04cac2de66505be004a1bf1ab49285de7ee5ba1ffda36e9897309b743a",
+      "pages": 2,
+      "doc_type": "enacted_bylaw",
+      "author": "City Clerk (enacted by-law)",
+      "evidence": "BY-LAW 1064-2026",
+      "fields": {
+        "bylaw_number": "1064-2026",
+        "title": "To adopt Official Plan Amendment 731 for the City of Toronto respecting the lands known municipally in the year 2025, as 191, 193, 195, 197, and 199 College St",
+        "council_vote_date": "July 30, 2026",
+        "mayoral_decision": "13-2026",
+        "mayoral_decision_date": "July 30, 2026"
+      }
+    },
+    {
+      "filename": "law1234.pdf",
+      "sha256": "9a916ee93be22c74d7e2ad695446d770ba7681e17d0f935e196b69c2b88802f2",
+      "pages": 8,
+      "doc_type": "enacted_bylaw",
+      "author": "City Clerk (enacted by-law)",
+      "evidence": "BY-LAW 1234-2026",
+      "fields": {
+        "bylaw_number": "1234-2026",
+        "title": "To amend Zoning By-law 569-2013, as amended, with respect to the lands municipally known in the year 2025 as, 191, 193, 195, 197 and 199 College Street and 74",
+        "council_vote_date": "July 30, 2026",
+        "mayoral_decision": "13-2026",
+        "mayoral_decision_date": "July 30, 2026"
+      }
     }
   ]
 }

@@ -25,12 +25,14 @@ def test_title_and_ids(rec):
 
 def test_three_stages_in_order_with_dates_from_the_record(rec):
     s = rec["stages"]
-    assert [x["stage"] for x in s] == ["staff_recommendation", "committee_decision", "council_decision"]
+    assert [x["stage"] for x in s] == ["staff_recommendation", "committee_decision", "council_decision", "enacted"]
     assert s[0]["date"] == "June 19, 2026" and s[0]["body"].startswith("Acting Director, Community Planning")
     assert s[1]["date"] == "July 8 and 9, 2026" and s[1]["status"] == "Amended"
     assert s[2]["date"] == "July 29 and 30, 2026"
     assert s[2]["outcome"] == "City Council adopted this item on July 29 and 30, 2026 with amendments."
-    assert rec["current_stage"] == "council_decision"
+    assert rec["current_stage"] == "enacted"
+    assert s[3]["date"] == "July 30, 2026" and s[3]["mayoral_decision"] == "13-2026"
+    assert [b["number"] for b in s[3]["bylaws"]] == ["1064-2026", "1234-2026"]
 
 
 def test_each_stage_names_its_source_file(rec):
@@ -40,6 +42,7 @@ def test_each_stage_names_its_source_file(rec):
 
 def test_council_votes_and_declared_interest(rec):
     c = rec["stages"][2]
+    assert c["stage"] == "council_decision"
     by = {v["on"]: v for v in c["votes"]}
     assert by["Amend Item"]["yes"]["count"] == 22 and by["Amend Item"]["no"]["count"] == 0
     assert by["Adopt Item as Amended"]["yes"]["count"] == 23

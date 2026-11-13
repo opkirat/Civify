@@ -110,6 +110,23 @@ def staff_stage(report: dict, recommendation: str | None) -> dict:
     }
 
 
+def enacted_stage(bylaws: list[dict]) -> dict | None:
+    """Fourth stage, from the enacted by-laws: when they passed and whether the Mayor
+    gave written approval under Strong Mayor powers. Absent if none were downloaded."""
+    if not bylaws:
+        return None
+    f0 = bylaws[0]["fields"]
+    return {
+        "stage": "enacted",
+        "body": "City Clerk (by-laws passed)",
+        "date": f0.get("council_vote_date"),
+        "bylaws": [{"number": b["fields"].get("bylaw_number"), "title": b["fields"].get("title"), "file": b["filename"]} for b in bylaws],
+        "mayoral_decision": f0.get("mayoral_decision"),
+        "mayoral_decision_date": f0.get("mayoral_decision_date"),
+        "source": {"file": bylaws[0]["filename"], "sha256": bylaws[0]["sha256"], "page": 1},
+    }
+
+
 def participation(notice: dict | None, council: dict) -> dict:
     """Quote the Clerk's rules; never compute a deadline. The only derived field is
     whether Council has already decided, read from the Tracking Status line."""
@@ -143,6 +160,9 @@ def build(folder: Path) -> dict:
         committee_stage(text, page_src),
         council,
     ]
+    enacted = enacted_stage([d for d in item["documents"] if d["doc_type"] == DocType.ENACTED_BYLAW.value])
+    if enacted:
+        stages.append(enacted)
     drafts_path = folder / "drafts.json"
     title_text = re.sub(r"\s+", " ", title.group(1).replace("-\n", "-")) if title else None
     staff = stages[0]
@@ -157,7 +177,7 @@ def build(folder: Path) -> dict:
         "location": location,
         "retrieved": item["retrieved"],
         "official_url": f"https://secure.toronto.ca/council/agenda-item.do?item={item['item_id']}",
-        "current_stage": "council_decision" if council.get("date") else "committee_decision",
+        "current_stage": "enacted" if enacted else ("council_decision" if council.get("date") else "committee_decision"),
         "stages": stages,
         "participation": participation(by_type.get(DocType.PUBLIC_NOTICE.value), council),
         "public_letters": sum(d["doc_type"] == DocType.PUBLIC_LETTER.value for d in item["documents"]),

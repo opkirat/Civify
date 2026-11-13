@@ -24,7 +24,8 @@ class DocType(str, Enum):
     STAFF_REPORT = "staff_report"          # written by City staff; the "staff recommendation" stage
     PUBLIC_NOTICE = "public_notice"        # City Clerk; the official participation details
     DRAFT_BYLAW = "draft_bylaw"            # staff's proposed by-law text (attachment to the report)
-    COUNCIL_BILL = "council_bill"          # by-law text as put before / adopted by Council
+    COUNCIL_BILL = "council_bill"          # by-law text as put before Council (still has placeholders)
+    ENACTED_BYLAW = "enacted_bylaw"        # the numbered, passed by-law; records the vote date and any mayoral approval
     ITEM_PAGE = "item_page"                # saved TMMIS page: tracking status, decisions, votes
     DECLARATION = "declaration_of_interest"
     PUBLIC_LETTER = "public_letter"        # correspondence from the public; never summarised
@@ -63,6 +64,18 @@ def classify(doc: Document) -> Classification:
     if re.search(r"\bBY-LAW\b", flat) and "CITY OF TORONTO" in flat:
         authority = _first_match(lines, r"^Authority:")
         auth_text = " ".join(lines[: lines.index(authority) + 2]) if authority in lines else flat[:300]
+        # An enacted by-law carries its number and says when Council voted; a mayoral
+        # approval line appears when Strong Mayor powers applied (housing matters).
+        num = re.search(r"BY-LAW (\d+-\d{4})", flat)
+        if num and "voted in favour" in flat:
+            f = {"bylaw_number": num.group(1), "title": _after(flat, num.group(0), 160)}
+            v = re.search(r"voted in favour of this by-law on ([A-Z][a-z]+ \d{1,2}, \d{4})", flat)
+            if v:
+                f["council_vote_date"] = v.group(1)
+            m = re.search(r"Mayoral Decision (\S+) dated ([A-Z][a-z]+ \d{1,2}, \d{4})", flat)
+            if m:
+                f["mayoral_decision"], f["mayoral_decision_date"] = m.group(1), m.group(2)
+            return Classification(DocType.ENACTED_BYLAW, "City Clerk (enacted by-law)", num.group(0), f)
         if "[-]" in auth_text or "Clerks to insert" in flat.split("enacts")[0]:
             return Classification(DocType.DRAFT_BYLAW, "City Planning (attachment to staff report)",
                                   auth_text, {"authority": auth_text})
@@ -107,6 +120,11 @@ def _labelled(lines: list[str], labels: list[str]) -> dict[str, str]:
             if l.startswith(lab + ":") and lab not in out:
                 out[lab] = l[len(lab) + 1:].strip()
     return out
+
+
+def _after(text: str, marker: str, n: int) -> str:
+    i = text.find(marker)
+    return text[i + len(marker): i + len(marker) + n].strip() if i >= 0 else ""
 
 
 def _first_match(lines: list[str], pattern: str) -> str:

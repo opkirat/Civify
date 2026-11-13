@@ -25,6 +25,8 @@ EXPECTED = {
     "communicationfile-216766.pdf": DocType.PUBLIC_LETTER,
     "communicationfile-216982.pdf": DocType.PUBLIC_LETTER,
     "communicationfile-216987.pdf": DocType.PUBLIC_LETTER,
+    "law1064.pdf": DocType.ENACTED_BYLAW,
+    "law1234.pdf": DocType.ENACTED_BYLAW,
 }
 
 pytestmark = pytest.mark.skipif(
@@ -80,3 +82,10 @@ def test_public_letters_carry_no_author():
 def test_sha256_is_recorded():
     doc = extract(DATA / "DI13226.pdf")
     assert len(doc.sha256) == 64
+
+
+def test_enacted_bylaw_records_vote_date_and_mayoral_approval():
+    c = classify(extract(DATA / "law1234.pdf"))
+    assert c.fields["bylaw_number"] == "1234-2026"
+    assert c.fields["council_vote_date"] == "July 30, 2026"
+    assert c.fields["mayoral_decision"] == "13-2026" and c.fields["mayoral_decision_date"] == "July 30, 2026"
