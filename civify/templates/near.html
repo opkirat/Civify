@@ -35,7 +35,22 @@
   </div>
   {% endfor %}
   {% elif me %}
-  <p>No items on file for your ward yet.</p>
+  <p>No council items on file for your ward yet.</p>
+  {% endif %}
+
+  {% if nearby %}
+  <h2>Public notices from the City Clerk (last 60 days)</h2>
+  {% for r in nearby %}
+  <div class="panel">
+    <strong><a href="/notices/{{ r.n.notice_id }}">{{ r.n.title }}</a></strong>
+    <div class="muted">
+      {% if r.same_ward %}<span class="ok">In your ward</span>{% else %}Ward {{ r.n.ward or 'not stated' }}{% endif %}
+      {% if r.km is not none %} · about {{ '%.1f'|format(r.km) }} km from your address{% endif %}
+      · posted {{ r.n.posted }} · {{ r.n.decision_body or '' }}
+      {% if r.n.participation %} · <span class="ok">says how to take part</span>{% endif %}
+    </div>
+  </div>
+  {% endfor %}
   {% endif %}
 {% endif %}
 {% endblock %}

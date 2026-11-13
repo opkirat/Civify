@@ -7,7 +7,8 @@ Routes
   GET  /staff/{item_id}          review screen: each draft beside its quote; approve / edit / reject
   POST /staff/{item_id}/{index}  save one decision
   GET  /items/{item_id}          resident view: approved claims only
-  GET  /near?address=|ward=      items in the resident's ward (address looked up live, never stored)
+  GET  /near?address=|ward=      items and public notices in the resident's ward (address looked up live, never stored)
+  GET  /notices/{notice_id}      one public notice: the Clerk's text as published, with how to take part
 
 Rule enforced here: nothing reaches the resident view until a named reviewer
 approved it, and an edited sentence must still pass the verifier against the
@@ -23,7 +24,7 @@ from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from civify import db, geo
+from civify import db, geo, notices
 from civify.extract import extract
 from civify.verify import Verifier
 
@@ -104,11 +105,24 @@ def near(request: Request, address: str = "", ward: str = ""):
         me = geo.lookup(address)
     elif ward:
         me = {"ward": ward.lstrip("0"), "ward_name": geo.WARDS.get(ward.zfill(2), ""), "address": None}
-    results = []
+    results, nearby = [], []
     if me:
         for rec in db.list_items():
             km = geo.distance_km(me, rec["location"]) if rec.get("location") and "lat" in me else None
             results.append({"rec": rec, "same_ward": rec.get("ward") == me["ward"], "km": km})
         results.sort(key=lambda r: (not r["same_ward"], r["km"] if r["km"] is not None else 1e9))
+        for n in notices.load():
+            kms = [geo.distance_km(me, a) for a in n["addresses"]] if "lat" in me else []
+            nearby.append({"n": n, "same_ward": n.get("ward") == me["ward"], "km": min(kms) if kms else None})
+        nearby.sort(key=lambda r: (not r["same_ward"], r["km"] if r["km"] is not None else 1e9))
     return templates.TemplateResponse(request, "near.html", {
-        "wards": geo.WARDS, "address": address, "ward": ward, "me": me, "results": results, "searched": bool(address or ward)})
+        "wards": geo.WARDS, "address": address, "ward": ward, "me": me, "results": results, "nearby": nearby,
+        "searched": bool(address or ward)})
+
+
+@app.get("/notices/{notice_id}", response_class=HTMLResponse)
+def notice(request: Request, notice_id: int):
+    n = next((x for x in notices.load() if x["notice_id"] == notice_id), None)
+    if n is None:
+        raise HTTPException(404, "no such notice in the current feed")
+    return templates.TemplateResponse(request, "notice.html", {"n": n})

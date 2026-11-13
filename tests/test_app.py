@@ -79,3 +79,14 @@ def test_near_unknown_address_explains(client, monkeypatch):
     monkeypatch.setattr(appmod.geo, "lookup", lambda a: None)
     r = client.get("/near", params={"address": "1 Nowhere Rd"})
     assert "couldn't find that address" in r.text
+
+
+@pytest.mark.skipif(not Path("data/notices.json").exists(), reason="feed not built")
+def test_near_lists_public_notices_and_notice_page_quotes_the_clerk(client):
+    r = client.get("/near", params={"ward": "13"})
+    assert "Public notices from the City Clerk" in r.text and "In your ward" in r.text
+    import json
+    n = json.loads(Path("data/notices.json").read_text())[0]
+    page = client.get(f"/notices/{n['notice_id']}")
+    assert page.status_code == 200 and n["title"] in page.text and "as published by the City Clerk" in page.text
+    assert client.get("/notices/1").status_code == 404
