@@ -53,7 +53,10 @@ def fetch_folder(folder: Path, fetch=None) -> list[str]:
     for page in sorted(folder.iterdir()):
         if page.suffix.lower() not in (".html", ".htm", ".pdf"):
             continue
-        pdfs, _ = links_in(page)
+        try:
+            pdfs, _ = links_in(page)
+        except Exception:  # unreadable or scanned PDF: nothing to follow
+            continue
         for url in pdfs:
             name = url.rsplit("/", 1)[-1]
             if download(url, folder / name, fetch):
