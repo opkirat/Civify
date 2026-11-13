@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.db
+
+# Source PDFs stay local for now (public letters contain residents' names); item.json is tracked.
+data/**/*.pdf

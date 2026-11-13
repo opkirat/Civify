@@ -1,0 +1,120 @@
+{
+  "item_id": "2026.TE34.21",
+  "retrieved": "2026-11-13",
+  "source_folder": "data/2026.TE34.21",
+  "documents": [
+    {
+      "filename": "Agenda_Item_History.pdf",
+      "sha256": "f3d702ae4da7721c241f260eea8b0e39b4856b11211ccc6e5c84939ae3facaaa",
+      "pages": 5,
+      "doc_type": "item_page",
+      "author": "City Clerk (TMMIS)",
+      "evidence": "Item - 2026.TE34.21",
+      "fields": {
+        "item_id": "2026.TE34.21",
+        "tracking_status": "City Council adopted this item on July 29 and 30, 2026 with amendments. This item was considered by Toronto and East York Community Council on July 8 and 9, 2026 and was adopted with amendments. It will be considered by City Council on July 29 and 30, 2026."
+      }
+    },
+    {
+      "filename": "DI13226.pdf",
+      "sha256": "f1ba84833622bd867dd35e46f7aa31aa18e84e41df5434adc41b57563689fd5b",
+      "pages": 1,
+      "doc_type": "declaration_of_interest",
+      "author": "City Clerk's Office",
+      "evidence": "July 28, 2026 at 5:29 p.m.Jonathan Canchela, City Clerk's Office",
+      "fields": {}
+    },
+    {
+      "filename": "backgroundfile-288412.pdf",
+      "sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
+      "pages": 35,
+      "doc_type": "staff_report",
+      "author": "Acting Director, Community Planning, Toronto and East York District",
+      "evidence": "REPORT FOR ACTION",
+      "fields": {
+        "Date": "June 19, 2026",
+        "To": "Toronto and East York Community Council",
+        "From": "Acting Director, Community Planning, Toronto and East York District",
+        "Ward": "11 - University-Rosedale",
+        "Planning Application Number": "26 120321 STE 11 OZ"
+      }
+    },
+    {
+      "filename": "backgroundfile-288413.pdf",
+      "sha256": "29840f1e88f766f8bf40212618914fbc3391c98f2d67c516e2940ece475968f2",
+      "pages": 3,
+      "doc_type": "public_notice",
+      "author": "City Clerk's Office",
+      "evidence": "NOTICE OF PUBLIC MEETING",
+      "fields": {
+        "Location of Application": "191-199 College Street and 74-76 Henry Street",
+        "Applicant": "The Planning Partnership",
+        "Date": "July 8, 2026",
+        "Time": "10:00 a.m., or as soon as possible thereafter",
+        "Place": "Committee Room 1, Toronto City Hall and by Video Conference",
+        "written_comments": "You can submit written comments up until City Council gives final consideration to the proposal.",
+        "speaker_registration": "please register by e-mail to teycc@toronto.ca or by phone at 416-392-7033, no later than 12:00 p.m. on July 7, 2026."
+      }
+    },
+    {
+      "filename": "backgroundfile-288508.pdf",
+      "sha256": "d1ee5e45aebae28af9ea45f98c75208a32ca97ff2ba2dd240d4209bd7314b389",
+      "pages": 9,
+      "doc_type": "draft_bylaw",
+      "author": "City Planning (attachment to staff report)",
+      "evidence": "Attachment 8: Draft Zoning By-law Amendment Authority: Toronto and East York Community Council Item [-], as adopted by City of Toronto Council on [-]",
+      "fields": {
+        "authority": "Attachment 8: Draft Zoning By-law Amendment Authority: Toronto and East York Community Council Item [-], as adopted by City of Toronto Council on [-]"
+      }
+    },
+    {
+      "filename": "backgroundfile-289954.pdf",
+      "sha256": "f7412765b9dc340fcb364a55ffb482778cf966fdfdc028719e1c39267421166d",
+      "pages": 7,
+      "doc_type": "council_bill",
+      "author": "City Clerk (bill before Council)",
+      "evidence": "Authority: City Council Item [###], as adopted by City of Toronto Council on July 29, 30 and 31, 2026",
+      "fields": {
+        "authority": "Authority: City Council Item [###], as adopted by City of Toronto Council on July 29, 30 and 31, 2026"
+      }
+    },
+    {
+      "filename": "communicationfile-215691.pdf",
+      "sha256": "ed72a1e4b3de253fe85190088ebcfac58f35849815a603b56b999c059d9e7e8d",
+      "pages": 2,
+      "doc_type": "public_letter",
+      "author": null,
+      "evidence": "communicationfile / letter form",
+      "fields": {}
+    },
+    {
+      "filename": "communicationfile-216766.pdf",
+      "sha256": "99c0f4221b988ae8791109f00d183eee9cd15db800f7314b349b58ff6d60cb5a",
+      "pages": 1,
+      "doc_type": "public_letter",
+      "author": null,
+      "evidence": "communicationfile / letter form",
+      "fields": {}
+    },
+    {
+      "filename": "communicationfile-216982.pdf",
+      "sha256": "8e9bb0b9a01e3f4f4f74ef4a36852dbb21f9a095821c6d81728b3365a4901def",
+      "pages": 1,
+      "doc_type": "public_letter",
+      "author": null,
+      "evidence": "communicationfile / letter form",
+      "fields": {}
+    },
+    {
+      "filename": "communicationfile-216987.pdf",
+      "sha256": "946f439b0bc89453be6cef9faeaaa855c9d3632e12798e168a4f26d951a04347",
+      "pages": 1,
+      "doc_type": "public_letter",
+      "author": null,
+      "evidence": "communicationfile / letter form",
+      "fields": {
+        "date": "July 6, 2026"
+      }
+    }
+  ]
+}
