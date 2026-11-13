@@ -12,8 +12,6 @@ from __future__ import annotations
 
 import argparse
 import json
-from dataclasses import asdict
-from datetime import date
 from pathlib import Path
 
 from civify.classify import DocType, classify
@@ -41,7 +39,8 @@ def ingest(folder: Path, retrieved: str) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("folder", type=Path)
-    ap.add_argument("--retrieved", default=date.today().isoformat(), help="date the files were downloaded (YYYY-MM-DD)")
+    # Required on purpose: a defaulted date would silently record the wrong provenance.
+    ap.add_argument("--retrieved", required=True, help="date the files were downloaded (YYYY-MM-DD)")
     args = ap.parse_args()
     result = ingest(args.folder, args.retrieved)
     out = args.folder / "item.json"

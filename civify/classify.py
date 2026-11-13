@@ -82,19 +82,20 @@ def classify(doc: Document) -> Classification:
     if "City Clerk's Office" in flat and len(flat) < 300:
         return Classification(DocType.DECLARATION, "City Clerk's Office", flat)
 
-    # 7. Public correspondence. Content varies a lot, so the City's own URL naming
-    #    ("communicationfile-...") is the primary signal, with a content fallback.
-    if doc.filename.startswith("communicationfile-") or re.search(
-        r"\b(Dear|Re:|Community Council)\b", flat[:400]
-    ):
+    # 7. Public correspondence. Letters have no fixed layout, so the only signal we
+    #    trust is the City's own file naming ("communicationfile-..."). Anything else
+    #    we don't recognise is returned as UNKNOWN for staff, never guessed.
+    if doc.filename.startswith("communicationfile-"):
         f = {}
         d = re.search(_DATE, flat)
         if d:
             f["date"] = d.group(0)
         # Deliberately no author extraction: the brief says not to display
         # unnecessary personal information from public correspondence.
-        return Classification(DocType.PUBLIC_LETTER, None, "communicationfile / letter form", f)
+        return Classification(DocType.PUBLIC_LETTER, None, "City filename prefix 'communicationfile-'", f)
 
+    if not flat:
+        return Classification(DocType.UNKNOWN, None, "no extractable text on page 1; the PDF may be a scan and need OCR")
     return Classification(DocType.UNKNOWN, None, head)
 
 
