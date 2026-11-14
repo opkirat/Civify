@@ -1,5 +1,5 @@
-{% macro pipeline_strip(steps) %}
-<ol class="pipeline" aria-label="Pipeline progress">
+{% macro pipeline_strip(steps, compact=false) %}
+<ol class="pipeline{{ ' compact' if compact }}" aria-label="Pipeline progress">
 {% for s in steps %}
   <li class="step {{ s.state }}">
     <span class="step-dot" aria-hidden="true">{% if s.state == 'done' %}✓{% elif s.state == 'attention' %}!{% else %}{{ loop.index }}{% endif %}</span>
@@ -35,7 +35,7 @@
     {% if r.escalation %}<span class="pill warning">Escalated by {{ r.escalation.raised_by }}</span>{% endif %}
   </div>
   {% if r.escalation %}<p class="escalation-note"><strong>Internal note:</strong> “{{ r.escalation.note }}”</p>{% endif %}
-  {% if r.reasons and not r.review %}<details class="check-reasons" {% if r.lane == 'blocked' %}open{% endif %}><summary>{{ 'Why this needs fixing' if r.lane == 'blocked' else 'Why this needs review' }}</summary><ul class="reasons">{% for reason in r.reasons %}<li>{{ reason }}</li>{% endfor %}</ul></details>{% endif %}
+  {% if r.reasons and not r.review %}<ul class="reasons why">{% for reason in r.reasons %}<li>{{ reason }}</li>{% endfor %}</ul>{% endif %}
   <div class="review-columns">
     <div><p class="eyebrow">What residents will read</p><p class="draft-sentence">{{ r.review.sentence if r.review else r.sentence }}</p></div>
     <div><p class="eyebrow">What the source says</p>
@@ -49,15 +49,16 @@
   </div>
   {% if not r.review and r.confirm and r.confirm.suggestion and r.confirm.suggestion != r.sentence %}
   <form class="suggestion" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
-    <p class="eyebrow">Suggested wording, from the AI check that read the whole page</p>
+    <p class="eyebrow">Suggested fix</p>
     <p class="draft-sentence">{{ r.confirm.suggestion }}</p>
     <input type="hidden" name="sentence" value="{{ r.confirm.suggestion }}">
     <button class="primary" name="action" value="edit">Approve suggested wording (goes live)</button>
-    <span class="muted">Checked against the same quote before saving; refused if it adds a number the quote doesn't have.</span>
+    <span class="muted">Re-checked against the source before it goes live.</span>
   </form>
   {% endif %}
   <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
-    {% if r.lane != 'blocked' and not (r.review and r.review.status == 'approved') %}<button class="primary" name="action" value="approve">Approve (goes live)</button>{% endif %}
+    {% set has_fix = not r.review and r.confirm and r.confirm.suggestion and r.confirm.suggestion != r.sentence %}
+    {% if r.lane != 'blocked' and not (r.review and r.review.status == 'approved') %}<button {{ '' if has_fix else 'class="primary"' }} name="action" value="approve">{{ 'Approve original instead' if has_fix else 'Approve (goes live)' }}</button>{% endif %}
     <button name="action" value="reject">Reject</button>
     <details {% if r.lane == 'blocked' %}open{% endif %}>
       <summary>Edit, then approve</summary>

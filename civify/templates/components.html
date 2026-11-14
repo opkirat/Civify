@@ -2,9 +2,9 @@
 <article class="issue-card">
 <div class="meta-row"><span class="pill {{ 'proposed' if it.current_stage == 'staff_recommendation' else 'decided' }}">{{ it.current_stage|stage_label }}</span><span>{{ it|ward_label }}</span></div>
 <h3><a href="/items/{{ it.item_id }}">{{ it.title|item_name }}</a></h3>
-<details class="card-topic"><summary>What’s this about?</summary><p class="topic">{{ it.title|item_topic }}</p></details>
+{% set b = it|blurb %}{% if b %}<p class="card-blurb">{{ b }}</p>{% endif %}
 {% if same_ward %}<p class="muted"><span class="ok">In your ward</span>{% if km is not none %} · about {{ '%.1f'|format(km) }} km from your address{% endif %}</p>{% elif km is not none %}<p class="muted">About {{ '%.1f'|format(km) }} km from your address</p>{% endif %}
-<div class="card-bottom"><span>{{ 'Council has decided' if it.participation.council_has_decided else 'Participation: check details' }}</span><a href="/items/{{ it.item_id }}" aria-label="View issue: {{ it.title|item_name }}">View issue →</a></div>
+<div class="card-bottom"><span>{{ it|status_line }}</span><a href="/items/{{ it.item_id }}" aria-label="View issue: {{ it.title|item_name }}">View issue →</a></div>
 </article>
 {% endmacro %}
 

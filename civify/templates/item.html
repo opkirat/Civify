@@ -4,9 +4,9 @@
 {% block body %}
 <div class="page-head">
 <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Explore issues</a><span aria-hidden="true">/</span><span>{{ rec.item_id }}</span></nav>
-<div class="meta-row"><span class="pill {{ 'proposed' if rec.current_stage == 'staff_recommendation' else 'decided' }}">{{ rec.current_stage|stage_label }}</span><span>{{ rec|ward_label }}</span><span>Records retrieved {{ rec.retrieved }}</span></div>
+<div class="meta-row"><span class="pill {{ 'proposed' if rec.current_stage == 'staff_recommendation' else 'decided' }}">{{ rec.current_stage|stage_label }}</span><span>{{ rec|ward_label }}</span></div>
 <h1>{{ rec.title|item_name }}</h1><details class="official-title"><summary>Official item title</summary><p>{{ rec.title|item_topic }}</p></details>
-<div class="actions"><a class="button primary" href="{{ rec.official_url }}">Official item page ↗</a><a class="button" href="/items/{{ rec.item_id }}/print">Printable notice with QR code</a></div>
+<p class="item-links"><a href="{{ rec.official_url }}">Official City page ↗</a><a href="/items/{{ rec.item_id }}/print">Print with QR code</a></p>
 </div>
 <div class="detail-grid">
 <div>
@@ -15,27 +15,42 @@
 <div class="ai-summary">
 <div class="ai-summary-head"><h2>Summary</h2><span class="pill ai-pill">AI-generated</span></div>
 <p class="summary-copy">{% for x in summary.sentences %}{{ x.text }} {% endfor %}</p>
-<p class="ai-disclosure">This summary was written by AI from the {{ claims|length }} sentences below, each of which was checked against the City's official records. It was checked again by code and a second AI before being shown. It can leave out detail: the sentences and their sources, and the official item page, are the authority.</p>
+<p class="ai-disclosure">Written by AI from the checked sentences below, each linked to the City record it came from.</p>
 </div>
 <details class="summary-breakdown"><summary>See each sentence with its source ({{ claims|length }})</summary>
 {% else %}<h2>What the records say</h2>{% endif %}
 {% if claims %}<ol class="claim-list">{% for c in claims %}<li>{{ c.sentence }}<details><summary>Read the source · page {{ c.page }}</summary><blockquote>“{{ c.quote }}”<br><span class="source-file">{{ c.source_file }}, page {{ c.page }}</span></blockquote></details></li>{% endfor %}</ol>
-<p class="muted">Version {{ publication.version }}, published {{ publication.published_at[:10] }}. Each sentence was written in plain language by AI and checked against the official record: the quote must appear in the document and every number must match. Sentences the checks were unsure about were reviewed by City staff.</p>
+<p class="muted">Each sentence was written by AI and checked against the City record: the quote must appear in the document and every number must match. Sentences the checks were unsure about were reviewed by City staff.</p>
 {% else %}<div class="empty-state"><p>No explanation yet. The records are being checked.</p><a href="{{ rec.official_url }}">Read the official item →</a></div>{% endif %}
 {% if summary %}</details>{% endif %}
+<p class="muted records-date">From City records retrieved {{ rec.retrieved }}.</p>
 </section>
 {% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
 {% if council.motions %}<details class="panel"><summary>What changed at Council</summary><p class="muted">These motions show the changes considered at Council, in the record’s own words.</p>{% for m in council.motions %}<details class="fold"><summary>{{ m.motion }} · {{ m.result }}</summary><p class="muted">Moved by {{ m.moved_by }}</p><blockquote style="white-space:pre-line">{{ m.text }}</blockquote></details>{% endfor %}</details>{% endif %}
 </div>
 <aside>
-<section class="panel action-panel" id="participate"><h2>Can I still have a say?</h2>{% if rec.participation.council_has_decided %}<p><strong>City Council has already decided this item.</strong></p>{% else %}<p><strong>An open comment window has not been verified.</strong></p>{% if rec.participation.next_meeting %}<p class="muted">Meeting in saved record: {{ rec.participation.next_meeting.date }}. This is not a submission deadline.</p>{% endif %}{% endif %}
-<a class="button primary" href="{{ rec.official_url }}">Check with the City ↗</a>
-<details class="participation-detail"><summary>Participation details</summary>{% include 'participation.html' %}</details><p class="muted">Based on records retrieved {{ rec.retrieved }}.</p></section>
-<details class="panel" id="timeline"><summary>Decision timeline</summary><ol class="stage">
-{% for s in rec.stages %}<li class="{{ 'current' if s.stage == rec.current_stage }}"><strong>{{ s.stage.replace('_',' ')|capitalize }}{% if s.stage == rec.current_stage %} · current{% endif %}</strong>{{ s.date or 'No decision recorded' }}{% if s.status %} · {{ s.status }}{% endif %}
+<section class="panel action-panel" id="participate"><h2>Can I still have a say?</h2>
+{% set p = rec.participation %}
+{% if p.council_has_decided %}<p><strong>No. City Council has already decided this item.</strong></p>
+<a class="button primary" href="{{ rec.official_url }}">See the decision ↗</a>
+{% else %}
+<p><strong>Yes, it hasn't been decided yet.</strong>{% if p.next_meeting %} {{ p.next_meeting.body }} meets <strong>{{ p.next_meeting.date }}</strong>.{% endif %}</p>
+<ol class="say-steps">
+{% if p.written_comments_rule %}<li><strong>Send a comment.</strong> The Clerk's notice says: “{{ p.written_comments_rule }}”</li>
+{% else %}<li><strong>Send a comment.</strong> On the City page, choose <em>Submit Comments</em>.{% if late_rule %} <span class="muted">“{{ late_rule }}”</span>{% endif %}</li>{% endif %}
+{% if p.speaker_registration_rule %}<li><strong>Ask to speak.</strong> The Clerk's notice says: “{{ p.speaker_registration_rule }}”</li>
+{% else %}<li><strong>Ask to speak at the meeting.</strong> On the City page, choose <em>Request to Speak</em>.{% if speak_rule %} The City says: “{{ speak_rule }}”{% endif %}</li>{% endif %}
+</ol>
+<a class="button primary" href="{{ rec.official_url }}">Comment or ask to speak ↗</a>
+{% if public_rule %}<p class="muted say-note">{{ public_rule }}</p>{% endif %}
+{% if not (p.written_comments_rule or p.speaker_registration_rule) %}<p class="muted say-note">These are the City's general rules{% if rules.retrieved %}, checked {{ rules.retrieved }}{% endif %}. Confirm the details for this item on the City page.</p>{% endif %}
+{% endif %}
+<details class="participation-detail"><summary>What the records say</summary>{% include 'participation.html' %}</details></section>
+<details class="panel" id="timeline" open><summary>Where it stands</summary><ol class="stage">
+{% for s in rec.stages %}<li class="{{ 'current' if s.stage == rec.current_stage }}"><strong>{{ s.stage|stage_label }}{% if s.stage == rec.current_stage %} <span class="pill proposed">Now</span>{% endif %}</strong>{{ s.date or 'Not yet' }}{% if s.status %} · {{ s.status }}{% endif %}
 {% if s.stage == 'enacted' %}<div class="muted">By-laws {{ s.bylaws|map(attribute='number')|join(', ') }}{% if s.mayoral_decision %} · written approval by Mayoral Decision {{ s.mayoral_decision }} ({{ s.mayoral_decision_date }}) under Strong Mayor powers{% endif %}</div>{% endif %}
 {% if s.stage == 'council_decision' and s.votes %}{% for v in s.votes if v.on == 'Adopt Item as Amended' %}<div class="muted">Vote: {{ v.yes.count }} yes, {{ v.no.count }} no, {{ v.absent.count }} absent</div>{% endfor %}{% if s.declared_interests %}<div class="muted">Declared interest: {{ s.declared_interests }}</div>{% endif %}{% endif %}
-<div class="muted source-file">Source: {{ s.source.file }}</div></li>{% endfor %}</ol></details>
+</li>{% endfor %}</ol></details>
 </aside>
 </div>
 {% endblock %}

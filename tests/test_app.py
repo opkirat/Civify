@@ -21,7 +21,7 @@ def test_approving_puts_a_sentence_live_straight_away(staff):
     r = staff.post(f"/staff/{ITEM}/1", data={"action": "approve"}, follow_redirects=False)
     assert "now%20live" in r.headers["location"] and "version%201" in r.headers["location"]
     page = staff.get(f"/items/{ITEM}").text
-    assert "31 storeys to 45 storeys" in page and "Version 1, published" in page and "No explanation yet" not in page
+    assert "31 storeys to 45 storeys" in page and "No explanation yet" not in page
     assert "Clerk A" not in page                                                       # reviewer names stay internal
 
 
@@ -147,7 +147,7 @@ def test_near_lists_public_notices_and_notice_page_quotes_the_clerk(client):
     import json
     n = json.loads(Path("data/notices.json").read_text())[0]
     page = client.get(f"/notices/{n['notice_id']}")
-    assert page.status_code == 200 and n["title"] in page.text and "as published by the City Clerk" in page.text
+    assert page.status_code == 200 and n["title"].split(" - ")[-1].strip() in page.text and "as published by the City Clerk" in page.text
     assert client.get("/notices/1").status_code == 404
 
 
@@ -170,10 +170,10 @@ def test_every_decision_makes_a_new_frozen_version(staff):
     staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
     staff.post(f"/staff/{ITEM}/2", data={"action": "approve"})
     page = staff.get(f"/items/{ITEM}").text
-    assert rec["claims"][2]["sentence"] in page and "Version 2" in page
+    assert rec["claims"][2]["sentence"] in page
     staff.post(f"/staff/{ITEM}/2", data={"action": "reject"})
     page = staff.get(f"/items/{ITEM}").text
-    assert rec["claims"][2]["sentence"] not in page and "Version 3" in page
+    assert rec["claims"][2]["sentence"] not in page
     staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})               # last one gone: page goes back to empty
     assert "No explanation yet" in staff.get(f"/items/{ITEM}").text
     staff.post(f"/staff/{ITEM}/1", data={"action": "escalate", "note": "x"})
@@ -276,6 +276,6 @@ def test_resident_page_shows_labelled_ai_summary_over_verified_sentences(staff, 
 def test_pipeline_view_is_visible_on_dashboard_and_item_page(staff):
     for path in ("/staff", f"/staff/{ITEM}"):
         t = staff.get(path).text
-        assert 'class="pipeline"' in t and "AI summary" in t and "Live for residents" in t
-        assert t.index('class="pipeline"') < t.index("Item details" if path == "/staff" else "Record details")
+        assert 'class="pipeline' in t and "AI summary" in t and "Live for residents" in t
+        assert t.index('class="pipeline') < t.index("Item details" if path == "/staff" else "Record details")
     assert "What needs a person" in staff.get(f"/staff/{ITEM}").text

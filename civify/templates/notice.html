@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block title %}Notice {{ n.notice_id }}{% endblock %}
 {% block body %}
-<div class="page-head"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/near">Near me</a><span aria-hidden="true">/</span><span>Public notice</span></nav><p class="eyebrow">From the City Clerk</p><h1>{{ n.title }}</h1></div>
+<div class="page-head"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/near">Near me</a><span aria-hidden="true">/</span><span>Public notice</span></nav>{% set np = n.title|notice_parts %}<p class="eyebrow">{{ np.kind }}</p><h1>{{ np.place }}</h1></div>
 <p class="muted">Public notice #{{ n.notice_id }} · posted {{ n.posted }} · {{ n.decision_body or '' }}{% if n.ward %} · Ward {{ n.ward }}{% endif %}
   · signed {{ n.signed_by }}</p>
 
 {% if n.participation %}
 <h2>How to have a say</h2>
 <div class="panel">
-  <p class="muted">Quoted from the notice. Always confirm on the <a href="{{ n.source.site }}">City's public notice site</a>.</p>
-  {% for s in n.participation %}<blockquote>{{ s }}</blockquote>{% endfor %}
+  <ol class="say-steps">{% for s in n.participation %}<li>“{{ s }}”</li>{% endfor %}</ol>
+  <p class="muted say-note">Quoted from the Clerk's notice. Confirm on the <a href="{{ n.source.site }}">City's public notice site</a>.</p>
 </div>
 {% endif %}
 
@@ -18,9 +18,9 @@
 <div class="panel">{% for e in n.events %}<p>{{ e.date }} · {{ e.location }}{% if e.address %}, {{ e.address }}{% endif %}</p>{% endfor %}</div>
 {% endif %}
 
-{% if n.addresses %}
+{% set where = n|notice_addresses %}{% if where|length > 1 %}
 <h2>Where</h2>
-<ul>{% for a in n.addresses %}<li>{{ a.address }}{% if a.postal_code %} ({{ a.postal_code }}){% endif %}</li>{% endfor %}</ul>
+<ul>{% for a in where %}<li>{{ a }}</li>{% endfor %}</ul>
 {% endif %}
 
 {% if n.agenda_items %}
@@ -29,5 +29,5 @@
 {% endif %}
 
 <details class="fold"><summary>The notice, as published by the City Clerk</summary><div style="white-space:pre-line">{{ n.text }}</div></details>
-<p class="muted">Source: <a href="{{ n.source.dataset }}">City of Toronto Open Data, Public Notices</a>, retrieved {{ n.source.retrieved }}. Shown as published; nothing here was rewritten by software.</p>
+<p class="muted">Source: <a href="{{ n.source.dataset }}">City of Toronto Open Data, Public Notices</a>, retrieved {{ n.source.retrieved }}. Quoted as published, not rewritten.</p>
 {% endblock %}

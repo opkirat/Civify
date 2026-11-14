@@ -108,6 +108,14 @@
 .worker-page details.attention > summary { font-weight:500; color:#9a5b12; }
 .worker-page details.attention li { margin:6px 0; }
 .work-item .next-action { font-size:14px; margin:4px 0 8px; }
+.pipeline.compact { gap:4px; margin:12px 0 10px; }
+.pipeline.compact .step { padding:6px 6px 4px; font-size:11px; border-top-width:3px; background:transparent; border-radius:0; }
+.pipeline.compact .step.attention { background:#fdf6ea; }
+.pipeline.compact .step-dot { width:16px; height:16px; font-size:9px; margin:0 4px 0 0; vertical-align:middle; }
+.pipeline.compact .step-label { display:inline; font-weight:600; }
+.pipeline.compact .step-detail { display:none; }
+.worker-page ul.reasons.why { margin:10px 0 0; padding:10px 14px 10px 30px; background:#fdf6ea; border-radius:7px; font-size:13px; color:#6b4a14; }
+.worker-page ul.reasons.why li { margin:2px 0; }
 @media(max-width:700px) {
  .ready-panel { flex-direction:column; }
  .ready-panel > form, .ready-panel button { width:100%; }

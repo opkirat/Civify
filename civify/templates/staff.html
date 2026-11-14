@@ -21,7 +21,7 @@
 <form method="post" action="/staff/{{ rec.item_id }}/approve-ready"><button class="primary" type="submit">Approve all {{ groups.ready|length }}</button></form></section>
 {% endif %}
 <section id="review" aria-labelledby="review-heading">
-<div class="review-heading"><h2 id="review-heading">{{ ('Needs you · ' ~ pending|length ~ ' sentence' ~ ('s' if pending|length != 1)) if pending else 'Nothing needs you' }}</h2><span class="muted">The checks weren't sure about these. Approve and it goes live for residents straight away; reject and it never appears.</span></div>
+<div class="review-heading"><h2 id="review-heading">{{ ('Needs you · ' ~ pending|length ~ ' sentence' ~ ('s' if pending|length != 1)) if pending else 'Nothing needs you' }}</h2></div>
 {% if pending %}
 <div id="review-controls" class="review-controls" hidden><div><span id="review-position" role="status" aria-live="polite"></span><label class="visually-hidden" for="sentence-picker">Choose a sentence</label><select id="sentence-picker"></select></div><div class="actions"><button id="previous-sentence" type="button">← Previous</button><button id="next-sentence" type="button">Next sentence →</button></div></div>
 <div class="review-deck">{% for r in pending %}{{ claim_card(rec, r) }}{% endfor %}</div>

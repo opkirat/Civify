@@ -2,25 +2,37 @@
 {% block title %}Upcoming meetings{% endblock %}
 {% block body %}
 <div class="page-head"><p class="eyebrow">Follow the conversation</p><h1>Upcoming meetings</h1><p class="lead">See what’s on the agenda, find your ward, and check the City’s guidance for taking part.</p></div>
-<p class="muted">Items and meeting dates from saved agendas. Confirm current details with the City. An item link appears when its full ID is confirmed by a saved source; explanations appear after staff review.</p>
+{% if rules.quotes %}
+<section class="panel meeting-participation" aria-labelledby="take-part-title">
+<h2 id="take-part-title">Want to have your say?</h2>
+<p>Open a City agenda item below, then choose how to take part.</p>
+<ol>
+<li><strong>Send a written comment.</strong> Use <strong>Submit Comments</strong> on the City's item page. Comments received after a decision are not accepted.</li>
+<li><strong>Ask to speak.</strong> For a Committee or Board meeting, use <strong>Request to Speak</strong>. The City recommends registering by noon the day before. Confirm the options for your item; speaking at City Council is generally restricted.</li>
+</ol>
+<p class="muted"><strong>Before submitting:</strong> your name and written comments become public. Avoid including personal information in your comments.</p>
+<a class="button" href="{{ rules.source }}">City instructions for comments and speaking ↗</a>
+<p class="muted">General guidance checked November 14, 2026. This does not confirm an open comment or speaking window for any listed item.</p>
+<details class="fold"><summary>Read the City's quoted guidance</summary>
+<p class="muted">Saved from <a href="{{ rules.source }}">the City's participation page</a> on {{ rules.retrieved }}.</p>
+{% for q in rules.quotes %}<blockquote>{{ q }}</blockquote>{% endfor %}
+</details>
+</section>
+{% endif %}
+
 {% for m in meetings %}
 <div class="section-heading"><div><p class="eyebrow">{{ m.meeting_date }} · {{ m.meeting_time }}</p><h2>{{ m.body }}</h2></div><span class="pill">{{ m.agenda_status }}</span></div>
-<p class="muted">{{ m.location }} · {{ m.agenda_status }} · saved {{ m.source.retrieved }}</p>
+<p class="muted">{{ m.location }}</p>
 {% for it in m['items'] %}
-<div class="panel">
-  <strong>{% if it.official_url %}<a href="{{ it.official_url }}">{{ it.id }}</a>{% else %}{{ it.id }}{% endif %}</strong> · Ward {{ it.ward or '?' }}{% if it.ward %} ({{ wards.get(it.ward.zfill(2), '') }}){% endif %}<br>
-  {{ it.title }}
-  {% if it.local_url %}<p><a href="{{ it.local_url }}">View decision and reviewed explanation</a></p>{% endif %}
-  {% if not it.official_url %}<p class="muted">Full item ID not confirmed. Find this item on the <a href="https://secure.toronto.ca/council/">City's meeting agendas</a>.</p>{% endif %}
-  {% for n in it.notes %}<div class="muted">{{ n.date }}: {{ n.note }}</div>{% endfor %}
+<div class="panel meeting-item">
+  <p class="notice-kind">{{ it.title.split(' - ', 1)[1] if ' - ' in it.title else 'Agenda item' }}</p>
+  <h3>{{ it.title.split(' - ', 1)[0] }}</h3>
+  <p class="muted">Ward {{ it.ward or '?' }}{% if it.ward %} · {{ wards.get(it.ward.zfill(2), '') }}{% endif %} · {{ it.id }}</p>
+  <p class="item-links">{% if it.local_url %}<a href="{{ it.local_url }}">Read the plain-language explanation</a>{% endif %}{% if it.official_url %}<a href="{{ it.official_url }}">Comment or ask to speak on the City page ↗</a>{% else %}<a href="https://secure.toronto.ca/council/">Find it on the City's agendas ↗</a>{% endif %}</p>
+  {% if it.notes %}<details class="fold"><summary>Updates to this item ({{ it.notes|length }})</summary>{% for n in it.notes %}<div class="muted">{{ n.date }}: {{ n.note }}</div>{% endfor %}</details>{% endif %}
 </div>
 {% endfor %}
 {% else %}
 <div class="empty-state"><h2>No saved agendas yet.</h2><p>Check the <a href="https://secure.toronto.ca/council/">City’s meeting calendar</a> for upcoming meetings.</p></div>
 {% endfor %}
-{% if rules.quotes %}
-<h2>How to take part</h2>
-<div class="panel"><span class="muted">Quoted from the City's <a href="{{ rules.source }}">Participate in Council and Committee Meetings</a> page, retrieved {{ rules.retrieved }}.</span>
-{% for q in rules.quotes %}<blockquote>{{ q }}</blockquote>{% endfor %}</div>
-{% endif %}
 {% endblock %}

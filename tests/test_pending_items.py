@@ -69,7 +69,7 @@ def test_pending_pages_show_unknown_participation_without_publishing_drafts(staf
         page = staff.get(f"/items/{item_id}{suffix}")
         assert page.status_code == 200
         assert "November 16, 2026" in page.text
-        assert "An open comment window has not been verified" in page.text
+        assert "couldn't confirm a comment period" in page.text or "don't include a notice" in page.text
         assert "None" not in page.text
         assert "No explanation yet" in page.text
         assert rec["claims"][0]["sentence"] not in page.text

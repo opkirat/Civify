@@ -28,6 +28,7 @@ against the same quote (so an edit cannot introduce an unsupported number).
 
 from __future__ import annotations
 
+import re
 from functools import lru_cache
 from pathlib import Path
 from io import BytesIO
@@ -54,6 +55,62 @@ STAGE_LABELS = {"staff_recommendation": "Proposed", "committee_decision": "Commi
 templates.env.filters["stage_label"] = lambda value: STAGE_LABELS.get(value, value.replace("_", " "))
 templates.env.filters["item_name"] = lambda title: (title or "Untitled item").split(" - ", 2)[1] if " - " in (title or "") else title
 templates.env.filters["ward_label"] = lambda rec: "City-wide" if rec.get("citywide") else f"Ward {rec.get('ward') or '?'}"
+def _blurb(rec: dict) -> str:
+    """One line for an issue card: the AI summary's first sentence if one is showing, else the official topic."""
+    # Read only; never creates the database (a resident's search must not write anything).
+    pub = db.latest_publication(db.connect(DB_PATH), rec["item_id"]) if Path(DB_PATH).exists() else None
+    s = summary.for_residents(rec["item_id"], [c["sentence"] for c in pub["claims"]]) if pub else None
+    if s:
+        return s["sentences"][0]["text"]
+    if pub and pub["claims"]:
+        return pub["claims"][0]["sentence"]          # a verified sentence beats the official jargon title
+    title = rec.get("title") or ""
+    return title.split(" - ", 2)[2] if title.count(" - ") >= 2 else ""
+
+
+def _status_line(rec: dict) -> str:
+    p = rec.get("participation") or {}
+    if p.get("council_has_decided"):
+        return "Council has decided"
+    m = p.get("next_meeting")
+    if m:
+        return f"{m['body'].replace('Toronto ', '')} meets {m['date']}"
+    return "Not decided yet"
+
+
+_NOTICE_KINDS = [(r"^Notice of Application - Under the Planning Act$", "Development application"),
+                 (r"^Notice of Public Meeting - (.+)$", r"Public meeting · \1"),
+                 (r"^Notice of Adoption of (.+)$", r"Adopted · \1"),
+                 (r"^Notice of (.+)$", r"\1")]
+
+
+def _notice_parts(title: str) -> dict:
+    """'Notice of Application - Under the Planning Act - 689 King Street West' ->
+    {'kind': 'Development application', 'place': '689 King Street West'}."""
+    parts = [p.strip() for p in (title or "").strip().split(" - ")]
+    place, kind = parts[-1], " - ".join(parts[:-1])
+    for pattern, label in _NOTICE_KINDS:
+        if re.match(pattern, kind):
+            return {"kind": re.sub(pattern, label, kind), "place": place}
+    return {"kind": kind or "Public notice", "place": place}
+
+
+def _notice_addresses(n: dict) -> list[str]:
+    """Addresses from the open-data feed, keeping only streets the notice itself names
+    (the feed has known geocoding errors, e.g. a Kennedy Road notice placed on Kennedy Avenue)."""
+    title = (n.get("title") or "").lower()
+    out = []
+    for a in n.get("addresses") or []:
+        street = re.sub(r"^\d+[a-z]?\s+", "", a["address"].lower())
+        if street and street in title:
+            out.append(a["address"])
+    return out
+
+
+templates.env.filters["blurb"] = _blurb
+templates.env.filters["status_line"] = _status_line
+templates.env.filters["notice_parts"] = _notice_parts
+templates.env.filters["notice_addresses"] = _notice_addresses
 templates.env.filters["item_topic"] = lambda title: (title or "").split(" - ", 2)[2] if (title or "").count(" - ") >= 2 else ""
 
 
@@ -470,8 +527,13 @@ def item(request: Request, item_id: str):
     rec = record_or_404(item_id)
     pub = db.latest_publication(db.connect(DB_PATH), item_id)
     claims = pub["claims"] if pub else []
+    rules = agenda.load_rules()
+    quote_with = lambda word: next((q for q in rules.get("quotes", []) if word in q), None)   # the City's own words, never paraphrased
     return templates.TemplateResponse(request, "item.html", {"rec": rec, "claims": claims, "publication": pub,
-                                                             "summary": summary.for_residents(item_id, [c["sentence"] for c in claims])})
+                                                             "summary": summary.for_residents(item_id, [c["sentence"] for c in claims]),
+                                                             "rules": rules, "speak_rule": quote_with("register by"),
+                                                             "late_rule": quote_with("after a matter has been decided"),
+                                                             "public_rule": quote_with("public record")})
 
 
 @app.get("/items/{item_id}/print", response_class=HTMLResponse)
