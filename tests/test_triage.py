@@ -70,3 +70,39 @@ def test_check_meaning_maps_numbered_pairs_and_ignores_out_of_range():
 def test_triage_missing_result_falls_back_to_review():
     out = triage([claim("The site is on Queen Street."), claim("The site is on King Street.")], {0: OK})
     assert [t["lane"] for t in out] == ["ready", "review"]
+
+
+from civify.triage import build_confirm_prompt, check_confirm
+
+APPROVE = {"verdict": "approve", "neutral": True, "issue": "", "suggestion": ""}
+HOLD = {"verdict": "hold", "neutral": True, "issue": "drops the condition", "suggestion": "Approval is subject to conditions."}
+
+
+def test_auto_needs_both_ai_checks_and_never_covers_participation():
+    plain = claim("The site is on Queen Street.")
+    assert assign_lane(plain, OK, APPROVE) == ("ready", [])
+    lane, reasons = assign_lane(plain, OK, HOLD)
+    assert lane == "review" and "drops the condition" in reasons[0]
+    lane, _ = assign_lane(plain, {"verdict": "unsure", "neutral": True, "issue": ""}, APPROVE)
+    assert lane == "review"                                                   # meaning check must agree too
+    lane, _ = assign_lane(claim("Comments are accepted until Monday."), OK, APPROVE)
+    assert lane == "review"                                                   # taking part: always a person
+    out = triage([plain, plain, claim("x", verified=False, reason="quote not found")], {0: OK, 1: OK}, {0: APPROVE})
+    assert [t["auto"] for t in out] == [True, False, False]                  # no context check, no auto
+
+
+def test_context_check_can_clear_a_word_the_quote_lacks_but_not_a_meaning_flag():
+    c = {"sentence": "Staff recommend amending the plan.", "quote": "City Council amend the Official Plan for the site as set out.", "verified": True, "reason": "ok"}
+    assert assign_lane(c, OK, None)[0] == "review"
+    assert assign_lane(c, OK, APPROVE) == ("ready", [])                       # page says "City Planning recommends that"
+    assert assign_lane(c, {"verdict": "not_supported", "neutral": True, "issue": "x"}, APPROVE)[0] == "review"
+
+
+def test_confirm_prompt_skips_blocked_and_participation_and_maps_by_index():
+    claims = [claim("The site is on Queen Street."), claim("x", verified=False), claim("Comments close Monday.")]
+    ctx = [{"pages": "3", "before": "Intro. ", "match": "q" * 50, "after": " More."}, None, None]
+    prompt, sent = build_confirm_prompt(claims, ctx, {0: OK})
+    assert sent == [0] and "1. SENTENCE: The site is on Queen Street." in prompt and "[[" + "q" * 50 + "]]" in prompt
+    reply = json.dumps({"results": [dict(APPROVE, index=1), dict(APPROVE, index=3)]})
+    _, confirm = check_confirm(claims, ctx, {0: OK}, lambda p: reply)
+    assert set(confirm) == {0}                                                # reply for an unsent item is ignored
