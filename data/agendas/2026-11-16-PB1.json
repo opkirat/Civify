@@ -7,35 +7,40 @@
  "agenda_status": "Agenda Published",
  "items": [
   {
-   "id": "2026.PB1.1",
+   "id": "PB1.1",
+   "short_id": "PB1.1",
    "title": "8 Arnold Avenue - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
    "ward": "5",
    "notes": [],
-   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.1"
+   "official_url": null
   },
   {
-   "id": "2026.PB1.2",
+   "id": "PB1.2",
+   "short_id": "PB1.2",
    "title": "106 Beverley Street - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
    "ward": "10",
    "notes": [],
-   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.2"
+   "official_url": null
   },
   {
-   "id": "2026.PB1.3",
+   "id": "PB1.3",
+   "short_id": "PB1.3",
    "title": "66 Gerrard Street East - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
    "ward": "13",
    "notes": [],
-   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.3"
+   "official_url": null
   },
   {
-   "id": "2026.PB1.4",
+   "id": "PB1.4",
+   "short_id": "PB1.4",
    "title": "70 Gerrard Street East - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
    "ward": "13",
    "notes": [],
-   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.4"
+   "official_url": null
   },
   {
-   "id": "2026.PB1.5",
+   "id": "PB1.5",
+   "short_id": "PB1.5",
    "title": "19 Don Ridge Drive - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
    "ward": "15",
    "notes": [
@@ -52,14 +57,15 @@
      "note": "A communication was posted."
     }
    ],
-   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.5"
+   "official_url": null
   },
   {
-   "id": "2026.PB1.6",
+   "id": "PB1.6",
+   "short_id": "PB1.6",
    "title": "1337 Queen Street West - Demolition and New Construction on a Designated Heritage Property under Part V, Section 42 of the Ontario Heritage Act - Approval",
    "ward": "4",
    "notes": [],
-   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.6"
+   "official_url": null
   }
  ],
  "source": {

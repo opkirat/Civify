@@ -1,0 +1,119 @@
+[
+  {
+    "sentence": "City staff recommend that City Council state its intention to designate the property at 19 Don Ridge Drive under the Ontario Heritage Act.",
+    "quote": "This report recommends that City Council state its intention to designate the property at 19 Don Ridge Drive under Part IV, Section 29 of the Ontario Heritage Act",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "If there are no objections to the designation, staff recommend that City Council let the City Solicitor introduce the designating bill.",
+    "quote": "If there are no objections to the designation, City Council authorize the City Solicitor to introduce the Bill in Council designating the property under Part IV, Section 29 of the Ontario Heritage Act.",
+    "verified": true,
+    "reason": "ok",
+    "page": 3,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "The property at 19 Don Ridge Drive is known as St. John's York Mills Anglican Church and is on the east side of Yonge Street, north of York Mills Road, in North York.",
+    "quote": "The subject property at 19 Don Ridge Drive, known as St. John's York Mills Anglican Church, an active Place of Worship, is located on the east side of Yonge Street, north of York Mills Road, within the York Mills neighbourhood of North York.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "The property is located in Ward 15, Don Valley West.",
+    "quote": "Wards: 15 - Don Valley West",
+    "verified": false,
+    "reason": "quote is too short to count as evidence",
+    "page": null,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "This report focuses on the original 1843–44 church building, and not on later additions, other buildings, or the burial grounds.",
+    "quote": "The focus of this report is the original 1843–44 church structure, not any of its later additions, auxiliary structures, or the adjacent burial grounds.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "Staff recommend designating the property because it has cultural heritage value and meets five of the nine provincial criteria.",
+    "quote": "Staff have independently reviewed the research and heritage evaluations prepared by the Consultant and agree with the determination that the property at 19 Don Ridge Drive has cultural heritage value and meets five of the nine criteria as outlined by Ontario Regulation 9/06",
+    "verified": true,
+    "reason": "ok",
+    "page": 5,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "A property may be designated if it meets two or more of the nine criteria.",
+    "quote": "A property may be designated under Part IV, Section 29 of the Ontario Heritage Act, if it meets two or more of the nine criteria.",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "The church has design value as a Gothic Revival building designed by architect John George Howard in the 1840s.",
+    "quote": "The property at 19 Don Ridge Drive is a representative example of the Gothic Revival style of ecclesiastical architecture employed by the prominent architect John George Howard in the design and construction of several churches across Southern Ontario in the 1840s.",
+    "verified": true,
+    "reason": "ok",
+    "page": 7,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "The property has historical value for its direct links to the founding of the Anglican Church in Upper Canada and St. John’s York Mills parish.",
+    "quote": "The property at 19 Don Ridge Drive has historical value for its direct associations with the establishment of the Anglican Church within Upper Canada and the Town of York, and with the founding of St. John’s York Mills parish within the community of York Mills.",
+    "verified": true,
+    "reason": "ok",
+    "page": 7,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "The property has contextual value because it is historically linked to nearby heritage properties from a similar time period.",
+    "quote": "The property at 19 Don Ridge Drive has contextual value as it is historically linked to its surroundings, which include several properties that share a similar period of construction with St. John’s York Mills Anglican Church and that collectively relay the history of the community.",
+    "verified": true,
+    "reason": "ok",
+    "page": 8,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "Heritage designation allows City Council to review proposed changes or demolitions on the property and enforce maintenance standards.",
+    "quote": "Designation enables City Council to review proposed alterations or demolitions to the property and enforce heritage property standards and maintenance.",
+    "verified": true,
+    "reason": "ok",
+    "page": 3,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "The Anglican Diocese of Toronto confirmed that none of the identified heritage attributes are liturgical elements, which would be exempt from regulation while the congregation uses the property.",
+    "quote": "The Anglican Diocese of Toronto confirmed that while the structure is used for liturgical purposes none of the identified attributes were liturgical elements.",
+    "verified": true,
+    "reason": "ok",
+    "page": 3,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  },
+  {
+    "sentence": "There are no financial impacts for the City from the recommendations in this report.",
+    "quote": "There are no financial implications resulting from the recommendations included in this report in the current budget year or in future years.",
+    "verified": true,
+    "reason": "ok",
+    "page": 3,
+    "source_file": "backgroundfile-290992.pdf",
+    "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2"
+  }
+]

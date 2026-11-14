@@ -114,9 +114,11 @@ def main() -> int:
     ap.add_argument("--replay", action="store_true", help="reuse the saved model response instead of calling the API")
     args = ap.parse_args()
 
-    # Use the classifier to find the staff report, instead of trusting a filename.
-    report = next((d for d in map(extract, sorted(args.folder.glob("*.pdf")))
-                   if classify(d).doc_type is DocType.STAFF_REPORT), None)
+    # Use the classifier to find the staff report(s); when staff posted revisions, draft from the newest.
+    from civify.record import _sortable
+    reports = [(classify(d), d) for d in map(extract, sorted(args.folder.glob("*.pdf")))]
+    reports = [(c, d) for c, d in reports if c.doc_type is DocType.STAFF_REPORT]
+    report = max(reports, key=lambda cd: (_sortable(cd[0].fields.get("Date")), cd[1].filename))[1] if reports else None
     if report is None:
         print("no staff report found in that folder")
         return 1

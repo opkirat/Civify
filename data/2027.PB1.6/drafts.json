@@ -1,0 +1,101 @@
+[
+  {
+    "sentence": "The property at 1337 Queen Street West is located on the south side of Queen Street West between Dunn Avenue and Cowan Avenue.",
+    "quote": "The subject property at 1337 Queen Street West is an interior lot located between Dunn Avenue and Cowan Avenue on the south side of Queen Street West and is identified as the West Block of the Parkdale Hub project.",
+    "verified": true,
+    "reason": "ok",
+    "page": 3,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "This property is known as the West Block of the Parkdale Hub project and currently has a one-storey building on it.",
+    "quote": "The subject property at 1337 Queen Street West is an interior lot located between Dunn Avenue and Cowan Avenue on the south side of Queen Street West and is identified as the West Block of the Parkdale Hub project. The property contains an existing one-storey building.",
+    "verified": true,
+    "reason": "ok",
+    "page": 3,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "The proposal is to tear down the existing building and build a 16-storey mixed-use tower with a 4-storey podium.",
+    "quote": "Staff recommend approval of the heritage permit application for the demolition of the existing building on the non-contributing property to facilitate the construction of a new 16-storey mixed-use tower with a 4-storey podium for the West Block of the Parkdale Hub project.",
+    "verified": true,
+    "reason": "ok",
+    "page": 9,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "The new building will stay owned by the City and will include purpose-built affordable housing.",
+    "quote": "The proposed development is for the West Block of the Parkdale Hub project to erect a new 16-storey mixed-use tower with a 4-storey podium building that will include purpose-built affordable housing; and which will remain under ownership of the City.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "The demolition and new building are proposed to create new affordable rental housing, better community facilities, and updated public spaces.",
+    "quote": "The proposal for the West Block includes the demolition of the existing building identified as a non-contributing property within the PHCD to provide new affordable rental housing, improved community facilities, and modernized public spaces.",
+    "verified": true,
+    "reason": "ok",
+    "page": 4,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "City Council previously approved a heritage permit for this project on June 24 and 25, 2026.",
+    "quote": "A heritage permit for the project was previously approved on June 24 and 25, 2026, by City Council.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "The updated proposal raises the height of the 4-storey podium by 1.2m to allow for taller ceilings in the ground floor community space.",
+    "quote": "The revised proposal increases the height of the 4-storey podium building by 1.2m in order to increase the floor-to-ceiling heights within the ground floor community space.",
+    "verified": true,
+    "reason": "ok",
+    "page": 4,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "Because the revised proposal no longer follows policies 7.6.4 and 7.6.5 of the Parkdale Main Street Heritage Conservation District Plan, it needs a new Section 42 approval under the Ontario Heritage Act.",
+    "quote": "It also does not include a 5.0m step back for all portions of the new building that are taller than the adjacent contributing building as required under Policies 7.6.4. and 7.6.5  of the Parkdale HCD Plan. Consequently, as the proposal does not meet these policies, a new Section 42 approval under the Ontario Heritage Act is required.",
+    "verified": true,
+    "reason": "ok",
+    "page": 8,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "A separate minor variance application is also needed for the proposed changes.",
+    "quote": "A separate minor variance application is also required for the proposed revisions.",
+    "verified": true,
+    "reason": "ok",
+    "page": 4,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "City staff recommend that City Council approve the demolition and the construction of the new 16-storey building at 1337 Queen Street West.",
+    "quote": "1. City Council approve the demolition of the non-contributing building and the erection of a new 16-storey mixed-use building at 1337 Queen Street West, in the Parkdale Main Street Heritage Conservation District in accordance with subsections 42(1) 4 and 42(1) 2 of the Ontario Heritage Act, and subject to the following conditions:",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  },
+  {
+    "sentence": "This approval is subject to the condition that the replacement building is built substantially according to the plans by LGA Architectural Partners dated September 25, 2026.",
+    "quote": "a. That the replacement building for 1337 Queen Street West is constructed substantially in accordance with the plans and elevations prepared by LGA Architectural Partners dated September 25, 2026, on file with the Senior Manager, Heritage Planning.",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-290746.pdf",
+    "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+  }
+]

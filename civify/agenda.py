@@ -43,7 +43,8 @@ def _iso(text: str) -> str | None:
 
 
 def parse(path: Path, retrieved: str) -> dict:
-    text = extract(path).text if path.suffix.lower() == ".pdf" else _html_to_text(path.read_text(errors="ignore"))
+    raw = extract(path).text if path.suffix.lower() == ".pdf" else path.read_text(errors="ignore")
+    text = raw if path.suffix.lower() == ".pdf" else _html_to_text(raw)
     lines = [l.strip() for l in text.splitlines() if l.strip() and not _PRINT_NOISE.match(l.strip())]
 
     body = re.sub(r"\s*\(\d{4}-\d{4}\)$", "", lines[0]) if lines else None
@@ -51,13 +52,18 @@ def parse(path: Path, retrieved: str) -> dict:
     loc_idx = next((i for i, l in enumerate(lines) if _MEETING.match(l)), None)
     location = lines[loc_idx + 1] if loc_idx is not None and loc_idx + 1 < len(lines) else None
     status = next((l for l in lines if l in ("Agenda Published", "Agenda Not Yet Published", "Meeting Cancelled")), None)
-    year = meeting.group(1)[-4:] if meeting else str(dt.date.today().year)
+    # The meeting year is not necessarily the item year (November 2026 PB1
+    # items have 2027 IDs). Keep short IDs unless a saved source confirms one.
+    ids = re.findall(r"agenda-item\.do\?item=(\d{4}\.[A-Z]{2,4}\d+\.\d+)", raw.replace("\n", ""))
 
     items, cur = [], None
     for l in lines:
         if (m := _ITEM_ID.match(l)):
-            cur = {"id": f"{year}.{m.group(1)}", "title": "", "ward": None, "notes": [],
-                   "official_url": f"https://secure.toronto.ca/council/agenda-item.do?item={year}.{m.group(1)}"}
+            short_id = m.group(1)
+            matches = {i for i in ids if i.split(".", 1)[1] == short_id}
+            item_id = next(iter(matches)) if len(matches) == 1 else short_id
+            cur = {"id": item_id, "short_id": short_id, "title": "", "ward": None, "notes": [],
+                   "official_url": f"https://secure.toronto.ca/council/agenda-item.do?item={item_id}" if len(matches) == 1 else None}
             items.append(cur)
         elif cur is None:
             continue
@@ -115,8 +121,27 @@ def load_rules() -> dict:
     return json.loads(RULES_FILE.read_text()) if RULES_FILE.exists() else {"source": PARTICIPATE_URL, "retrieved": None, "quotes": []}
 
 
-def load_meetings() -> list[dict]:
-    return sorted((json.loads(p.read_text()) for p in AGENDAS.glob("*.json")), key=lambda m: m["meeting_date"] or "")
+def resolve_items(meeting: dict, records: list[dict]) -> dict:
+    """Join only when the short ID, body, meeting date and ward all agree."""
+    for item in meeting["items"]:
+        short_id = item.get("short_id") or re.sub(r"^\d{4}\.", "", item["id"])
+        matches = []
+        for rec in records:
+            nxt = rec.get("participation", {}).get("next_meeting") or {}
+            if (rec["item_id"].split(".", 1)[1] == short_id
+                    and nxt.get("body") == meeting["body"]
+                    and _iso(nxt.get("date", "")) == meeting["meeting_date"]
+                    and rec.get("ward") == item.get("ward")):
+                matches.append(rec)
+        if len(matches) == 1:
+            item.update(id=matches[0]["item_id"], official_url=matches[0]["official_url"],
+                        local_url=f"/items/{matches[0]['item_id']}")
+    return meeting
+
+
+def load_meetings(records: list[dict] | None = None) -> list[dict]:
+    return sorted((resolve_items(json.loads(p.read_text()), records or []) for p in AGENDAS.glob("*.json")),
+                  key=lambda m: m["meeting_date"] or "")
 
 
 def main() -> int:

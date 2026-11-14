@@ -72,7 +72,8 @@ def council_stage(text: str, src: dict) -> dict:
         "stage": "council_decision",
         "body": "City Council",
         "date": date.group(1) if date else None,
-        "outcome": section(text, "Tracking Status", "This item was considered"),
+        "outcome": next((line.strip() for line in (section(text, "Tracking Status", "This item was considered", "This item will be considered", "consideration on") or "").splitlines()
+                         if line.strip().startswith("City Council ")), None),
         "decision_text": decision,
         "motions": motions,
         "votes": votes,
@@ -81,31 +82,61 @@ def council_stage(text: str, src: dict) -> dict:
     }
 
 
+_CONSIDERATION = re.compile(r"^(.+?) consideration on ([A-Z][a-z]+ \d{1,2}(?: and \d{1,2})?, \d{4})$", re.M)
+
+
 def committee_stage(text: str, src: dict) -> dict:
-    head = section(text, "Toronto and East York Community Council consideration on", "Decision Type") or ""
-    status = re.search(r"Status:\s*(.+)", text)
-    recs = section(text, "Community Council Recommendations", "Decision Advice", "Origin")
-    meeting = section(text, "Decision Advice and Other Information", "Origin")
+    """The committee or board stage. Works for any body: the heading is
+    '<Body> consideration on <date>'. Before the meeting there is no decision yet."""
+    m = next((m for m in _CONSIDERATION.finditer(text) if "City Council" not in m.group(1)), None)
+    body, date = (m.group(1).strip(), m.group(2)) if m else (None, None)
+    block = text[m.end():] if m else ""
+    following = _CONSIDERATION.search(block)
+    if following:
+        block = block[:following.start()]
+    status = re.search(r"^Status:[ \t]*(.+)", block, re.M)
+    recs = None
+    if status:
+        for heading in (f"{body} Recommendations", "Community Council Recommendations", "Committee Recommendations", "Board Recommendations"):
+            recs = section(block, heading, "Decision Advice", "Origin")
+            if recs:
+                break
     return {
         "stage": "committee_decision",
-        "body": "Toronto and East York Community Council",
-        "date": head.split("\n")[0].strip() or None,
-        "status": status.group(1).strip() if status else None,
+        "body": body,
+        "date": date,
+        "status": status.group(1).strip() if status else ("pending" if date else None),
         "recommendations": recs,
-        "public_meeting": meeting,
+        "public_meeting": section(block, "Decision Advice and Other Information", "Origin"),
         "source": src,
     }
 
 
-def staff_stage(report: dict, recommendation: str | None) -> dict:
+def latest_report(reports: list[dict]) -> dict:
+    """Staff sometimes post revised reports; the newest dated one is the current recommendation."""
+    return max(reports, key=lambda r: (_sortable(r["fields"].get("Date")), r["filename"]))
+
+
+def _sortable(date_text: str | None) -> str:
+    m = re.match(r"([A-Z][a-z]+) (\d{1,2}), (\d{4})", date_text or "")
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    return f"{m.group(3)}-{months.index(m.group(1)) + 1:02d}-{int(m.group(2)):02d}" if m and m.group(1) in months else ""
+
+
+def staff_stage(reports: list[dict], recommendation: str | None, text: str) -> dict:
+    report = latest_report(reports)
     f = report["fields"]
+    ward = f.get("Ward") or (re.search(r"^Ward:\s*(.+)$", text, re.M) or [None, None])[1]
+    staff_recs = section(text, "Recommendations\n", "Summary", "Financial Impact")
     return {
         "stage": "staff_recommendation",
         "body": f.get("From"),
         "date": f.get("Date"),
-        "ward": f.get("Ward"),
+        "ward": ward,
         "application_number": f.get("Planning Application Number"),
         "summary": recommendation,
+        "recommendations": staff_recs,
+        "versions": [{"file": r["filename"], "date": r["fields"].get("Date")} for r in sorted(reports, key=lambda r: _sortable(r["fields"].get("Date")))],
         "source": {"file": report["filename"], "sha256": report["sha256"], "page": 1},
     }
 
@@ -127,17 +158,19 @@ def enacted_stage(bylaws: list[dict]) -> dict | None:
     }
 
 
-def participation(notice: dict | None, council: dict) -> dict:
-    """Quote the Clerk's rules; never compute a deadline. The only derived field is
-    whether Council has already decided, read from the Tracking Status line."""
+def participation(notice: dict | None, council: dict, text: str) -> dict:
+    """Quote the Clerk's rules; never compute a deadline. Derived fields are read from the
+    Tracking Status line only: whether Council has decided, and which meeting is next."""
     f = notice["fields"] if notice else {}
     decided = bool(council.get("outcome") and "adopted" in council["outcome"].lower())
+    nxt = re.search(r"This item will be considered by (.+?) on ([A-Z][a-z]+ \d{1,2}(?: and \d{1,2})?, \d{4})", text)
     return {
         "written_comments_rule": f.get("written_comments"),
         "speaker_registration_rule": f.get("speaker_registration"),
         "public_meeting": {k: f.get(k) for k in ("Date", "Time", "Place") if f.get(k)},
         "council_has_decided": decided,
-        "basis": council.get("outcome"),
+        "next_meeting": {"body": nxt.group(1), "date": nxt.group(2)} if nxt else None,
+        "basis": council.get("outcome") or (nxt.group(0) + "." if nxt else None),
         "source": {"file": notice["filename"], "sha256": notice["sha256"]} if notice else None,
         "note": "Staff must confirm current participation status on the official item page before publishing.",
     }
@@ -153,10 +186,11 @@ def build(folder: Path) -> dict:
     # The title is the line(s) immediately before "Decision Type:", e.g.
     # "TE34.21 - 191-199 College Street ... - Decision Report - Approval".
     short_id = item["item_id"].split(".", 1)[1]
-    title = re.search(rf"^({re.escape(short_id)} - .+?)\nDecision Type", text, re.M | re.S)
+    title = re.search(rf"^({re.escape(short_id)} - .+?)\n(?:Decision|Consideration) Type", text, re.M | re.S)
     council = council_stage(text, page_src)
+    reports = [d for d in item["documents"] if d["doc_type"] == DocType.STAFF_REPORT.value]
     stages = [
-        staff_stage(by_type[DocType.STAFF_REPORT.value], section(text, "Summary", "Background Information")),
+        staff_stage(reports, section(text, "Summary", "Background Information"), text),
         committee_stage(text, page_src),
         council,
     ]
@@ -177,9 +211,10 @@ def build(folder: Path) -> dict:
         "location": location,
         "retrieved": item["retrieved"],
         "official_url": f"https://secure.toronto.ca/council/agenda-item.do?item={item['item_id']}",
-        "current_stage": "enacted" if enacted else ("council_decision" if council.get("date") else "committee_decision"),
+        "current_stage": ("enacted" if enacted else "council_decision" if council.get("date")
+                          else "committee_decision" if stages[1]["status"] not in (None, "pending") else "staff_recommendation"),
         "stages": stages,
-        "participation": participation(by_type.get(DocType.PUBLIC_NOTICE.value), council),
+        "participation": participation(by_type.get(DocType.PUBLIC_NOTICE.value), council, text),
         "public_letters": sum(d["doc_type"] == DocType.PUBLIC_LETTER.value for d in item["documents"]),
         "claims": json.loads(drafts_path.read_text()) if drafts_path.exists() else [],
     }

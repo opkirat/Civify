@@ -20,6 +20,13 @@
       "ward": "11 - University-Rosedale",
       "application_number": "26 120321 STE 11 OZ",
       "summary": "This Report recommends approval of an application to amend Official Plan Amendment 731 and Site-\nSpecific Zoning By-law 1166-2025 to permit an increase in height from 31 to 45 storeys (90 to 158.5\nmetres, excluding mechanical penthouse), changes to the building massing, and an increase from 490\nto 684 residential dwelling units, including 545 affordable rental units.\n \nAn Official Plan Amendment is required to amend policies within Chapter 7 Site and Area Specific\nPolicy (SASP) 533 to reflect the revised building height.",
+      "recommendations": "The Toronto and East York Community Council recommends that:\n \n1. City Council amend the Official Plan for the lands municipally known as 191-199 College Street and\n74-76 Henry Street substantially in accordance with the draft Official Plan Amendment included as\nAttachment 7 to the report (June 19, 2026) from the Acting Director, Community Planning, Toronto and\nEast York District.\n \n2. City Council amend City of Toronto Zoning By-law 569-2013 for the lands municipally known as 191-\n199 College Street and 74-76 Henry Street substantially in accordance with the draft Zoning By-law\nAmendment included as Attachment 8 to the report (June 19, 2026) from the Acting Director,\nCommunity Planning, Toronto and East York District.\n \n3. City Council authorize the City Solicitor to make such stylistic and technical changes to the draft\nOfficial Plan Amendment and draft Zoning By-law Amendment as may be required.\n \n4. City Council authorize the City Solicitor to amend or replace the existing agreements related to the\ndwelling room replacement requirements, affordable housing provisions and the securing of additional\naffordable housing units, including:\na. the Dwelling Room Replacement and Tenant Relocation and Assistance Agreement to the\nsatisfaction of the Chief Planner and Executive Director, City Planning and the City Solicitor; and\nb. the Municipal Housing Project Facilities Agreement (the “Contribution Agreement”) with the\nHousing Secretariat to confirm the financial assistance being provided and set out the terms of\noperation of the affordable housing units, on terms and conditions satisfactory to the Executive\nDirector, Housing Secretariat, and in a form satisfactory to the City Solicitor.\n \n5. City Council request the Executive Director, Development Review to consider securing the following\nas part of the site plan agreement:\n \na. a Transportation Impact Study, in consultation with the community, that includes a traffic mitigation\nand loading strategy to limit the impacts",
+      "versions": [
+        {
+          "file": "backgroundfile-288412.pdf",
+          "date": "June 19, 2026"
+        }
+      ],
       "source": {
         "file": "backgroundfile-288412.pdf",
         "sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
@@ -132,6 +139,7 @@
       "Place": "Committee Room 1, Toronto City Hall and by Video Conference"
     },
     "council_has_decided": true,
+    "next_meeting": null,
     "basis": "City Council adopted this item on July 29 and 30, 2026 with amendments.",
     "source": {
       "file": "backgroundfile-288413.pdf",

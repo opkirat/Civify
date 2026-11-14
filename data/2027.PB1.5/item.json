@@ -1,0 +1,66 @@
+{
+  "item_id": "2027.PB1.5",
+  "retrieved": "2026-11-13",
+  "source_folder": "data/2027.PB1.5",
+  "documents": [
+    {
+      "filename": "Agenda_Item_History.pdf",
+      "sha256": "5c800cb08cbe8772f7d1038bba91c10bfbdbb6116bc5545d05074920e32b1737",
+      "pages": 3,
+      "doc_type": "item_page",
+      "author": "City Clerk (TMMIS)",
+      "evidence": "Item - 2027.PB1.5",
+      "fields": {
+        "item_id": "2027.PB1.5"
+      }
+    },
+    {
+      "filename": "backgroundfile-290750.pdf",
+      "sha256": "34ca0ab2f07f9e390b57ccce5eb72135090ea44e8acc8e15c579eb20f3011703",
+      "pages": 33,
+      "doc_type": "staff_report",
+      "author": "Senior Manager, Heritage Planning, Urban Design, City Planning",
+      "evidence": "REPORT FOR ACTION",
+      "fields": {
+        "Date": "October 28, 2026",
+        "To": "Toronto Preservation Board",
+        "From": "Senior Manager, Heritage Planning, Urban Design, City Planning"
+      }
+    },
+    {
+      "filename": "backgroundfile-290912.pdf",
+      "sha256": "59d5120be91ff12beb6db4745b947db4b4aaa916de0547fdc1024789d3973023",
+      "pages": 33,
+      "doc_type": "staff_report",
+      "author": "Senior Manager, Heritage Planning, Urban Design, City Planning",
+      "evidence": "REPORT FOR ACTION",
+      "fields": {
+        "Date": "November 9, 2026",
+        "To": "Toronto Preservation Board",
+        "From": "Senior Manager, Heritage Planning, Urban Design, City Planning"
+      }
+    },
+    {
+      "filename": "backgroundfile-290992.pdf",
+      "sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
+      "pages": 33,
+      "doc_type": "staff_report",
+      "author": "Senior Manager, Heritage Planning, Urban Design, City Planning",
+      "evidence": "REPORT FOR ACTION",
+      "fields": {
+        "Date": "November 13, 2026",
+        "To": "Toronto Preservation Board",
+        "From": "Senior Manager, Heritage Planning, Urban Design, City Planning"
+      }
+    },
+    {
+      "filename": "communicationfile-219215.pdf",
+      "sha256": "0403e4706f4e5f0e030860405c9b8adc78986cccbaeee1f9283d531188919083",
+      "pages": 1,
+      "doc_type": "public_letter",
+      "author": null,
+      "evidence": "City filename prefix 'communicationfile-'",
+      "fields": {}
+    }
+  ]
+}

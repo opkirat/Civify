@@ -15,15 +15,15 @@ def test_meeting_details_and_all_items_with_wards():
     assert m["body"] == "Toronto Preservation Board"
     assert (m["meeting_date"], m["meeting_time"], m["agenda_status"]) == ("2026-11-16", "9:30 AM", "Agenda Published")
     assert m["location"] == "Committee Room 1, City Hall/Video Conference"
-    assert [i["id"] for i in m["items"]] == [f"2026.PB1.{n}" for n in range(1, 7)]
+    assert [i["id"] for i in m["items"]] == [f"PB1.{n}" for n in range(1, 7)]
     assert [i["ward"] for i in m["items"]] == ["5", "10", "13", "13", "15", "4"]
     assert m["items"][5]["title"].startswith("1337 Queen Street West - Demolition and New Construction")
-    assert m["items"][5]["official_url"].endswith("item=2026.PB1.6")
+    assert m["items"][5]["official_url"] is None
 
 
 def test_posted_notes_are_captured_whole():
     item = parse(AGENDA, "x")["items"][4]
-    assert item["id"] == "2026.PB1.5" and len(item["notes"]) == 3
+    assert item["id"] == "PB1.5" and len(item["notes"]) == 3
     assert item["notes"][0]["date"] == "2026-11-10" and item["notes"][0]["note"].endswith("corrections were made to Pages 1 and 7.")
     assert item["notes"][2]["note"] == "A communication was posted."
 
