@@ -33,6 +33,12 @@ Each requirement is testable; the test column names the test that checks it. Sta
 | FR-21 | Staff pages and actions require sign-in with an individual account; resident pages stay public. | `test_staff_pages_and_actions_require_sign_in`, `test_auth.py` | ✅ |
 | FR-22 | Staff see each item's pipeline (documents → draft → source check → meaning check → review → published) and a linked list of exactly what needs a person. | `test_workflow.py`, `test_pipeline_view_lists_what_needs_a_person` | ✅ |
 
+| FR-23 | Workers upload one or more PDFs in the browser (drag-and-drop or file picker), see each file's size, pages, record type, OCR need and duplicate/version warnings, can remove or add files, confirm the item number, and start processing only once validation passes. | `test_intake.py` | ✅ |
+| FR-24 | A separate Processing page shows each pipeline step (queued, running, done, failed, blocked, skipped) with times, details and preliminary outputs, refreshes while running, and offers Retry from the failed or blocked step. Missing AI key or staff report shows as blocked, not failed. | `test_full_processing_run_then_review`, `test_missing_staff_report_blocks_and_retry_resumes`, `test_no_ai_key_is_shown_as_blocked_not_failed` | ✅ |
+| FR-25 | Residents see only a published, numbered version: a frozen snapshot of approved sentences. Later approvals wait for the next version; reviewer names and notes never reach residents. | `test_residents_see_nothing_until_staff_approve_and_publish`, `test_publishing_freezes_a_version_and_later_approvals_wait_for_the_next` | ✅ |
+| FR-26 | Workers can escalate a sentence with a required internal note; escalations are listed first on the dashboard and resolved by the next approve or reject. | `test_escalate_needs_a_note_stays_internal_and_resolves_on_decision` | ✅ |
+| FR-27 | The dashboard can be searched and filtered (needs review, blocked or failed, awaiting publishing, published, processing) and sorted; each item shows last update, who, and the next required action. | `test_dashboard_search_and_filters` | ✅ |
+
 ## Non-functional
 
 | ID | Requirement | How checked | Status |

@@ -30,6 +30,10 @@ Running log. Each entry says what the gap is, whether it fails safe, and what a 
 
 ## App
 
+- **Processing runs inside the web server process.** A run started from the browser executes as a background task. If the server stops mid-run, the job stays "running"; Retry resumes it from the unfinished step. A pilot would use a proper job queue.
+- **No assignment of items to workers.** The dashboard shows who last touched each item; assigning work, notifications and role-based permissions are pilot next steps.
+- **Uploads are validated, not virus-scanned.** Files must start with the PDF signature, are size-limited and are parsed in-process. A pilot should scan uploads and run parsing in an isolated worker.
+
 - **Staff sign-in is local accounts** (`civify/auth.py`: scrypt-hashed passwords, server-side sessions, 12-hour expiry). Real reviewer identity is now recorded on every decision and in an append-only audit log. A pilot would replace it with the City's single sign-on and add roles (e.g. who may publish vs. draft). No CSRF token is used; the session cookie is SameSite=Lax, which blocks cross-site form posts in current browsers.
 - **Approvals are bound to content.** A decision counts only for the exact sentence, quote and source file it was made on. Re-running the pipeline sends changed sentences back to review. Approvals made before this change have no content hash and no longer count.
 - **Amendment view is verbatim, not a semantic diff.** Staff and resident screens show Council motions and their text. There is no automatic plain-language comparison of versions.

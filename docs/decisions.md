@@ -87,3 +87,12 @@ The print route uses the resident approval gate and includes complete approved s
 ## D-14 · Approvals bound to content, with an append-only audit log
 
 **Why.** Reviews used to be keyed by claim position. Re-running the drafter could silently attach an old approval to a new sentence. Each decision now stores a hash of sentence + quote + source checksum; a mismatch sends the sentence back to review, and every decision is appended to an audit table that is never updated.
+
+## D-15 · Published versions instead of live approvals
+
+**Choice.** Approving a sentence no longer shows it to residents. A worker publishes a numbered version: a frozen copy of the approved sentences with their quotes and sources (no lanes, reasons, notes or reviewer names).
+**Why.** It gives the City one deliberate "this is what we're telling residents" moment per item, an exact record of what residents saw and when, and stops a half-reviewed item from leaking out sentence by sentence.
+
+## D-16 · Steps, not "agents"; reasons, not confidence scores; no assignment yet
+
+A review prompt asked for per-agent progress, numeric confidence and assigned workers. The pipeline has six steps, two of which use AI, so the Processing page shows those steps honestly rather than a fictional agent chain. A model-produced "87% confident" would be false precision; each sentence instead carries its lane and the plain-language reasons for it. Assignment adds accounts, notifications and permissions the hackathon doesn't need; the dashboard shows who last acted on each item.
