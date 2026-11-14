@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from civify import app as appmod
-from civify import auth, db
+from civify import auth, db, summary
 
 
 @pytest.fixture
@@ -20,3 +20,12 @@ def staff(client):
     r = client.post("/login", data={"username": "clerka", "password": "correct horse battery"}, follow_redirects=False)
     assert r.status_code == 303
     return client
+
+
+@pytest.fixture(autouse=True)
+def no_live_summaries(monkeypatch):
+    """Tests never call the model for summaries, and never write summary.json into data/."""
+    def offline(_prompt):
+        raise RuntimeError("no model in tests")
+    monkeypatch.setattr(summary, "WRITE_CALL", offline)
+    monkeypatch.setattr(summary, "CHECK_CALL", offline)

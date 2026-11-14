@@ -40,7 +40,7 @@ from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Resp
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from civify import agenda, auth, db, geo, intake, notices, pipeline, sms, source, workflow
+from civify import agenda, auth, db, geo, intake, notices, pipeline, sms, source, summary, workflow
 from civify.extract import extract
 from civify.verify import Verifier
 
@@ -393,7 +393,7 @@ def source_pdf(request: Request, item_id: str, filename: str):
 
 
 @app.post("/staff/{item_id}/approve-ready")
-def approve_ready(request: Request, item_id: str):
+def approve_ready(request: Request, item_id: str, background: BackgroundTasks):
     """One click for every sentence that passed all checks and hasn't been reviewed yet.
     Each one is re-verified against its source before it is saved."""
     user = staff_user(request)
@@ -407,7 +407,8 @@ def approve_ready(request: Request, item_id: str):
         if verifier_for(item_id, c["source_file"]).check(c["sentence"], c["quote"]).verified:
             db.save_review(con, item_id, c["index"], c, "approved", c["sentence"], user["name"])
             n += 1
-    db.sync_publication(con, rec, user["name"])
+    if db.sync_publication(con, rec, user["name"]):
+        background.add_task(summary.refresh_item, DB_PATH, item_id)
     return RedirectResponse(f"/staff/{item_id}?notice=Approved+{n}+sentence(s).+They+are+now+live+for+residents.#review", status_code=303)
 
 
@@ -423,7 +424,7 @@ def publish(request: Request, item_id: str):
 
 
 @app.post("/staff/{item_id}/{index}")
-def decide(request: Request, item_id: str, index: int, action: str = Form(...), sentence: str = Form(""), note: str = Form("")):
+def decide(request: Request, item_id: str, index: int, background: BackgroundTasks, action: str = Form(...), sentence: str = Form(""), note: str = Form("")):
     user = staff_user(request)
     rec = record_or_404(item_id)
     if not 0 <= index < len(rec["claims"]):
@@ -453,6 +454,7 @@ def decide(request: Request, item_id: str, index: int, action: str = Form(...), 
                }.get(action, "Approved. It is now live for residents.")
     if version:
         message += f" (Resident page updated to version {version}.)"
+        background.add_task(summary.refresh_item, DB_PATH, item_id)
     return RedirectResponse(f"/staff/{item_id}?notice={quote(message)}#review", status_code=303)
 
 
@@ -460,7 +462,9 @@ def decide(request: Request, item_id: str, index: int, action: str = Form(...), 
 def item(request: Request, item_id: str):
     rec = record_or_404(item_id)
     pub = db.latest_publication(db.connect(DB_PATH), item_id)
-    return templates.TemplateResponse(request, "item.html", {"rec": rec, "claims": pub["claims"] if pub else [], "publication": pub})
+    claims = pub["claims"] if pub else []
+    return templates.TemplateResponse(request, "item.html", {"rec": rec, "claims": claims, "publication": pub,
+                                                             "summary": summary.for_residents(item_id, [c["sentence"] for c in claims])})
 
 
 @app.get("/items/{item_id}/print", response_class=HTMLResponse)

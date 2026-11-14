@@ -10,9 +10,19 @@
 </div>
 <div class="detail-grid">
 <div>
-<section class="panel" id="explanation"><h2>What is proposed</h2>
-{% if claims %}<ol class="claim-list">{% for c in claims %}<li>{{ c.sentence }}<details><summary>Read the source · page {{ c.page }}</summary><blockquote>“{{ c.quote }}”<br><span class="source-file">{{ c.source_file }}, page {{ c.page }}</span></blockquote></details></li>{% endfor %}</ol><p class="muted">Version {{ publication.version }}, published {{ publication.published_at[:10] }}. Each sentence was checked against the official record before it was shown. Expand a source to check the evidence.</p>
-{% else %}<div class="empty-state"><p>No approved explanation yet. Staff are reviewing the drafts.</p><a href="{{ rec.official_url }}">Read the official item →</a></div>{% endif %}
+<section class="panel" id="explanation">
+{% if summary %}
+<div class="ai-summary">
+<div class="ai-summary-head"><h2>Summary</h2><span class="pill ai-pill">AI-generated</span></div>
+<p class="summary-copy">{% for x in summary.sentences %}{{ x.text }} {% endfor %}</p>
+<p class="ai-disclosure">This summary was written by AI from the {{ claims|length }} sentences below, each of which was checked against the City's official records. It was checked again by code and a second AI before being shown. It can leave out detail: the sentences and their sources, and the official item page, are the authority.</p>
+</div>
+<details class="summary-breakdown"><summary>See each sentence with its source ({{ claims|length }})</summary>
+{% else %}<h2>What the records say</h2>{% endif %}
+{% if claims %}<ol class="claim-list">{% for c in claims %}<li>{{ c.sentence }}<details><summary>Read the source · page {{ c.page }}</summary><blockquote>“{{ c.quote }}”<br><span class="source-file">{{ c.source_file }}, page {{ c.page }}</span></blockquote></details></li>{% endfor %}</ol>
+<p class="muted">Version {{ publication.version }}, published {{ publication.published_at[:10] }}. Each sentence was written in plain language by AI and checked against the official record: the quote must appear in the document and every number must match. Sentences the checks were unsure about were reviewed by City staff.</p>
+{% else %}<div class="empty-state"><p>No explanation yet. The records are being checked.</p><a href="{{ rec.official_url }}">Read the official item →</a></div>{% endif %}
+{% if summary %}</details>{% endif %}
 </section>
 {% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
 {% if council.motions %}<details class="panel"><summary>What changed at Council</summary><p class="muted">These motions show the changes considered at Council, in the record’s own words.</p>{% for m in council.motions %}<details class="fold"><summary>{{ m.motion }} · {{ m.result }}</summary><p class="muted">Moved by {{ m.moved_by }}</p><blockquote style="white-space:pre-line">{{ m.text }}</blockquote></details>{% endfor %}</details>{% endif %}

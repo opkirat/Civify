@@ -34,7 +34,7 @@
   <blockquote>“{{ c.quote }}” — {{ c.source_file }}, page {{ c.page }}</blockquote>
 </li>{% endfor %}</ol>
 <p class="muted">These sentences passed quote and number checks and were approved by a named reviewer. Reviewer identity is not authenticated in this demo.</p>
-{% else %}<p>No approved explanation yet. Staff are reviewing the drafts.</p>{% endif %}
+{% else %}<p>No explanation yet. Staff are reviewing the drafts.</p>{% endif %}
 <div class="notice-qr"><img src="/items/{{ rec.item_id }}/qr.svg" alt="QR code linking to the official City item page">
 <div><strong>Read the official record</strong><p>Scan for the City's item page and current participation information.</p><p class="source-url"><a href="{{ rec.official_url }}">{{ rec.official_url }}</a></p></div></div>
 <p class="muted">Civify prototype · This is a summary of saved records, not an official City notice. Proposals, conditions and participation opportunities may have changed.</p>

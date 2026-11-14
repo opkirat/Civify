@@ -17,11 +17,11 @@ def test_index_lists_the_item(client):
 
 
 def test_approving_puts_a_sentence_live_straight_away(staff):
-    assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
+    assert "No explanation yet" in staff.get(f"/items/{ITEM}").text
     r = staff.post(f"/staff/{ITEM}/1", data={"action": "approve"}, follow_redirects=False)
     assert "now%20live" in r.headers["location"] and "version%201" in r.headers["location"]
     page = staff.get(f"/items/{ITEM}").text
-    assert "31 storeys to 45 storeys" in page and "Version 1, published" in page and "No approved explanation yet" not in page
+    assert "31 storeys to 45 storeys" in page and "Version 1, published" in page and "No explanation yet" not in page
     assert "Clerk A" not in page                                                       # reviewer names stay internal
 
 
@@ -34,7 +34,7 @@ def test_rejected_claim_never_shows_and_reviewer_comes_from_login(staff):
 def test_edit_is_rechecked_against_the_quote(staff):
     bad = staff.post(f"/staff/{ITEM}/1", data={"action": "edit", "sentence": "The height goes from 31 to 54 storeys."}, follow_redirects=False)
     assert bad.status_code == 303 and "Not+saved" in bad.headers["location"] and "54" in bad.headers["location"]
-    assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
+    assert "No explanation yet" in staff.get(f"/items/{ITEM}").text
     staff.post(f"/staff/{ITEM}/1", data={"action": "edit", "sentence": "The building would go from 31 to 45 storeys."})
     assert "The building would go from 31 to 45 storeys." in staff.get(f"/items/{ITEM}").text
 
@@ -56,7 +56,7 @@ def test_staff_pages_and_actions_require_sign_in(client):
     assert r.status_code == 303 and "/login" in r.headers["location"]
     r = client.post(f"/staff/{ITEM}/approve-ready", follow_redirects=False)
     assert "/login" in r.headers["location"]
-    assert "No approved explanation yet" in client.get(f"/items/{ITEM}").text   # nothing slipped through
+    assert "No explanation yet" in client.get(f"/items/{ITEM}").text   # nothing slipped through
     assert client.get("/").status_code == 200 and client.get(f"/items/{ITEM}").status_code == 200  # residents unaffected
 
 
@@ -175,7 +175,7 @@ def test_every_decision_makes_a_new_frozen_version(staff):
     page = staff.get(f"/items/{ITEM}").text
     assert rec["claims"][2]["sentence"] not in page and "Version 3" in page
     staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})               # last one gone: page goes back to empty
-    assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
+    assert "No explanation yet" in staff.get(f"/items/{ITEM}").text
     staff.post(f"/staff/{ITEM}/1", data={"action": "escalate", "note": "x"})
     assert db.latest_publication(db.connect(appmod.DB_PATH), ITEM)["version"] == 4   # escalating publishes nothing
 
@@ -254,3 +254,20 @@ def test_citywide_item_shows_for_every_ward(client, monkeypatch):
     for ward in ("1", "25"):
         page = client.get("/near", params={"ward": ward}).text
         assert "City-wide" in page and "/items/2026.CC38.1" in page
+
+
+def test_resident_page_shows_labelled_ai_summary_over_verified_sentences(staff, monkeypatch, tmp_path):
+    from civify import summary
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
+    rec = db.load_record(ITEM)
+    live = rec["claims"][1]["sentence"]
+    page = staff.get(f"/items/{ITEM}").text
+    assert "AI-generated" not in page and live in page                              # no summary yet: sentences shown directly
+    monkeypatch.setattr(summary, "path_for", lambda item_id: tmp_path / "summary.json")
+    (tmp_path / "summary.json").write_text(json.dumps({"status": "ok", "based_on": [live],
+        "sentences": [{"text": "A plain summary of the change.", "uses": [live]}], "issues": []}))
+    page = staff.get(f"/items/{ITEM}").text
+    assert "AI-generated" in page and "A plain summary of the change." in page and "written by AI" in page
+    assert "See each sentence with its source (1)" in page and live in page
+    staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})                        # its source is gone: summary withdrawn
+    assert "A plain summary of the change." not in staff.get(f"/items/{ITEM}").text

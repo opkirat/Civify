@@ -22,7 +22,7 @@ from datetime import date
 from pathlib import Path
 from typing import Callable
 
-from civify import db, fetch, intake, record, triage
+from civify import db, fetch, intake, record, summary, triage
 from civify.classify import DocType, classify
 from civify.draft import draft, load_env
 from civify.extract import extract
@@ -34,7 +34,7 @@ STEPS = [
     ("classify", "Classify documents"),
     ("draft", "Draft summary and check sources (AI + code)"),
     ("meaning", "Two AI checks: meaning, then in context"),
-    ("record", "Build the record, approve and publish what passed"),
+    ("record", "Build the record, publish what passed, write the AI summary"),
 ]
 
 # Swappable in tests; None means "call the real model".
@@ -185,6 +185,9 @@ def step_record(j, folder):
     n = db.auto_approve(con, rec)
     version = db.sync_publication(con, rec, db.AUTO_REVIEWER)
     live = f" · version {version} live for residents" if version else ""
+    pub = db.latest_publication(con, rec["item_id"])
+    s = summary.refresh(rec["item_id"], [c["sentence"] for c in pub["claims"]]) if pub else None
+    live += " · AI summary " + ({"ok": "ready", "held": "held back by its checks"}[s["status"]] if s else "not made")
     return f"{rec['item_id']} · stage: {rec['current_stage'].replace('_', ' ')} · {'city-wide' if rec.get('citywide') else 'ward ' + str(rec.get('ward') or '?')} · {n} sentence(s) approved automatically{live}", \
         {"title": rec["title"], "stage": rec["current_stage"], "auto_approved": n, "version": version}, "done"
 

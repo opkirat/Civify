@@ -309,3 +309,13 @@ button[disabled] { opacity:.5; cursor:not-allowed; }
  .address-search-row button { min-height:48px; }
  .location-search { margin-bottom:32px; }
 }
+
+/* Resident AI summary: labelled, with the verified sentences one tap away. */
+.ai-summary-head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.ai-summary-head h2 { margin:0; }
+.ai-pill { background:#eef0fb; color:#3b3f8f; border:1px solid #d6d9f3; font-weight:600; }
+.summary-copy { font-size:1.12rem; line-height:1.75; margin:16px 0 10px; }
+.ai-disclosure { font-size:.85rem; color:var(--muted); border-left:3px solid #d6d9f3; padding:4px 0 4px 12px; margin:0; }
+.summary-breakdown { border-top:1px solid var(--line); padding-top:18px; margin-top:22px; }
+.summary-breakdown > summary { color:var(--ok); font-weight:650; cursor:pointer; }
+.summary-breakdown .claim-list { margin-top:18px; }
