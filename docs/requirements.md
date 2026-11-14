@@ -28,7 +28,7 @@ Each requirement is testable; the test column names the test that checks it. Sta
 | FR-20 | Pending items remain staff recommendations; revised reports use the latest dated source. | `test_pending_records_choose_latest_report`, `test_latest_report_uses_date_not_filename_order` | ✅ |
 | FR-21 | Public notices preserve Clerk text and participation wording. | `test_notices.py`, `test_near_lists_public_notices_and_notice_page_quotes_the_clerk` | ✅ |
 
-| FR-19 | Each sentence is routed to a lane: **blocked** (code check failed; cannot be approved as written), **review** (states a decision, condition, uncertainty or deadline, or the meaning check is not a clean "supported"), or **ready**. If the meaning check is missing or fails, sentences go to review. | `test_triage.py`, `test_staff_page_groups_sentences_by_lane_with_reasons` | ✅ |
+| FR-19 | Each sentence is routed to a lane: **blocked** (code check failed; cannot be approved as written), **review** (about taking part or a deadline; or states a decision, condition or uncertainty that the quoted passage does not; or the meaning check is not a clean "supported"), or **ready**. If the meaning check is missing or fails, sentences go to review. | `test_triage.py`, `test_risk_words_echoed_by_the_passage_do_not_need_a_person`, `test_staff_page_groups_sentences_by_lane_with_reasons` | ✅ |
 | FR-20 | Staff publish every ready sentence with one click; each is re-verified before it is saved. | `test_approve_ready_publishes_only_ready_sentences` | ✅ |
 | FR-21 | Staff pages and actions require sign-in with an individual account; resident pages stay public. | `test_staff_pages_and_actions_require_sign_in`, `test_auth.py` | ✅ |
 | FR-22 | Staff see each item's pipeline (documents → draft → source check → meaning check → review → published) and a linked list of exactly what needs a person. | `test_workflow.py`, `test_pipeline_view_lists_what_needs_a_person` | ✅ |
@@ -38,6 +38,7 @@ Each requirement is testable; the test column names the test that checks it. Sta
 | FR-25 | Residents see only a published, numbered version: a frozen snapshot of approved sentences. Later approvals wait for the next version; reviewer names and notes never reach residents. | `test_residents_see_nothing_until_staff_approve_and_publish`, `test_publishing_freezes_a_version_and_later_approvals_wait_for_the_next` | ✅ |
 | FR-26 | Workers can escalate a sentence with a required internal note; escalations are listed first on the dashboard and resolved by the next approve or reject. | `test_escalate_needs_a_note_stays_internal_and_resolves_on_decision` | ✅ |
 | FR-27 | The dashboard can be searched and filtered (needs review, blocked or failed, awaiting publishing, published, processing) and sorted; each item shows last update, who, and the next required action. | `test_dashboard_search_and_filters` | ✅ |
+| FR-28 | Every sentence under review shows where its quote sits in the source: the page's own text with the quote highlighted, and a link that opens the PDF at that page. Source PDFs are served to signed-in staff only. | `test_source.py`, `test_review_cards_link_to_the_pdf_page_and_show_the_quote_in_context` | ✅ |
 
 ## Non-functional
 

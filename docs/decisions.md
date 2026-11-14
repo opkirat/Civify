@@ -76,7 +76,7 @@ The print route uses the resident approval gate and includes complete approved s
 
 **Choice.** Keep the drafter, add one second model call per item that judges each sentence against its own quote, plus plain-code risk rules. Route sentences into ready / review / blocked lanes.
 **Alternatives.** (a) A four-agent pipeline (curator, validator, impact & personalisation, engagement guide). (b) Send every sentence to a person (status quo). (c) Publish ready sentences with no human action.
-**Trade-off.** (a) adds cost, latency and failure points; its "impact level" and demographic matching would put AI judgement on political decisions and need personal data, against the brief's neutrality and data-minimisation constraints; stages and participation are already read from the record, so an engagement agent would only add risk. (b) was the friction staff asked us to remove: on the real items, 18 of 43 sentences are now ready for one-click publishing. (c) removes the one human signature the brief's "checked against the records" rule relies on; one click per item keeps it nearly frictionless. The meaning check fails safe: if it errors or isn't run, everything goes to review.
+**Trade-off.** (a) adds cost, latency and failure points; its "impact level" and demographic matching would put AI judgement on political decisions and need personal data, against the brief's neutrality and data-minimisation constraints; stages and participation are already read from the record, so an engagement agent would only add risk. (b) was the friction staff asked us to remove: on the real items, 18 of 43 sentences were ready for one-click approval under the first rule, 31 of 43 under D-17. (c) removes the one human signature the brief's "checked against the records" rule relies on; one click per item keeps it nearly frictionless. The meaning check fails safe: if it errors or isn't run, everything goes to review.
 
 ## D-13 · Local accounts with server-side sessions
 
@@ -96,3 +96,15 @@ The print route uses the resident approval gate and includes complete approved s
 ## D-16 · Steps, not "agents"; reasons, not confidence scores; no assignment yet
 
 A review prompt asked for per-agent progress, numeric confidence and assigned workers. The pipeline has six steps, two of which use AI, so the Processing page shows those steps honestly rather than a fictional agent chain. A model-produced "87% confident" would be false precision; each sentence instead carries its lane and the plain-language reasons for it. Assignment adds accounts, notifications and permissions the hackathon doesn't need; the dashboard shows who last acted on each item.
+
+## D-17 · Risk words need a person only when the passage doesn't echo them
+
+**Choice.** The code risk rules first sent any sentence containing a decision, condition or hedge word to a person. Now those words route to a person only when the quoted passage has no word of the same kind: "must" with no requirement in the passage, "may" with no hedge, "recommend" with no recommendation. Taking part and deadlines still always go to a person. The AI meaning check still has to say "supported".
+**Alternatives.** (a) Keep the strict rule (24 of 43 real sentences waited for a person, most of them "Staff recommend…" beside a passage that says "recommends"). (b) Drop the risk rules and trust the meaning check alone.
+**Trade-off.** (a) is the friction workers complained about and it buries the few real problems among routine ones. (b) leaves a single model judgement between a sentence and residents on the details that change what a resident does. The echo rule is deterministic and explainable on the card ("states a condition that the source passage does not"); on the real items, every sentence it leaves in review is one the meaning check also flagged or one that attributes a recommendation the passage doesn't make.
+
+## D-18 · Lead the reviewer to the passage, don't just name the page
+
+**Choice.** Each card shows the page's own text around the quote with the quote highlighted, and a link that opens the PDF at that page. The excerpt comes from the same extracted text the verifier searched, with headers and footers removed; matching tolerates line breaks, hyphenation, dashes and curly quotes but is otherwise exact.
+**Alternatives.** (a) Name the file and page and leave the reviewer to open the PDF and search. (b) Embed a PDF viewer with coordinates highlighted.
+**Trade-off.** (a) is what the first version did; reviewers told us it made every check a hunt. (b) needs text-position extraction and a viewer, and still breaks on scanned pages. The excerpt gives the surrounding paragraph in one glance, and the PDF link covers the cases where layout matters.

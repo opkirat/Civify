@@ -32,6 +32,7 @@ Running log. Each entry says what the gap is, whether it fails safe, and what a 
 
 - **Processing runs inside the web server process.** A run started from the browser executes as a background task. If the server stops mid-run, the job stays "running"; Retry resumes it from the unfinished step. A pilot would use a proper job queue.
 - **No assignment of items to workers.** The dashboard shows who last touched each item; assigning work, notifications and role-based permissions are pilot next steps.
+- **The in-context excerpt is extracted text, not the page image.** Tables and multi-column layouts can read out of order, and a quote that straddles two pages shows as one run of text. The link to the PDF at that page is the authority when layout matters; `#page=N` is honoured by the built-in PDF viewers in Chrome, Edge, Firefox and Safari.
 - **Uploads are validated, not virus-scanned.** Files must start with the PDF signature, are size-limited and are parsed in-process. A pilot should scan uploads and run parsing in an isolated worker.
 
 - **Staff sign-in is local accounts** (`civify/auth.py`: scrypt-hashed passwords, server-side sessions, 12-hour expiry). Real reviewer identity is now recorded on every decision and in an append-only audit log. A pilot would replace it with the City's single sign-on and add roles (e.g. who may publish vs. draft). No CSRF token is used; the session cookie is SameSite=Lax, which blocks cross-site form posts in current browsers.
