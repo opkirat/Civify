@@ -176,6 +176,18 @@ def participation(notice: dict | None, council: dict, text: str) -> dict:
     }
 
 
+def with_triage(claims: list[dict], path: Path) -> list[dict]:
+    """Attach lane, reasons and meaning-check result from triage.json, matched by index and sentence."""
+    if not path.exists():
+        return claims
+    by_index = {t["index"]: t for t in json.loads(path.read_text())}
+    out = []
+    for i, c in enumerate(claims):
+        t = by_index.get(i)
+        out.append({**c, "lane": t["lane"], "reasons": t["reasons"], "meaning": t["meaning"]} if t and t["sentence"] == c["sentence"] else c)
+    return out
+
+
 def build(folder: Path) -> dict:
     item = json.loads((folder / "item.json").read_text())
     by_type = {d["doc_type"]: d for d in item["documents"]}
@@ -216,7 +228,7 @@ def build(folder: Path) -> dict:
         "stages": stages,
         "participation": participation(by_type.get(DocType.PUBLIC_NOTICE.value), council, text),
         "public_letters": sum(d["doc_type"] == DocType.PUBLIC_LETTER.value for d in item["documents"]),
-        "claims": json.loads(drafts_path.read_text()) if drafts_path.exists() else [],
+        "claims": with_triage(json.loads(drafts_path.read_text()) if drafts_path.exists() else [], folder / "triage.json"),
     }
 
 

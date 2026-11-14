@@ -1,0 +1,232 @@
+[
+ {
+  "index": 0,
+  "sentence": "The site is at the southwest corner of College Street and Henry Street, covering about 1,617 square metres.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 1,
+  "sentence": "The application proposes to increase the approved building height from 31 storeys to 45 storeys.",
+  "lane": "review",
+  "reasons": [
+   "states a recommendation or decision"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 2,
+  "sentence": "The proposal increases the total number of residential units from 490 to 684, which includes 545 affordable rental units.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 3,
+  "sentence": "The proposal adds 137 affordable two-bedroom rental units, which would have affordable rents for 40 years.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 4,
+  "sentence": "The 137 additional affordable units may qualify for financial incentives from the City, such as waived fees and charges.",
+  "lane": "review",
+  "reasons": [
+   "states uncertainty"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 5,
+  "sentence": "The proposed building will also include 1,931 square metres of retail space on the first three levels.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 6,
+  "sentence": "The development will continue to provide 12 replacement rental dwelling rooms, and eligible tenants would keep the right to return at similar rents.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 7,
+  "sentence": "The designated heritage properties on the site are to be kept and built into the new development.",
+  "lane": "review",
+  "reasons": [
+   "states a recommendation or decision"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 8,
+  "sentence": "The proposal includes 6 vehicle parking spaces at ground level.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 9,
+  "sentence": "A total of 695 bicycle parking spaces are proposed for the building.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 10,
+  "sentence": "An Official Plan Amendment is needed to change Site and Area Specific Policy 533 to allow the new building height.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 11,
+  "sentence": "A Zoning By-law Amendment is needed to change Exception CR 1010 to allow the increased density, height, massing, and other standards.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 12,
+  "sentence": "Staff recommend that City Council amend the Official Plan for 191-199 College Street and 74-76 Henry Street.",
+  "lane": "review",
+  "reasons": [
+   "states a recommendation or decision"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 13,
+  "sentence": "Staff recommend that City Council amend Zoning By-law 569-2013 for the site.",
+  "lane": "review",
+  "reasons": [
+   "states a recommendation or decision"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 14,
+  "sentence": "Staff recommend that City Council allow the City Solicitor to update or replace existing agreements for dwelling room replacement and affordable housing.",
+  "lane": "review",
+  "reasons": [
+   "states a recommendation or decision"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 15,
+  "sentence": "Staff recommend putting a holding provision on the Zoning By-law until the Functional Servicing and Stormwater Management Report is revised, reviewed, and accepted.",
+  "lane": "review",
+  "reasons": [
+   "states a recommendation or decision"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 16,
+  "sentence": "If the accepted servicing report shows that new or upgraded municipal infrastructure is needed, the owner must secure it with financial securities or build it before the holding provision is removed.",
+  "lane": "review",
+  "reasons": [
+   "states a condition or requirement"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 17,
+  "sentence": "The owner must pay cash-in-lieu for parkland dedication before the first above-ground building permit is issued.",
+  "lane": "review",
+  "reasons": [
+   "states a condition or requirement"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ },
+ {
+  "index": 18,
+  "sentence": "Nine new City street trees are proposed to be planted, and cash-in-lieu will be required if it is not physically possible to plant all required replacement trees.",
+  "lane": "review",
+  "reasons": [
+   "states a condition or requirement",
+   "states uncertainty"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  }
+ }
+]

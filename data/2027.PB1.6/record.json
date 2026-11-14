@@ -82,7 +82,14 @@
       "reason": "ok",
       "page": 3,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      }
     },
     {
       "sentence": "This property is known as the West Block of the Parkdale Hub project and currently has a one-storey building on it.",
@@ -91,7 +98,14 @@
       "reason": "ok",
       "page": 3,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      }
     },
     {
       "sentence": "The proposal is to tear down the existing building and build a 16-storey mixed-use tower with a 4-storey podium.",
@@ -100,7 +114,14 @@
       "reason": "ok",
       "page": 9,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      }
     },
     {
       "sentence": "The new building will stay owned by the City and will include purpose-built affordable housing.",
@@ -109,7 +130,14 @@
       "reason": "ok",
       "page": 1,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      }
     },
     {
       "sentence": "The demolition and new building are proposed to create new affordable rental housing, better community facilities, and updated public spaces.",
@@ -118,7 +146,16 @@
       "reason": "ok",
       "page": 4,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "review",
+      "reasons": [
+        "meaning check: not supported (The passage only mentions the demolition of the existing building, not the new building.)"
+      ],
+      "meaning": {
+        "verdict": "not_supported",
+        "neutral": true,
+        "issue": "The passage only mentions the demolition of the existing building, not the new building."
+      }
     },
     {
       "sentence": "City Council previously approved a heritage permit for this project on June 24 and 25, 2026.",
@@ -127,7 +164,16 @@
       "reason": "ok",
       "page": 1,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "review",
+      "reasons": [
+        "states a recommendation or decision"
+      ],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      }
     },
     {
       "sentence": "The updated proposal raises the height of the 4-storey podium by 1.2m to allow for taller ceilings in the ground floor community space.",
@@ -136,7 +182,14 @@
       "reason": "ok",
       "page": 4,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      }
     },
     {
       "sentence": "Because the revised proposal no longer follows policies 7.6.4 and 7.6.5 of the Parkdale Main Street Heritage Conservation District Plan, it needs a new Section 42 approval under the Ontario Heritage Act.",
@@ -145,7 +198,17 @@
       "reason": "ok",
       "page": 8,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "review",
+      "reasons": [
+        "states a recommendation or decision",
+        "meaning check: not supported (The passage refers to the 'Parkdale HCD Plan', whereas the sentence expands it to 'Parkdale Main Street Heritage Conservation District Plan' which is not in this passage.)"
+      ],
+      "meaning": {
+        "verdict": "not_supported",
+        "neutral": true,
+        "issue": "The passage refers to the 'Parkdale HCD Plan', whereas the sentence expands it to 'Parkdale Main Street Heritage Conservation District Plan' which is not in this passage."
+      }
     },
     {
       "sentence": "A separate minor variance application is also needed for the proposed changes.",
@@ -154,7 +217,14 @@
       "reason": "ok",
       "page": 4,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      }
     },
     {
       "sentence": "City staff recommend that City Council approve the demolition and the construction of the new 16-storey building at 1337 Queen Street West.",
@@ -163,7 +233,17 @@
       "reason": "ok",
       "page": 2,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "review",
+      "reasons": [
+        "states a recommendation or decision",
+        "meaning check: not supported (The passage does not explicitly state that 'City staff recommend' this action, and the sentence omits that the approval is subject to conditions.)"
+      ],
+      "meaning": {
+        "verdict": "not_supported",
+        "neutral": true,
+        "issue": "The passage does not explicitly state that 'City staff recommend' this action, and the sentence omits that the approval is subject to conditions."
+      }
     },
     {
       "sentence": "This approval is subject to the condition that the replacement building is built substantially according to the plans by LGA Architectural Partners dated September 25, 2026.",
@@ -172,7 +252,17 @@
       "reason": "ok",
       "page": 2,
       "source_file": "backgroundfile-290746.pdf",
-      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c"
+      "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
+      "lane": "review",
+      "reasons": [
+        "states a recommendation or decision",
+        "states a condition or requirement"
+      ],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      }
     }
   ]
 }
