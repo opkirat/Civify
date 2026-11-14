@@ -9,7 +9,8 @@ Routes (staff routes require sign-in; resident routes are public)
   GET  /staff/intake, POST ...   upload PDFs, validate them, confirm the item, start processing
   GET  /staff/processing/{job}   watch each pipeline step run; preliminary outputs; retry
   POST /staff/{item_id}/publish  freeze the current approvals as the next version residents see
-  GET  /staff/{item_id}          review screen, sorted by lane: needs a look, blocked, ready
+  GET  /staff/{item_id}          review screen: sentences that need a person, each beside the passage in context
+  GET  /staff/{item_id}/source/{file}   the source PDF itself (open at a page with #page=N)
   POST /staff/{item_id}/approve-ready   publish every "ready" sentence in one click
   POST /staff/{item_id}/{index}  save one decision
   GET  /items/{item_id}          resident view: approved claims only
@@ -33,11 +34,11 @@ import segno
 
 from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, Request, UploadFile
 from urllib.parse import quote
-from fastapi.responses import HTMLResponse, RedirectResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from civify import agenda, auth, db, geo, intake, notices, pipeline, workflow
+from civify import agenda, auth, db, geo, intake, notices, pipeline, source, workflow
 from civify.extract import extract
 from civify.verify import Verifier
 
@@ -53,9 +54,14 @@ templates.env.filters["item_name"] = lambda title: (title or "Untitled item").sp
 templates.env.filters["item_topic"] = lambda title: (title or "").split(" - ", 2)[2] if (title or "").count(" - ") >= 2 else ""
 
 
+@lru_cache(maxsize=32)
+def document_for(item_id: str, filename: str):
+    return extract(db.DATA / item_id / filename)
+
+
 @lru_cache(maxsize=16)
 def verifier_for(item_id: str, filename: str) -> Verifier:
-    return Verifier(extract(db.DATA / item_id / filename))
+    return Verifier(document_for(item_id, filename))
 
 
 def record_or_404(item_id: str) -> dict:
@@ -275,7 +281,8 @@ def staff(request: Request, item_id: str):
     rows = []
     for c in workflow.lanes(rec):
         raw = reviews.get(c["index"])
-        rows.append({**c, "review": db.current_review(raw, c), "stale": raw is not None and db.current_review(raw, c) is None})
+        ctx = source.locate(document_for(item_id, c["source_file"]), c["quote"], c.get("page")) if c.get("source_file") else None
+        rows.append({**c, "review": db.current_review(raw, c), "stale": raw is not None and db.current_review(raw, c) is None, "context": ctx})
     groups = {
         "review": [r for r in rows if not r["review"] and r["lane"] == "review"],
         "blocked": [r for r in rows if not r["review"] and r["lane"] == "blocked"],
@@ -297,6 +304,16 @@ def staff(request: Request, item_id: str):
                                                               "error": request.query_params.get("error"), "notice": request.query_params.get("notice")})
 
 
+@app.get("/staff/{item_id}/source/{filename}")
+def source_pdf(request: Request, item_id: str, filename: str):
+    """The PDF a quote came from, for the reviewer's own eyes. Opened with #page=N by the review screen."""
+    staff_user(request)
+    path = db.DATA / item_id / filename
+    if "/" in filename or filename.startswith(".") or path.suffix.lower() != ".pdf" or not path.is_file():
+        raise HTTPException(404, "no such source file")
+    return FileResponse(path, media_type="application/pdf", headers={"Content-Disposition": f'inline; filename="{filename}"'})
+
+
 @app.post("/staff/{item_id}/approve-ready")
 def approve_ready(request: Request, item_id: str):
     """One click for every sentence that passed all checks and hasn't been reviewed yet.
@@ -312,7 +329,7 @@ def approve_ready(request: Request, item_id: str):
         if verifier_for(item_id, c["source_file"]).check(c["sentence"], c["quote"]).verified:
             db.save_review(con, item_id, c["index"], c, "approved", c["sentence"], user["name"])
             n += 1
-    return RedirectResponse(f"/staff/{item_id}?notice=Published+{n}+ready+sentence(s)", status_code=303)
+    return RedirectResponse(f"/staff/{item_id}?notice=Approved+{n}+ready+sentence(s).+Publish+when+you+are+ready.#review", status_code=303)
 
 
 @app.post("/staff/{item_id}/publish")
@@ -351,7 +368,8 @@ def decide(request: Request, item_id: str, index: int, action: str = Form(...), 
         db.save_review(con, item_id, index, claim, "approved", final, user["name"], note)
     else:
         raise HTTPException(400, "unknown action")
-    return RedirectResponse(f"/staff/{item_id}#claim-{index}", status_code=303)
+    message = "Second opinion requested." if action == "escalate" else "Review saved. It will appear to residents only after publishing."
+    return RedirectResponse(f"/staff/{item_id}?notice={quote(message)}#review", status_code=303)
 
 
 @app.get("/items/{item_id}", response_class=HTMLResponse)

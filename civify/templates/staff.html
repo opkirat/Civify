@@ -1,86 +1,42 @@
-{% extends "base.html" %}
+{% extends "staff_base.html" %}
 {% from 'staff_parts.html' import pipeline_strip, signed_in, claim_card %}
 {% block title %}Staff review · {{ rec.item_id }}{% endblock %}
+{% block head_extra %}{{ super() }}<script defer src="{{ url_for('static', path='/staff-review.js') }}"></script>{% endblock %}
 {% block body %}
-<div class="page-head">
-  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/staff">Staff workspace</a><span aria-hidden="true">/</span><span>{{ rec.item_id }}</span></nav>
-  <p class="eyebrow">Review before publishing</p>
-  <h1>{{ rec.title|item_name }}</h1>
-  <p class="lead">{{ rec.title|item_topic }}</p>
-  {{ signed_in(user) }}
-  <div class="actions"><a class="button" href="/items/{{ rec.item_id }}">Preview resident view →</a><a class="button" href="{{ rec.official_url }}">Official item page ↗</a></div>
-</div>
-
+{{ signed_in(user) }}
+<nav class="breadcrumb" aria-label="Breadcrumb"><a href="/staff">← Work queue</a><span aria-hidden="true">/</span><span>{{ rec.item_id }}</span></nav>
+<div class="worker-heading"><div><h1>{{ rec.title|item_name }}</h1><p class="lead">Read the sentence beside its source. Approve it, edit it, or reject it.</p></div><a href="/items/{{ rec.item_id }}">Resident view ↗</a></div>
 {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
 {% if notice %}<p class="success" role="status">{{ notice }}</p>{% endif %}
-
-{{ pipeline_strip(pipeline.steps) }}
-
+{% set pending = (groups.escalated + groups.blocked + groups.review)|unique(attribute='index')|list %}
+<div class="review-progress"><span><strong>{{ groups.done|length }} of {{ rec.claims|length }}</strong> reviewed</span><progress value="{{ groups.done|length }}" max="{{ rec.claims|length or 1 }}" aria-label="Sentences reviewed"></progress><a href="#publish">Publishing ↓</a></div>
+{% if groups.ready %}
+<section id="ready" class="panel ready-panel"><div><h2>{{ groups.ready|length }} sentence{{ 's' if groups.ready|length != 1 }} passed every check</h2>
+<p class="muted">The quote was found in the report, every number matches, and a second AI read found the passage fully supports the wording. They don't state anything the passage doesn't.</p>
+<details class="fold"><summary>Skim them</summary>{% for r in groups.ready %}{{ claim_card(rec, r) }}{% endfor %}</details></div>
+<form method="post" action="/staff/{{ rec.item_id }}/approve-ready"><button class="primary" type="submit">Approve all {{ groups.ready|length }}</button></form></section>
+{% endif %}
+<section id="review" aria-labelledby="review-heading">
+<div class="review-heading"><h2 id="review-heading">{{ (pending|length ~ ' sentence' ~ ('s' if pending|length != 1) ~ ' need a person') if pending else 'Nothing needs a person' }}</h2><span class="muted">Each one shows why, and where it sits in the source. Approving saves your review; publishing makes it public.</span></div>
+{% if pending %}
+<div id="review-controls" class="review-controls" hidden><div><span id="review-position" role="status" aria-live="polite"></span><label class="visually-hidden" for="sentence-picker">Choose a sentence</label><select id="sentence-picker"></select></div><div class="actions"><button id="previous-sentence" type="button">← Previous</button><button id="next-sentence" type="button">Next sentence →</button></div></div>
+<div class="review-deck">{% for r in pending %}{{ claim_card(rec, r) }}{% endfor %}</div>
+{% else %}<div class="empty-state"><h3>{{ 'Approve the ready sentences above, then publish.' if groups.ready else 'Your review is complete.' }}</h3><p>Check the approved changes below before publishing them for residents.</p></div>{% endif %}
+</section>
 <section id="publish" class="panel publish-panel">
-  <div class="section-heading"><div>
-    <p class="eyebrow">What residents see</p>
-    {% if publication %}<h2>Version {{ publication.version }} is live</h2>
-      <p class="muted">Published {{ publication.published_at[:16].replace('T', ' ') }} by {{ publication.published_by }} · {{ publication.claims|length }} sentences.</p>
-    {% else %}<h2>Nothing is published yet</h2><p class="muted">Residents see the stages and official links, but no explanation, until you publish.</p>{% endif %}
-    {% if changes.added or changes.removed %}<p><strong>{{ changes.added }}</strong> approved sentence(s) to add{% if changes.removed %}, <strong>{{ changes.removed }}</strong> to remove{% endif %} in the next version.</p>{% endif %}
-  </div>
-  {% if changes.added or changes.removed %}<form method="post" action="/staff/{{ rec.item_id }}/publish"><button class="primary" type="submit">Publish version {{ (publication.version + 1) if publication else 1 }}</button></form>{% endif %}
-  </div>
-</section>
-
-<div class="lane-summary">
-  {% if groups.escalated %}<a href="#escalated" class="lane-count review"><strong>{{ groups.escalated|length }}</strong> escalated</a>{% endif %}
-  <a href="#review" class="lane-count review"><strong>{{ groups.review|length }}</strong> need a look</a>
-  <a href="#blocked" class="lane-count blocked"><strong>{{ groups.blocked|length }}</strong> blocked</a>
-  <a href="#ready" class="lane-count ready"><strong>{{ groups.ready|length }}</strong> ready</a>
-  <a href="#done" class="lane-count done"><strong>{{ groups.done|length }}</strong> decided</a>
-</div>
-
-<details class="fold">
-  <summary>How sentences are sorted</summary>
-  <p><strong>Ready</strong>: the quote was found in the report, every number matches, a second AI check found the quote fully supports the sentence, and the sentence doesn't state a decision, condition, uncertainty or deadline. Publish these together.</p>
-  <p><strong>Needs a look</strong>: any of those checks raised something. The reasons are listed on each one. Code cannot judge meaning, and the AI check can be wrong, so you decide.</p>
-  <p><strong>Blocked</strong>: the quote wasn't found or a number doesn't match. It can't be approved as written: edit it so it passes, or reject it.</p>
-</details>
-
-{% if groups.escalated %}
-<section id="escalated" class="lane-section">
-  <h2>Escalated ({{ groups.escalated|length }})</h2>
-  <p class="muted">A reviewer asked for a second opinion. Approving or rejecting resolves the escalation.</p>
-  {% for r in groups.escalated %}{{ claim_card(rec, r) }}{% endfor %}
-</section>
-{% endif %}
-
-<section id="review" class="lane-section">
-  <h2>Needs a look ({{ groups.review|length }})</h2>
-  {% for r in groups.review %}{{ claim_card(rec, r) }}{% else %}<p class="muted">Nothing here.</p>{% endfor %}
-</section>
-
-{% if groups.blocked %}
-<section id="blocked" class="lane-section">
-  <h2>Blocked ({{ groups.blocked|length }})</h2>
-  {% for r in groups.blocked %}{{ claim_card(rec, r) }}{% endfor %}
-</section>
-{% endif %}
-
-<section id="ready" class="lane-section">
-  <div class="section-heading"><div><h2>Ready ({{ groups.ready|length }})</h2><p class="muted">Passed every check. Skim them, then publish together.</p></div>
-  {% if groups.ready %}<form method="post" action="/staff/{{ rec.item_id }}/approve-ready"><button class="primary" type="submit">Approve all {{ groups.ready|length }} ready</button></form>{% endif %}</div>
-  {% if groups.ready %}
-  <details class="fold"><summary>Show the {{ groups.ready|length }} ready sentences</summary>
-    {% for r in groups.ready %}{{ claim_card(rec, r) }}{% endfor %}
-  </details>
-  {% else %}<p class="muted">Nothing here.</p>{% endif %}
-</section>
-
-{% if groups.done %}
-<section id="done" class="lane-section">
-  <details class="fold"><summary>Decided ({{ groups.done|length }})</summary>
-    {% for r in groups.done %}{{ claim_card(rec, r) }}{% endfor %}
-  </details>
-</section>
-{% endif %}
-
+<div class="publish-summary"><div><h2>{{ 'Ready to publish your changes?' if changes.added or changes.removed else 'Publishing' }}</h2>
+{% if publication %}<p class="muted">Version {{ publication.version }} is live · {{ publication.claims|length }} sentences.</p>{% else %}<p class="muted">Nothing is published yet. Residents will see the explanation after you publish.</p>{% endif %}
+{% if changes.added or changes.removed %}<p>{{ changes.added }} approved sentence(s) to add{% if changes.removed %}, {{ changes.removed }} to remove{% endif %}.</p>{% endif %}
+{% if pending and changes.approved %}<p class="muted">{{ pending|length }} sentences still need review. Publishing includes only your {{ changes.approved }} approved sentences.</p>{% endif %}</div>
+{% if (changes.added or changes.removed) and changes.approved %}<form method="post" action="/staff/{{ rec.item_id }}/publish"><button class="primary" type="submit">Publish version {{ (publication.version + 1) if publication else 1 }}</button></form>{% elif changes.removed %}<p class="warn">No approved sentences remain. Publishing an empty explanation is not supported; the existing version is still live.</p>{% endif %}
+</div></section>
+{% if groups.done %}<details class="fold" id="done"><summary>Reviewed sentences ({{ groups.done|length }})</summary>{% for r in groups.done %}{{ claim_card(rec, r) }}{% endfor %}</details>{% endif %}
+<details class="fold"><summary>How sentences are sorted</summary>
+<p><strong>Passed every check</strong>: the quote was found in the report, every number matches, the AI meaning check found the passage fully supports the sentence, and any decision, condition or hedge in the sentence is also in the passage. Approve them together.</p>
+<p><strong>Needs a person</strong>: the meaning check disagreed or was unsure, the sentence says something the passage doesn't (a "must", a "may", a recommendation), or it is about taking part or a deadline. Those always get a person.</p>
+<p><strong>Source check failed</strong>: the quote wasn't found or a number doesn't match. Edit it so it passes, or reject it.</p>
+<p>Checks help you review; they do not replace your judgement.</p></details>
+<details class="fold worker-record"><summary>Record details and history</summary><p>{{ rec.title|item_topic }}</p><p><a href="{{ rec.official_url }}">Official item page ↗</a></p>{{ pipeline_strip(pipeline.steps) }}
 <details class="fold">
   <summary>Who residents are matched to</summary>
   <p>Residents see this item when they search <strong>Ward {{ rec.ward or 'not recorded' }}</strong>{% if rec.location %}, and by distance from <strong>{{ rec.location.address }}</strong> (located with the City's address service){% endif %}. Matching uses only ward and distance; no resident data is stored.</p>
@@ -88,11 +44,11 @@
 
 <details class="fold">
   <summary>History ({{ history|length }} most recent)</summary>
-  <table class="history"><thead><tr><th>When (UTC)</th><th>Who</th><th>Action</th><th>Sentence</th><th>Note</th></tr></thead><tbody>
+  <div class="table-wrap"><table class="history"><thead><tr><th>When (UTC)</th><th>Who</th><th>Action</th><th>Sentence</th><th>Note</th></tr></thead><tbody>
   {% for h in history %}<tr><td>{{ h.at[:16].replace('T', ' ') }}</td><td>{{ h.reviewer }}</td><td>{{ h.action }}</td>
     <td>{% if h.claim_index >= 0 %}{{ h.claim_index + 1 }}{% else %}—{% endif %}</td><td>{{ h.note or '' }}</td></tr>
   {% else %}<tr><td colspan="5" class="muted">No decisions yet.</td></tr>{% endfor %}
-  </tbody></table>
+  </tbody></table></div>
 </details>
 
 {% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
@@ -126,5 +82,6 @@
   <div>Council has decided: <strong>{{ 'yes' if rec.participation.council_has_decided else 'no' }}</strong></div>
   {% if rec.participation.next_meeting %}<p>Next meeting in the record: {{ rec.participation.next_meeting.body }} · {{ rec.participation.next_meeting.date }}. This is not a submission deadline.</p>{% endif %}
   <p class="muted">{{ rec.participation.note }}</p>
+</details>
 </details>
 {% endblock %}

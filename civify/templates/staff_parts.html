@@ -13,10 +13,7 @@
 
 {% macro signed_in(user) %}
 <div class="staff-bar">
-  <nav class="staff-nav-tabs" aria-label="Staff sections">
-    <a href="/staff">Dashboard</a><a href="/staff/intake">Add documents</a><a href="/staff/processing">Processing</a>
-  </nav>
-  <form method="post" action="/logout" class="signed-in"><span class="muted">Signed in as <strong>{{ user.name }}</strong></span><button class="small" type="submit">Sign out</button></form>
+  <form method="post" action="/logout" class="signed-in"><span class="muted">{{ user.name }}</span><button class="small" type="submit">Sign out</button></form>
 </div>
 {% endmacro %}
 
@@ -25,34 +22,42 @@
 {% endmacro %}
 
 {% macro claim_card(rec, r) %}
-<section class="claim lane-{{ r.lane }} {{ r.review.status if r.review }}" id="claim-{{ r.index }}" aria-labelledby="s{{ r.index }}">
+<section class="claim lane-{{ r.lane }} {{ r.review.status if r.review }}" id="claim-{{ r.index }}" aria-labelledby="s{{ r.index }}" data-sentence="{{ r.index + 1 }}">
   <div class="claim-head" id="s{{ r.index }}">
     <strong>Sentence {{ r.index + 1 }}</strong>
     {% if r.review %}<span class="pill decided">{{ r.review.status|capitalize }} by {{ r.review.reviewer }} · {{ r.review.reviewed_at[:16].replace('T', ' ') }}</span>
-    {% elif r.lane == 'blocked' %}<span class="pill warning">Blocked</span>
-    {% elif r.lane == 'review' %}<span class="pill warning">Needs a look</span>
-    {% else %}<span class="pill proposed">Ready</span>{% endif %}
+    {% elif r.lane == 'blocked' %}<span class="pill warning">Source check failed</span>
+    {% elif r.lane == 'review' %}<span class="pill warning">Needs your review</span>
+    {% else %}<span class="pill proposed">Checks passed</span>{% endif %}
     {% if r.stale %}<span class="pill warning">Changed since last review</span>{% endif %}
     {% if r.escalation %}<span class="pill warning">Escalated by {{ r.escalation.raised_by }}</span>{% endif %}
   </div>
   {% if r.escalation %}<p class="escalation-note"><strong>Internal note:</strong> “{{ r.escalation.note }}”</p>{% endif %}
-  {% if r.reasons and not r.review %}<ul class="reasons">{% for reason in r.reasons %}<li>{{ reason }}</li>{% endfor %}</ul>{% endif %}
+  {% if r.reasons and not r.review %}<details class="check-reasons" {% if r.lane == 'blocked' %}open{% endif %}><summary>{{ 'Why this needs fixing' if r.lane == 'blocked' else 'Why this needs review' }}</summary><ul class="reasons">{% for reason in r.reasons %}<li>{{ reason }}</li>{% endfor %}</ul></details>{% endif %}
   <div class="review-columns">
-    <div><p class="eyebrow">Resident explanation</p><p>{{ r.review.sentence if r.review else r.sentence }}</p></div>
-    <div><p class="eyebrow">Supporting source</p>
-      <blockquote>“{{ r.quote }}” <span class="muted">— {{ r.source_file }}{% if r.page %}, page {{ r.page }}{% endif %}</span></blockquote></div>
+    <div><p class="eyebrow">What residents will read</p><p class="draft-sentence">{{ r.review.sentence if r.review else r.sentence }}</p></div>
+    <div><p class="eyebrow">What the source says</p>
+      <blockquote>“{{ r.quote }}”</blockquote>
+      <p class="source-line"><span class="muted">{{ r.source_file }}{% if r.page %}, page {{ r.page }}{% endif %}</span>
+        {% if r.page %}<a href="/staff/{{ rec.item_id }}/source/{{ r.source_file }}#page={{ r.page }}" target="_blank" rel="noopener">Open the PDF at page {{ r.page }} ↗</a>
+        {% else %}<a href="/staff/{{ rec.item_id }}/source/{{ r.source_file }}" target="_blank" rel="noopener">Open the PDF ↗</a>{% endif %}</p>
+      {% if r.context %}<details class="in-context" {% if r.lane != 'ready' and not r.review %}open{% endif %}><summary>Read it in context (page {{ r.context.pages }})</summary>
+        <p class="excerpt">{{ r.context.before }}<mark>{{ r.context.match }}</mark>{{ r.context.after }}</p></details>
+      {% elif r.lane == 'blocked' %}<p class="muted">The quote could not be found in the file as extracted, so there is nothing to highlight. Open the PDF to check by hand.</p>{% endif %}</div>
   </div>
   <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
-    <label class="note-field">Internal note (optional; required to escalate; never shown to residents)
-      <input type="text" name="note" maxlength="500"></label>
-    {% if r.lane != 'blocked' %}<button class="primary" name="action" value="approve">Approve as written</button>{% endif %}
+    {% if r.lane != 'blocked' %}<button class="primary" name="action" value="approve">Approve sentence</button>{% endif %}
     <button name="action" value="reject">Reject</button>
-    {% if not r.escalation %}<button name="action" value="escalate">Escalate</button>{% endif %}
     <details {% if r.lane == 'blocked' %}open{% endif %}>
       <summary>Edit, then approve</summary>
       <textarea name="sentence" rows="2" aria-label="Edited sentence">{{ r.review.sentence if r.review else r.sentence }}</textarea>
       <button name="action" value="edit">Approve edited sentence</button>
-      <span class="muted">Your edit is re-checked against the same quote; a number the quote doesn't contain is refused.</span>
+      <span class="muted">Your edit is checked against the same source before saving.</span>
+    </details>
+    <details class="review-notes">
+      <summary>Add a note{% if not r.escalation %} or ask for a second opinion{% endif %}</summary>
+      <label class="note-field">Internal note <span class="muted">— not shown to residents</span><input type="text" name="note" maxlength="500"></label>
+      {% if not r.escalation %}<button name="action" value="escalate">Ask for a second opinion</button><p class="muted">Add a note explaining what needs checking. This escalates the sentence without approving it.</p>{% endif %}
     </details>
   </form>
 </section>

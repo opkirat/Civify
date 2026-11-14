@@ -1,5 +1,6 @@
 """Web app tests: the approval gate and the edit re-check, on the real TE34.21 record."""
 
+import json
 from pathlib import Path
 
 import pytest
@@ -82,7 +83,7 @@ def test_approve_ready_publishes_only_ready_sentences(staff):
     other = [c for c in rec["claims"] if c.get("lane") != "ready"]
     assert ready and other
     r = staff.post(f"/staff/{ITEM}/approve-ready", follow_redirects=False)
-    assert f"Published+{len(ready)}+ready" in r.headers["location"]
+    assert f"Approved+{len(ready)}+ready" in r.headers["location"]
     staff.post(f"/staff/{ITEM}/publish")
     page = staff.get(f"/items/{ITEM}").text
     assert all(c["sentence"] in page for c in ready)
@@ -91,7 +92,7 @@ def test_approve_ready_publishes_only_ready_sentences(staff):
 
 def test_staff_page_groups_sentences_by_lane_with_reasons(staff):
     t = staff.get(f"/staff/{ITEM}").text
-    assert "Needs a look (" in t and "Ready (" in t and "Approve all" in t
+    assert "need a person" in t and "passed every check" in t and "Approve all" in t
     assert "states a recommendation or decision" in t
     assert "Documents saved" in t and "Meaning check" in t
 
@@ -183,11 +184,11 @@ def test_escalate_needs_a_note_stays_internal_and_resolves_on_decision(staff):
     assert "Add+a+note" in r.headers["location"]
     staff.post(f"/staff/{ITEM}/1", data={"action": "escalate", "note": "Check the storey count with planning"})
     t = staff.get(f"/staff/{ITEM}").text
-    assert "Escalated (1)" in t and "Check the storey count with planning" in t
+    assert "Escalated by" in t and "Check the storey count with planning" in t
     assert "Check the storey count" in staff.get("/staff").text                      # shows on the dashboard
     staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
     staff.post(f"/staff/{ITEM}/publish")
-    assert "Escalated (" not in staff.get(f"/staff/{ITEM}").text
+    assert "Escalated by" not in staff.get(f"/staff/{ITEM}").text
     assert "Check the storey count" not in staff.get(f"/items/{ITEM}").text          # notes never reach residents
 
 
@@ -198,3 +199,18 @@ def test_dashboard_search_and_filters(staff):
     staff.post(f"/staff/{ITEM}/1", data={"action": "approve"}); staff.post(f"/staff/{ITEM}/publish")
     t = staff.get("/staff", params={"show": "published"}).text
     assert "191-199 College Street" in t and "Version 1 live" in t
+
+
+def test_review_cards_link_to_the_pdf_page_and_show_the_quote_in_context(staff):
+    page = staff.get(f"/staff/{ITEM}").text
+    assert f"/staff/{ITEM}/source/" in page and "#page=" in page
+    assert "<mark>" in page and "Read it in context" in page
+    rec = json.loads((Path("data") / ITEM / "record.json").read_text())
+    c = next(c for c in rec["claims"] if c.get("verified"))
+    r = staff.get(f"/staff/{ITEM}/source/{c['source_file']}")
+    assert r.status_code == 200 and r.headers["content-type"] == "application/pdf" and r.content[:4] == b"%PDF"
+    assert staff.get(f"/staff/{ITEM}/source/..%2F..%2Fcivify.db").status_code == 404
+    assert staff.get(f"/staff/{ITEM}/source/record.json").status_code == 404
+    staff.post("/logout")                                        # signed out: the PDF is staff-only
+    r = staff.get(f"/staff/{ITEM}/source/{c['source_file']}", follow_redirects=False)
+    assert r.status_code == 303 and r.headers["location"].startswith("/login")

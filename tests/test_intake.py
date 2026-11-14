@@ -78,7 +78,7 @@ def test_full_processing_run_then_review(staff, tmp_data):
     assert "11 sentences" in j["steps"][3]["detail"]
     rec = json.loads((tmp_data / "2027.PB1.6" / "record.json").read_text())
     assert rec["item_id"] == "2027.PB1.6" and len(rec["claims"]) == 11 and all("lane" in c for c in rec["claims"])
-    assert "Ready (" in staff.get("/staff/2027.PB1.6").text
+    assert "passed every check" in staff.get("/staff/2027.PB1.6").text
 
 
 def test_missing_staff_report_blocks_and_retry_resumes(staff, tmp_data, monkeypatch):
