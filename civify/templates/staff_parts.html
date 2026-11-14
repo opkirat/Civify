@@ -25,8 +25,9 @@
 <section class="claim lane-{{ r.lane }} {{ r.review.status if r.review }}" id="claim-{{ r.index }}" aria-labelledby="s{{ r.index }}" data-sentence="{{ r.index + 1 }}">
   <div class="claim-head" id="s{{ r.index }}">
     <strong>Sentence {{ r.index + 1 }}</strong>
-    {% if r.review and r.review.reviewer == 'auto-check' %}<span class="pill proposed">Approved automatically · all checks agreed</span>
-    {% elif r.review %}<span class="pill decided">{{ r.review.status|capitalize }} by {{ r.review.reviewer }} · {{ r.review.reviewed_at[:16].replace('T', ' ') }}</span>
+    {% if r.review and r.review.reviewer == 'auto-check' %}<span class="pill proposed">Live · approved automatically (all checks agreed)</span>
+    {% elif r.review and r.review.status == 'approved' %}<span class="pill proposed">Live · approved by {{ r.review.reviewer }} · {{ r.review.reviewed_at[:16].replace('T', ' ') }}</span>
+    {% elif r.review %}<span class="pill decided">Rejected by {{ r.review.reviewer }} · {{ r.review.reviewed_at[:16].replace('T', ' ') }}</span>
     {% elif r.lane == 'blocked' %}<span class="pill warning">Source check failed</span>
     {% elif r.lane == 'review' %}<span class="pill warning">Needs your review</span>
     {% else %}<span class="pill proposed">Checks passed</span>{% endif %}
@@ -51,12 +52,12 @@
     <p class="eyebrow">Suggested wording, from the AI check that read the whole page</p>
     <p class="draft-sentence">{{ r.confirm.suggestion }}</p>
     <input type="hidden" name="sentence" value="{{ r.confirm.suggestion }}">
-    <button class="primary" name="action" value="edit">Approve suggested wording</button>
+    <button class="primary" name="action" value="edit">Approve suggested wording (goes live)</button>
     <span class="muted">Checked against the same quote before saving; refused if it adds a number the quote doesn't have.</span>
   </form>
   {% endif %}
   <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
-    {% if r.lane != 'blocked' %}<button class="primary" name="action" value="approve">Approve sentence</button>{% endif %}
+    {% if r.lane != 'blocked' and not (r.review and r.review.status == 'approved') %}<button class="primary" name="action" value="approve">Approve (goes live)</button>{% endif %}
     <button name="action" value="reject">Reject</button>
     <details {% if r.lane == 'blocked' %}open{% endif %}>
       <summary>Edit, then approve</summary>

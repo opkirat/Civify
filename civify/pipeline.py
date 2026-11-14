@@ -6,7 +6,7 @@ preliminary output, so the Processing page can show real progress and a Retry
 button can resume from the step that failed.
 
 Steps: save files → fetch linked records → classify → draft + source check (AI)
-       → two AI checks (meaning, then in context) → build record + auto-approve
+       → two AI checks (meaning, then in context) → build record, approve and publish what passed
 
 AI output is reused automatically when nothing it depends on has changed
 (same staff report for drafting; same sentences for the meaning check), so
@@ -34,7 +34,7 @@ STEPS = [
     ("classify", "Classify documents"),
     ("draft", "Draft summary and check sources (AI + code)"),
     ("meaning", "Two AI checks: meaning, then in context"),
-    ("record", "Build the record and auto-approve"),
+    ("record", "Build the record, approve and publish what passed"),
 ]
 
 # Swappable in tests; None means "call the real model".
@@ -181,9 +181,12 @@ def step_meaning(j, folder):
 def step_record(j, folder):
     rec = record.build(folder)
     (folder / "record.json").write_text(json.dumps(rec, indent=2, ensure_ascii=False))
-    n = db.auto_approve(db.connect(j["db_path"]), rec)
-    return f"{rec['item_id']} · stage: {rec['current_stage'].replace('_', ' ')} · ward {rec.get('ward') or '?'} · {n} sentence(s) auto-approved", \
-        {"title": rec["title"], "stage": rec["current_stage"], "auto_approved": n}, "done"
+    con = db.connect(j["db_path"])
+    n = db.auto_approve(con, rec)
+    version = db.sync_publication(con, rec, db.AUTO_REVIEWER)
+    live = f" · version {version} live for residents" if version else ""
+    return f"{rec['item_id']} · stage: {rec['current_stage'].replace('_', ' ')} · ward {rec.get('ward') or '?'} · {n} sentence(s) approved automatically{live}", \
+        {"title": rec["title"], "stage": rec["current_stage"], "auto_approved": n, "version": version}, "done"
 
 
 def _live_call(kind: str):
@@ -199,13 +202,15 @@ STEP_FUNCS = {"save": step_save, "fetch": step_fetch, "classify": step_classify,
 
 
 def main() -> int:
-    """Auto-approve an item that was processed from the command line:
+    """Approve and publish what passed every check, for an item processed from the command line:
     python -m civify.pipeline data/2027.PB1.6"""
     import sys
     folder = Path(sys.argv[1])
     rec = db.load_record(folder.name)
-    n = db.auto_approve(db.connect("civify.db"), rec)
-    print(f"{rec['item_id']}: {n} sentence(s) auto-approved. Publish from the staff review screen.")
+    con = db.connect("civify.db")
+    n = db.auto_approve(con, rec)
+    version = db.sync_publication(con, rec, db.AUTO_REVIEWER)
+    print(f"{rec['item_id']}: {n} sentence(s) approved automatically" + (f"; version {version} is live for residents." if version else "; nothing new to publish."))
     return 0
 
 

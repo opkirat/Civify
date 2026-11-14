@@ -163,7 +163,7 @@ AUTO_NOTE = ("Approved automatically: the quote is in the source, every number m
 def auto_approve(con: sqlite3.Connection, record: dict) -> int:
     """Approve every sentence the triage marked "auto", unless a person already decided
     this exact sentence or it is escalated. Logged like any decision; a person can
-    reject or edit it later, and nothing reaches residents until someone publishes."""
+    reject or edit it later. Callers publish afterwards with sync_publication."""
     iid = record["item_id"]
     reviews = reviews_for(con, iid)
     escalated = {e["claim_index"] for e in open_escalations(con, iid)}
@@ -192,9 +192,9 @@ def open_escalations(con: sqlite3.Connection, item_id: str | None = None) -> lis
 
 # --- publications: what residents see is a frozen, numbered version -----------------
 
-def publish(con: sqlite3.Connection, record: dict, who: str) -> int:
+def publish(con: sqlite3.Connection, record: dict, who: str, allow_empty: bool = False) -> int:
     claims = approved_claims(con, record)
-    if not claims:
+    if not claims and not allow_empty:
         raise ValueError("nothing approved to publish")
     keep = ("sentence", "quote", "page", "source_file", "source_sha256")
     frozen = [{k: c.get(k) for k in keep} for c in claims]   # no lanes, reasons, notes or reviewer names
@@ -203,6 +203,17 @@ def publish(con: sqlite3.Connection, record: dict, who: str) -> int:
     log(con, record["item_id"], -1, "", "published", f"version {version} ({len(frozen)} sentences)", who)
     con.commit()
     return version
+
+
+def sync_publication(con: sqlite3.Connection, record: dict, who: str) -> int | None:
+    """Make what residents see match the current approvals: approving a sentence puts it
+    live, rejecting or editing one updates the page. Each change is a new frozen
+    version, so the history of what residents saw is kept. Returns the new version,
+    or None if nothing changed (or nothing has ever been approved)."""
+    ch = unpublished_changes(con, record)
+    if not (ch["added"] or ch["removed"]):
+        return None
+    return publish(con, record, who, allow_empty=True)
 
 
 def latest_publication(con: sqlite3.Connection, item_id: str) -> dict | None:

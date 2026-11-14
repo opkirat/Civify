@@ -16,12 +16,10 @@ def test_index_lists_the_item(client):
     assert r.status_code == 200 and "191-199 College Street" in r.text
 
 
-def test_residents_see_nothing_until_staff_approve_and_publish(staff):
+def test_approving_puts_a_sentence_live_straight_away(staff):
     assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
-    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
-    assert "31 storeys to 45 storeys" not in staff.get(f"/items/{ITEM}").text      # approved but not published
-    r = staff.post(f"/staff/{ITEM}/publish", follow_redirects=False)
-    assert "Version+1" in r.headers["location"]
+    r = staff.post(f"/staff/{ITEM}/1", data={"action": "approve"}, follow_redirects=False)
+    assert "now%20live" in r.headers["location"] and "version%201" in r.headers["location"]
     page = staff.get(f"/items/{ITEM}").text
     assert "31 storeys to 45 storeys" in page and "Version 1, published" in page and "No approved explanation yet" not in page
     assert "Clerk A" not in page                                                       # reviewer names stay internal
@@ -38,7 +36,6 @@ def test_edit_is_rechecked_against_the_quote(staff):
     assert bad.status_code == 303 and "Not+saved" in bad.headers["location"] and "54" in bad.headers["location"]
     assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
     staff.post(f"/staff/{ITEM}/1", data={"action": "edit", "sentence": "The building would go from 31 to 45 storeys."})
-    staff.post(f"/staff/{ITEM}/publish")
     assert "The building would go from 31 to 45 storeys." in staff.get(f"/items/{ITEM}").text
 
 
@@ -83,8 +80,7 @@ def test_approve_ready_publishes_only_ready_sentences(staff):
     other = [c for c in rec["claims"] if c.get("lane") != "ready"]
     assert ready and other
     r = staff.post(f"/staff/{ITEM}/approve-ready", follow_redirects=False)
-    assert f"Approved+{len(ready)}+ready" in r.headers["location"]
-    staff.post(f"/staff/{ITEM}/publish")
+    assert f"Approved+{len(ready)}+sentence" in r.headers["location"]
     page = staff.get(f"/items/{ITEM}").text
     assert all(c["sentence"] in page for c in ready)
     assert not any(c["sentence"] in page for c in other)
@@ -92,7 +88,7 @@ def test_approve_ready_publishes_only_ready_sentences(staff):
 
 def test_staff_page_groups_sentences_by_lane_with_reasons(staff):
     t = staff.get(f"/staff/{ITEM}").text
-    assert "need a person" in t and "passed every check" in t and "Approve all" in t
+    assert "Needs you" in t and "passed the checks" in t and "Approve all" in t
     assert "context check: held" in t and "Approve suggested wording" in t
     assert "Documents saved" in t and "Meaning check" in t
 
@@ -103,6 +99,9 @@ def test_approval_stops_counting_when_the_sentence_changes(staff, monkeypatch):
     changed = {**rec, "claims": [dict(c) for c in rec["claims"]]}
     changed["claims"][1]["sentence"] = "A redrafted sentence about 31 and 45 storeys."
     monkeypatch.setattr(appmod.db, "load_record", lambda item_id: changed)
+    con = db.connect(appmod.DB_PATH)
+    assert db.approved_claims(con, changed) == []
+    db.sync_publication(con, changed, db.AUTO_REVIEWER)                  # what a pipeline re-run does
     assert "31 storeys to 45 storeys" not in staff.get(f"/items/{ITEM}").text
     assert "Changed since last review" in staff.get(f"/staff/{ITEM}").text
 
@@ -111,7 +110,8 @@ def test_every_decision_is_kept_in_the_audit_log(staff):
     staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
     staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})
     rows = db.connect(appmod.DB_PATH).execute("SELECT action, reviewer FROM audit ORDER BY id").fetchall()
-    assert [(r["action"], r["reviewer"]) for r in rows] == [("approved", "Clerk A"), ("rejected", "Clerk A")]
+    assert [(r["action"], r["reviewer"]) for r in rows] == [("approved", "Clerk A"), ("published", "Clerk A"),
+                                                            ("rejected", "Clerk A"), ("published", "Clerk A")]
 
 
 def test_pipeline_view_lists_what_needs_a_person(staff):
@@ -162,16 +162,19 @@ def test_meetings_page_and_upcoming_items_in_ward(client):
 
 # --- publishing versions, escalation, dashboard ------------------------------------
 
-def test_publishing_freezes_a_version_and_later_approvals_wait_for_the_next(staff):
-    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
-    staff.post(f"/staff/{ITEM}/publish")
+def test_every_decision_makes_a_new_frozen_version(staff):
     rec = db.load_record(ITEM)
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
     staff.post(f"/staff/{ITEM}/2", data={"action": "approve"})
-    assert rec["claims"][2]["sentence"] not in staff.get(f"/items/{ITEM}").text   # still version 1
-    assert "Publish version 2" in staff.get(f"/staff/{ITEM}").text
-    staff.post(f"/staff/{ITEM}/publish")
     page = staff.get(f"/items/{ITEM}").text
     assert rec["claims"][2]["sentence"] in page and "Version 2" in page
+    staff.post(f"/staff/{ITEM}/2", data={"action": "reject"})
+    page = staff.get(f"/items/{ITEM}").text
+    assert rec["claims"][2]["sentence"] not in page and "Version 3" in page
+    staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})               # last one gone: page goes back to empty
+    assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
+    staff.post(f"/staff/{ITEM}/1", data={"action": "escalate", "note": "x"})
+    assert db.latest_publication(db.connect(appmod.DB_PATH), ITEM)["version"] == 4   # escalating publishes nothing
 
 
 def test_publish_with_nothing_approved_is_refused(staff):
@@ -187,7 +190,6 @@ def test_escalate_needs_a_note_stays_internal_and_resolves_on_decision(staff):
     assert "Escalated by" in t and "Check the storey count with planning" in t
     assert "Check the storey count" in staff.get("/staff").text                      # shows on the dashboard
     staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
-    staff.post(f"/staff/{ITEM}/publish")
     assert "Escalated by" not in staff.get(f"/staff/{ITEM}").text
     assert "Check the storey count" not in staff.get(f"/items/{ITEM}").text          # notes never reach residents
 
@@ -196,7 +198,7 @@ def test_dashboard_search_and_filters(staff):
     t = staff.get("/staff", params={"q": "College"}).text
     assert "191-199 College Street" in t and "1337 Queen Street West" not in t
     assert "1337 Queen Street West" not in staff.get("/staff", params={"show": "published"}).text
-    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"}); staff.post(f"/staff/{ITEM}/publish")
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
     t = staff.get("/staff", params={"show": "published"}).text
     assert "191-199 College Street" in t and "Version 1 live" in t
 
@@ -216,21 +218,23 @@ def test_review_cards_link_to_the_pdf_page_and_show_the_quote_in_context(staff):
     assert r.status_code == 303 and r.headers["location"].startswith("/login")
 
 
-def test_auto_approval_counts_but_nothing_is_public_until_published(staff):
+def test_auto_approved_sentences_go_live_and_a_person_can_take_them_down(staff):
     rec = db.load_record(ITEM)
     con = db.connect(appmod.DB_PATH)
     n = db.auto_approve(con, rec)
     assert n == sum(1 for c in rec["claims"] if c.get("auto")) and n > 0
     assert db.auto_approve(con, rec) == 0                                    # idempotent
+    assert db.sync_publication(con, rec, db.AUTO_REVIEWER) == 1              # what the pipeline does next
     page = staff.get(f"/staff/{ITEM}").text
-    assert f"Approved automatically ({n})" in page and "auto-check" not in staff.get(f"/items/{ITEM}").text
+    assert f"Live for residents ({n})" in page and "approved automatically" in page
     auto_sentence = next(c["sentence"] for c in rec["claims"] if c.get("auto"))
-    assert auto_sentence not in staff.get(f"/items/{ITEM}").text              # not public before publishing
-    staff.post(f"/staff/{ITEM}/publish")
-    assert auto_sentence in staff.get(f"/items/{ITEM}").text
+    resident = staff.get(f"/items/{ITEM}").text
+    assert auto_sentence in resident and "auto-check" not in resident
+    assert not any(c["sentence"] in resident for c in rec["claims"] if not c.get("auto"))   # unsure ones stay off
     i = next(i for i, c in enumerate(rec["claims"]) if c.get("auto"))
     staff.post(f"/staff/{ITEM}/{i}", data={"action": "reject"})               # a person can overrule it
     assert db.current_review(db.reviews_for(con, ITEM)[i], rec["claims"][i])["status"] == "rejected"
+    assert rec["claims"][i]["sentence"] not in staff.get(f"/items/{ITEM}").text
     assert db.auto_approve(con, rec) == 0                                     # and it is not re-approved
 
 

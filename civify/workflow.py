@@ -18,8 +18,8 @@ STEPS = [
     ("drafted", "Plain-language draft"),
     ("checked", "Checked against source"),
     ("meaning", "Meaning check"),
-    ("reviewed", "Staff review"),
-    ("published", "Published"),
+    ("reviewed", "Unsure ones reviewed"),
+    ("published", "Live for residents"),
 ]
 
 
@@ -82,7 +82,7 @@ def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row],
     unpublished = changes["added"] + changes["removed"]
     if unpublished:
         nxt = (publication["version"] + 1) if publication else 1
-        attention.append({"text": f"{unpublished} approved change(s) are not visible to residents yet. Publish version {nxt}.", "href": f"/staff/{iid}#publish"})
+        attention.append({"text": f"{unpublished} approved change(s) are not on the resident page yet. Open the item and update it (version {nxt}).", "href": f"/staff/{iid}#publish"})
     if claims and not meaning_run:
         attention.append({"text": "Meaning check has not run. Review each sentence against its source.", "href": f"/staff/{iid}#review"})
     p = record.get("participation", {})

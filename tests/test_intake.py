@@ -80,8 +80,9 @@ def test_full_processing_run_then_review(staff, tmp_data):
     rec = json.loads((tmp_data / "2027.PB1.6" / "record.json").read_text())
     assert rec["item_id"] == "2027.PB1.6" and len(rec["claims"]) == 11 and all("lane" in c for c in rec["claims"])
     page = staff.get("/staff/2027.PB1.6").text
-    assert "Approved automatically (8)" in page and "need a person" in page
-    assert "8 sentence(s) auto-approved" in j["steps"][5]["detail"]
+    assert "Live for residents (8)" in page and "Needs you" in page
+    assert "8 sentence(s) approved automatically · version 1 live" in j["steps"][5]["detail"]
+    assert rec["claims"][next(i for i, c in enumerate(rec["claims"]) if c.get("auto"))]["sentence"] in staff.get("/items/2027.PB1.6").text
 
 
 def test_missing_staff_report_blocks_and_retry_resumes(staff, tmp_data, monkeypatch):

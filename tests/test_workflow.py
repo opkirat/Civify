@@ -39,7 +39,7 @@ def test_all_decided_and_published_needs_nothing():
 def test_approved_but_unpublished_asks_to_publish():
     reviews = {0: {"status": "approved", "claim_hash": db.claim_hash(READY)}}
     st = workflow.status(rec([READY]), ITEM, reviews, None, [], {"added": 1, "removed": 0})
-    assert states(st)["published"] == "attention" and "Publish version 1" in st["attention"][0]["text"]
+    assert states(st)["published"] == "attention" and "update it (version 1)" in st["attention"][0]["text"]
 
 
 def test_escalation_is_listed_first_with_its_note():

@@ -8,7 +8,7 @@ Routes (staff routes require sign-in; resident routes are public)
   GET  /staff                    dashboard: every item's progress, what needs a person, search and filters
   GET  /staff/intake, POST ...   upload PDFs, validate them, confirm the item, start processing
   GET  /staff/processing/{job}   watch each pipeline step run; preliminary outputs; retry
-  POST /staff/{item_id}/publish  freeze the current approvals as the next version residents see
+  POST /staff/{item_id}/publish  (kept for scripts) freeze the current approvals as a version; decisions now do this themselves
   GET  /staff/{item_id}          review screen: sentences that need a person, each beside the passage in context;
                                  auto-approved ones listed for spot-checks
   GET  /staff/{item_id}/source/{file}   the source PDF itself (open at a page with #page=N)
@@ -19,8 +19,9 @@ Routes (staff routes require sign-in; resident routes are public)
   GET  /notices/{notice_id}      one public notice: the Clerk's text as published, with how to take part
   GET  /meetings                 upcoming meetings from saved agendas: every item, by ward, with the City's rules quoted
 
-Rules enforced here: residents see only a published version, made of sentences a
-signed-in reviewer approved; an approval counts only for the exact sentence and
+Rules enforced here: residents see only a published version, made of approved
+sentences (approved by a signed-in reviewer, or automatically when every check
+agreed); every approval or rejection publishes a new version straight away; an approval counts only for the exact sentence and
 evidence it was made on; and an edited sentence must still pass the verifier
 against the same quote (so an edit cannot introduce an unsupported number).
 """
@@ -288,8 +289,8 @@ def staff(request: Request, item_id: str):
         "review": [r for r in rows if not r["review"] and r["lane"] == "review"],
         "blocked": [r for r in rows if not r["review"] and r["lane"] == "blocked"],
         "ready": [r for r in rows if not r["review"] and r["lane"] == "ready"],
-        "done": [r for r in rows if r["review"] and r["review"]["reviewer"] != db.AUTO_REVIEWER],
-        "auto": [r for r in rows if r["review"] and r["review"]["reviewer"] == db.AUTO_REVIEWER],
+        "live": [r for r in rows if r["review"] and r["review"]["status"] == "approved"],
+        "rejected": [r for r in rows if r["review"] and r["review"]["status"] == "rejected"],
     }
     con = db.connect(DB_PATH)
     esc = {e["claim_index"]: e for e in db.open_escalations(con, item_id)}
@@ -331,7 +332,8 @@ def approve_ready(request: Request, item_id: str):
         if verifier_for(item_id, c["source_file"]).check(c["sentence"], c["quote"]).verified:
             db.save_review(con, item_id, c["index"], c, "approved", c["sentence"], user["name"])
             n += 1
-    return RedirectResponse(f"/staff/{item_id}?notice=Approved+{n}+ready+sentence(s).+Publish+when+you+are+ready.#review", status_code=303)
+    db.sync_publication(con, rec, user["name"])
+    return RedirectResponse(f"/staff/{item_id}?notice=Approved+{n}+sentence(s).+They+are+now+live+for+residents.#review", status_code=303)
 
 
 @app.post("/staff/{item_id}/publish")
@@ -339,7 +341,7 @@ def publish(request: Request, item_id: str):
     user = staff_user(request)
     rec = record_or_404(item_id)
     try:
-        version = db.publish(db.connect(DB_PATH), rec, user["name"])
+        version = db.publish(db.connect(DB_PATH), rec, user["name"], allow_empty=db.latest_publication(db.connect(DB_PATH), item_id) is not None)
     except ValueError:
         return RedirectResponse(f"/staff/{item_id}?error=Approve+at+least+one+sentence+before+publishing#publish", status_code=303)
     return RedirectResponse(f"/staff/{item_id}?notice=Version+{version}+is+now+visible+to+residents#publish", status_code=303)
@@ -370,7 +372,12 @@ def decide(request: Request, item_id: str, index: int, action: str = Form(...), 
         db.save_review(con, item_id, index, claim, "approved", final, user["name"], note)
     else:
         raise HTTPException(400, "unknown action")
-    message = "Second opinion requested." if action == "escalate" else "Review saved. It will appear to residents only after publishing."
+    version = db.sync_publication(con, rec, user["name"])
+    message = {"escalate": "Second opinion requested. It stays off the resident page until someone approves it.",
+               "reject": "Rejected. It is not on the resident page.",
+               }.get(action, "Approved. It is now live for residents.")
+    if version:
+        message += f" (Resident page updated to version {version}.)"
     return RedirectResponse(f"/staff/{item_id}?notice={quote(message)}#review", status_code=303)
 
 

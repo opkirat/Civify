@@ -5,40 +5,35 @@
 {% block body %}
 {{ signed_in(user) }}
 <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/staff">← Work queue</a><span aria-hidden="true">/</span><span>{{ rec.item_id }}</span></nav>
-<div class="worker-heading"><div><h1>{{ rec.title|item_name }}</h1><p class="lead">Read the sentence beside its source. Approve it, edit it, or reject it.</p></div><a href="/items/{{ rec.item_id }}">Resident view ↗</a></div>
+<div class="worker-heading"><div><h1>{{ rec.title|item_name }}</h1><p class="lead">Only the sentences the checks weren't sure about wait for you. Approving puts a sentence live.</p></div><a href="/items/{{ rec.item_id }}">Resident view ↗</a></div>
 {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
 {% if notice %}<p class="success" role="status">{{ notice }}</p>{% endif %}
 {% set pending = (groups.escalated + groups.blocked + groups.review)|unique(attribute='index')|list %}
-{% set decided = groups.done|length + groups.auto|length %}<div class="review-progress"><span><strong>{{ decided }} of {{ rec.claims|length }}</strong> decided{% if groups.auto %} ({{ groups.auto|length }} automatically){% endif %}</span><progress value="{{ decided }}" max="{{ rec.claims|length or 1 }}" aria-label="Sentences decided"></progress><a href="#publish">Publishing ↓</a></div>
+<div class="review-progress"><span>{% if publication and publication.claims %}<strong>Live for residents:</strong> {{ publication.claims|length }} of {{ rec.claims|length }} sentences{% else %}<strong>Not live yet:</strong> nothing approved{% endif %}{% if pending %} · <strong>{{ pending|length }}</strong> waiting for you{% endif %}</span><progress value="{{ groups.live|length }}" max="{{ rec.claims|length or 1 }}" aria-label="Sentences live"></progress><a href="/items/{{ rec.item_id }}">See the resident page ↗</a></div>
+{% if changes.added or changes.removed %}<section id="publish" class="panel publish-panel"><div class="publish-summary"><p>{{ changes.added + changes.removed }} approved change(s) aren't on the resident page yet (made before decisions went live automatically).</p>
+<form method="post" action="/staff/{{ rec.item_id }}/publish"><button class="primary" type="submit">Update the resident page</button></form></div></section>{% endif %}
 {% if groups.ready %}
-<section id="ready" class="panel ready-panel"><div><h2>{{ groups.ready|length }} sentence{{ 's' if groups.ready|length != 1 }} passed every check</h2>
-<p class="muted">The quote was found in the report, every number matches, and a second AI read found the passage fully supports the wording. They don't state anything the passage doesn't.</p>
+<section id="ready" class="panel ready-panel"><div><h2>{{ groups.ready|length }} sentence{{ 's' if groups.ready|length != 1 }} passed the checks</h2>
+<p class="muted">The second AI check hasn't run on these, so they weren't put live automatically. Skim them, then approve them together.</p>
 <details class="fold"><summary>Skim them</summary>{% for r in groups.ready %}{{ claim_card(rec, r) }}{% endfor %}</details></div>
 <form method="post" action="/staff/{{ rec.item_id }}/approve-ready"><button class="primary" type="submit">Approve all {{ groups.ready|length }}</button></form></section>
 {% endif %}
 <section id="review" aria-labelledby="review-heading">
-<div class="review-heading"><h2 id="review-heading">{{ (pending|length ~ ' sentence' ~ ('s' if pending|length != 1) ~ ' need a person') if pending else 'Nothing needs a person' }}</h2><span class="muted">Each one shows why, and where it sits in the source. Approving saves your review; publishing makes it public.</span></div>
+<div class="review-heading"><h2 id="review-heading">{{ ('Needs you · ' ~ pending|length ~ ' sentence' ~ ('s' if pending|length != 1)) if pending else 'Nothing needs you' }}</h2><span class="muted">The checks weren't sure about these. Approve and it goes live for residents straight away; reject and it never appears.</span></div>
 {% if pending %}
 <div id="review-controls" class="review-controls" hidden><div><span id="review-position" role="status" aria-live="polite"></span><label class="visually-hidden" for="sentence-picker">Choose a sentence</label><select id="sentence-picker"></select></div><div class="actions"><button id="previous-sentence" type="button">← Previous</button><button id="next-sentence" type="button">Next sentence →</button></div></div>
 <div class="review-deck">{% for r in pending %}{{ claim_card(rec, r) }}{% endfor %}</div>
-{% else %}<div class="empty-state"><h3>{{ 'Approve the ready sentences above, then publish.' if groups.ready else 'Nothing needs you. Publish when ready.' }}</h3><p>{{ groups.auto|length }} sentence(s) were approved automatically; spot-check them below.</p></div>{% endif %}
+{% else %}<div class="empty-state"><h3>All done.</h3><p>Every sentence is either live for residents or rejected.</p></div>{% endif %}
 </section>
-<section id="publish" class="panel publish-panel">
-<div class="publish-summary"><div><h2>{{ 'Ready to publish your changes?' if changes.added or changes.removed else 'Publishing' }}</h2>
-{% if publication %}<p class="muted">Version {{ publication.version }} is live · {{ publication.claims|length }} sentences.</p>{% else %}<p class="muted">Nothing is published yet. Residents will see the explanation after you publish.</p>{% endif %}
-{% if changes.added or changes.removed %}<p>{{ changes.added }} approved sentence(s) to add{% if changes.removed %}, {{ changes.removed }} to remove{% endif %}.</p>{% endif %}
-{% if pending and changes.approved %}<p class="muted">{{ pending|length }} sentences still need review. Publishing includes only your {{ changes.approved }} approved sentences.</p>{% endif %}</div>
-{% if (changes.added or changes.removed) and changes.approved %}<form method="post" action="/staff/{{ rec.item_id }}/publish"><button class="primary" type="submit">Publish version {{ (publication.version + 1) if publication else 1 }}</button></form>{% elif changes.removed %}<p class="warn">No approved sentences remain. Publishing an empty explanation is not supported; the existing version is still live.</p>{% endif %}
-</div></section>
-{% if groups.auto %}<details class="fold" id="auto"><summary>Approved automatically ({{ groups.auto|length }})</summary>
-<p class="muted">The quote is in the source, every number matches, and two separate AI checks (against the quote, then against the whole page) found each sentence fully supported and neutral. Nothing about taking part or deadlines is ever approved this way. Spot-check any of them; Reject or Edit works here too.</p>
-{% for r in groups.auto %}{{ claim_card(rec, r) }}{% endfor %}</details>{% endif %}
-{% if groups.done %}<details class="fold" id="done"><summary>Decided by staff ({{ groups.done|length }})</summary>{% for r in groups.done %}{{ claim_card(rec, r) }}{% endfor %}</details>{% endif %}
-<details class="fold"><summary>How sentences are sorted</summary>
-<p><strong>Approved automatically</strong>: the quote was found in the report, every number matches, an AI check found the quote fully supports the sentence, and a second AI check, reading the whole page and told to hold when in doubt, agreed. Sentences about taking part or deadlines never go this way.</p>
-<p><strong>Needs a person</strong>: about taking part or a deadline, or either AI check raised something. The reason is on each card, often with suggested wording you can approve in one click.</p>
+{% if groups.live %}<details class="fold" id="live"><summary>Live for residents ({{ groups.live|length }})</summary>
+<p class="muted">Approved automatically when the code check and both AI checks agreed, or approved by staff. Reject or edit any of them and the resident page updates straight away.</p>
+{% for r in groups.live %}{{ claim_card(rec, r) }}{% endfor %}</details>{% endif %}
+{% if groups.rejected %}<details class="fold" id="rejected"><summary>Rejected ({{ groups.rejected|length }})</summary>{% for r in groups.rejected %}{{ claim_card(rec, r) }}{% endfor %}</details>{% endif %}
+<details class="fold"><summary>How this works</summary>
+<p><strong>Goes live automatically</strong> when the quote is found in the report, every number matches, an AI check finds the quote fully supports the sentence, and a second AI check, reading the whole page and told to hold when in doubt, agrees. Sentences about taking part or deadlines never go live this way.</p>
+<p><strong>Needs you</strong>: about taking part or a deadline, or either AI check raised something. The reason is on each card, often with suggested wording you can approve in one click.</p>
 <p><strong>Source check failed</strong>: the quote wasn't found or a number doesn't match. Edit it so it passes, or reject it.</p>
-<p>Nothing reaches residents until a person publishes a version.</p></details>
+<p>Every change makes a new numbered version of the resident page, listed in the history, so you can always see what residents saw and when.</p></details>
 <details class="fold worker-record"><summary>Record details and history</summary><p>{{ rec.title|item_topic }}</p><p><a href="{{ rec.official_url }}">Official item page ↗</a></p>{{ pipeline_strip(pipeline.steps) }}
 <details class="fold">
   <summary>Who residents are matched to</summary>

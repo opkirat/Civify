@@ -23,7 +23,8 @@ Lanes
            if it did not, a person approves them with one click.
 
 Every check fails safe: an AI call that errors or isn't run sends sentences to
-"review", never to "ready". Nothing reaches residents until someone publishes.
+"review", never to "ready". Approved sentences go live for residents straight away
+(see db.sync_publication); a person can take any of them down.
 
 Run:  python -m civify.triage data/2027.PB1.6            # live AI checks (needs GEMINI_API_KEY)
       python -m civify.triage data/2027.PB1.6 --replay   # reuse the saved model replies
