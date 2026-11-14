@@ -8,3 +8,8 @@ __pycache__/
 # Source PDFs stay local for now (public letters contain residents' names); item.json is tracked.
 data/**/*.pdf
 data/_uploads/
+
+# PDFs saved from the browser into the project root before uploading
+/*.pdf
+.env*
+!.env.example
