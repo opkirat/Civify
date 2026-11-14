@@ -15,7 +15,7 @@ Each requirement is testable; the test column names the test that checks it. Sta
 | FR-07 | Build one record per item with distinct staff, committee and Council stages, plus enacted by-laws when present, each with date, outcome and source file. | `test_three_stages_in_order_with_dates_from_the_record`, `test_each_stage_names_its_source_file` | ✅ |
 | FR-08 | Record Council votes (counts and members), motions with their text, and declared interests from the item page. | `test_council_votes_and_declared_interest`, `test_council_motions_carry_their_text` | ✅ |
 | FR-09 | Public correspondence is counted, never summarised, and no correspondent's name appears in any output. | `test_public_letters_carry_no_author`, `test_letters_are_counted_not_named` | ✅ |
-| FR-10 | Staff see each draft beside its quote and page; can approve, reject, or edit then approve; the reviewer's name and time are recorded. | `test_app.py` | ✅ |
+| FR-10 | Staff see each draft beside its quote and page; can approve, reject, or edit then approve; the signed-in reviewer's name and time are recorded, and every decision is kept in an audit log. | `test_app.py`, `test_every_decision_is_kept_in_the_audit_log` | ✅ |
 | FR-11 | Residents see only approved sentences; nothing is shown before approval. | `test_resident_view_is_empty_until_staff_approve`, `test_rejected_claim_never_shows` | ✅ |
 | FR-12 | A staff edit is re-checked against the same quote; an edit that introduces an unsupported number is refused. | `test_edit_is_rechecked_against_the_quote` | ✅ |
 | FR-13 | A resident enters an address or ward and sees items in their ward (and distance where known). The address is looked up via the City's API and not stored. | `test_geo.py`, `test_near_by_ward_lists_item_in_that_ward_and_stores_nothing`, `test_near_by_address_uses_city_lookup` | ✅ |
@@ -28,11 +28,16 @@ Each requirement is testable; the test column names the test that checks it. Sta
 | FR-20 | Pending items remain staff recommendations; revised reports use the latest dated source. | `test_pending_records_choose_latest_report`, `test_latest_report_uses_date_not_filename_order` | ✅ |
 | FR-21 | Public notices preserve Clerk text and participation wording. | `test_notices.py`, `test_near_lists_public_notices_and_notice_page_quotes_the_clerk` | ✅ |
 
+| FR-19 | Each sentence is routed to a lane: **blocked** (code check failed; cannot be approved as written), **review** (states a decision, condition, uncertainty or deadline, or the meaning check is not a clean "supported"), or **ready**. If the meaning check is missing or fails, sentences go to review. | `test_triage.py`, `test_staff_page_groups_sentences_by_lane_with_reasons` | ✅ |
+| FR-20 | Staff publish every ready sentence with one click; each is re-verified before it is saved. | `test_approve_ready_publishes_only_ready_sentences` | ✅ |
+| FR-21 | Staff pages and actions require sign-in with an individual account; resident pages stay public. | `test_staff_pages_and_actions_require_sign_in`, `test_auth.py` | ✅ |
+| FR-22 | Staff see each item's pipeline (documents → draft → source check → meaning check → review → published) and a linked list of exactly what needs a person. | `test_workflow.py`, `test_pipeline_view_lists_what_needs_a_person` | ✅ |
+
 ## Non-functional
 
 | ID | Requirement | How checked | Status |
 |---|---|---|---|
-| NFR-01 | Accuracy: no unverified or unapproved AI sentence is ever shown to residents as fact. | FR-05, FR-11, FR-12 tests; meaning drift needs human review; replacing reviewed drafts requires clearing old index-based approvals | 🟡 |
+| NFR-01 | Accuracy: no unverified or unapproved AI sentence is ever shown to residents as fact. | FR-05, FR-11, FR-12, FR-19 tests; approvals bound to content (`test_approval_stops_counting_when_the_sentence_changes`); meaning drift routed to a person by risk rules and the meaning check | ✅ |
 | NFR-02 | Provenance: every stage, rule and sentence names its source file and (for sentences) page; files carry checksums; retrieval date recorded. | `record.json` structure; `test_each_stage_names_its_source_file` | ✅ |
 | NFR-03 | Privacy: no resident address stored; no correspondent names in outputs; source PDFs with letters kept out of the public repo. | `test_near_…_stores_nothing`, FR-09; `.gitignore` | ✅ |
 | NFR-04 | Plain language, neutral tone, conditions preserved. | Prompt rules + staff review; readability score not yet measured | 🟡 |

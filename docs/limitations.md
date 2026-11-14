@@ -4,7 +4,7 @@ Running log. Each entry says what the gap is, whether it fails safe, and what a 
 
 ## Verification
 
-- **Meaning drift is not caught by code.** A real quote under a sentence that contradicts it (e.g. "refuse" vs "approve", a dropped "not" or condition) passes the verifier. Numbers are checked; wording is not. *Mitigation:* staff see sentence and quote side by side and must approve before publication. *Pilot:* a second, independent model check ("does this quote support this sentence?") would reduce staff load but is still AI checking AI.
+- **Meaning drift is not caught by code alone.** A real quote under a sentence that contradicts it passes the code verifier. *Now mitigated twice:* risk rules send any sentence stating a decision, condition, uncertainty or deadline to a person, and a second model call (the meaning check, `civify/triage.py`) judges whether each quote fully supports its sentence. On the demo "Staff recommend refusing" under a real approval quote, both fired. *Remaining limit:* the meaning check is AI checking AI and can be wrong in both directions (on the 43 real sentences it flagged some that a person may judge fine, e.g. "staff recommend" when the cited passage is the recommendation list itself). It only routes sentences; it never approves them. A named person still publishes everything, ready lane included (one click).
 - **Quotes may span at most one page break.** Running headers/footers are stripped first. A quote across three pages fails (safe: flagged, not shown).
 - **Matching ignores hyphens, dashes and whitespace.** So "490-unit" and "490 unit" are equal. Judged safe because numbers are checked separately.
 
@@ -30,7 +30,8 @@ Running log. Each entry says what the gap is, whether it fails safe, and what a 
 
 ## App
 
-- **Reviewer identity is a typed name, not a login.** Enough for a demo; a pilot needs municipal SSO.
+- **Staff sign-in is local accounts** (`civify/auth.py`: scrypt-hashed passwords, server-side sessions, 12-hour expiry). Real reviewer identity is now recorded on every decision and in an append-only audit log. A pilot would replace it with the City's single sign-on and add roles (e.g. who may publish vs. draft). No CSRF token is used; the session cookie is SameSite=Lax, which blocks cross-site form posts in current browsers.
+- **Approvals are bound to content.** A decision counts only for the exact sentence, quote and source file it was made on. Re-running the pipeline sends changed sentences back to review. Approvals made before this change have no content hash and no longer count.
 - **Amendment view is verbatim, not a semantic diff.** Staff and resident screens show Council motions and their text. There is no automatic plain-language comparison of versions.
 - **No translation or SMS.** Printable notices with local QR generation are implemented; full approved sentences and quotes are retained, so lengthy notices can exceed one page. The UI refresh was checked in headless Chrome at desktop and 390px phone widths, and a sample print PDF was generated. Physical QR scanning and a full accessibility audit remain pending.
 - **Review decisions are keyed by claim index.** Replacing or reordering drafts after review can associate an old approval with a new claim. Do not regenerate reviewed items without clearing their reviews; a pilot needs content-bound approvals and review history.

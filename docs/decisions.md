@@ -71,3 +71,19 @@ The November 2026 Preservation Board agenda uses 2027 item IDs. The parser retai
 ## D-13 · Printable notices retain evidence and use official-page QR codes
 
 The print route uses the resident approval gate and includes complete approved sentences and their source quotes. Segno generates QR SVG locally, pointing to the official City item page so a phone does not need access to the demo's localhost. Long content can span multiple pages; fitting it by truncation could remove a condition or citation. Physical print layout and QR scanning still require manual verification.
+
+## D-12 · One meaning-check call and risk rules, not a multi-agent pipeline
+
+**Choice.** Keep the drafter, add one second model call per item that judges each sentence against its own quote, plus plain-code risk rules. Route sentences into ready / review / blocked lanes.
+**Alternatives.** (a) A four-agent pipeline (curator, validator, impact & personalisation, engagement guide). (b) Send every sentence to a person (status quo). (c) Publish ready sentences with no human action.
+**Trade-off.** (a) adds cost, latency and failure points; its "impact level" and demographic matching would put AI judgement on political decisions and need personal data, against the brief's neutrality and data-minimisation constraints; stages and participation are already read from the record, so an engagement agent would only add risk. (b) was the friction staff asked us to remove: on the real items, 18 of 43 sentences are now ready for one-click publishing. (c) removes the one human signature the brief's "checked against the records" rule relies on; one click per item keeps it nearly frictionless. The meaning check fails safe: if it errors or isn't run, everything goes to review.
+
+## D-13 · Local accounts with server-side sessions
+
+**Choice.** Individual accounts, scrypt password hashes (standard library), random session tokens stored in SQLite, HttpOnly SameSite=Lax cookie.
+**Alternatives.** One shared staff password; signed-cookie sessions (needs another library and can't be revoked server-side); City single sign-on.
+**Trade-off.** A shared password gives no real audit trail. Server-side sessions end the moment a user signs out or is removed. SSO is the pilot answer but needs the City's identity provider; the app only asks "who is signed in", so swapping it in touches one module.
+
+## D-14 · Approvals bound to content, with an append-only audit log
+
+**Why.** Reviews used to be keyed by claim position. Re-running the drafter could silently attach an old approval to a new sentence. Each decision now stores a hash of sentence + quote + source checksum; a mismatch sends the sentence back to review, and every decision is appended to an audit table that is never updated.

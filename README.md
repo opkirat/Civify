@@ -7,7 +7,7 @@ Built for the "Making municipal decisions easier to understand" challenge, on re
 ## What works today
 
 - **Pipeline** on a folder of downloaded PDFs: extract text with page numbers → classify each file (staff report, Clerk's notice, draft by-law, Council bill, item page, declaration, public letter) → draft plain-language sentences with Gemini, each with an exact quote → verify every quote and number in code → build one `record.json` per item with distinct staff, committee and Council stages, enacted by-laws where available, votes, motions and quoted participation rules.
-- **Staff review screen**: each sentence beside its quote and page; approve, reject, or edit (edits are re-checked). Nothing reaches residents until a named reviewer approves it.
+- **Staff workspace** (sign-in required): a pipeline view of every item and a linked list of exactly what needs a person. Sentences are sorted into **ready** (passed the source check, the AI meaning check and the risk rules: publish all with one click), **needs a look** (with the reasons), and **blocked** (failed the source check). Nothing reaches residents until a signed-in reviewer approves it; approvals are bound to the exact sentence and evidence, and every decision is logged.
 - **Resident view**: where the item stands, whether Council has decided, what the Clerk's notice says about taking part, what changed at Council, and the approved explanation with a source for every sentence.
 - **Near me**: address or ward → items in your ward, with distance. The address is looked up on the City's own API and never stored.
 - **Three saved item records**: `2026.TE34.21` (College Street rezoning, enacted); `2027.PB1.5` (19 Don Ridge Drive heritage designation); and `2027.PB1.6` (1337 Queen Street West demolition/new construction). The latter two records list a November 16, 2026 board meeting, with no board or Council decision yet. Their item IDs really use 2027; a meeting's year cannot determine its item IDs.
@@ -29,14 +29,16 @@ pytest                                   # PDF-dependent checks skip when source
 # Pipeline (the saved Gemini reply lets you replay without a key)
 python -m civify.ingest data/2026.TE34.21 --retrieved 2026-11-13
 python -m civify.draft  data/2026.TE34.21 --replay     # or set GEMINI_API_KEY in .env for a live run
+python -m civify.triage data/2026.TE34.21 --replay    # meaning check + lanes (live without --replay)
 python -m civify.record data/2026.TE34.21
 python -m civify.verify                                 # demo: watch wrong summaries get rejected
 
 # Web app
-uvicorn civify.app:app --reload          # http://127.0.0.1:8000
+python -m civify.auth add yourname --name "Your Name"   # create a staff account (prompts for a password)
+uvicorn civify.app:app --reload          # http://127.0.0.1:8000, staff sign in at /staff
 ```
 
-Source PDFs are excluded from Git (public letters carry residents' names). The JSON records let the app display items without PDFs; drafting, replaying and approving require the original staff reports locally. Review decisions are in the local `civify.db`, not shared through Git. This demo has no staff authentication and should run locally.
+Source PDFs are excluded from Git (public letters carry residents' names). The JSON records let the app display items without PDFs; drafting, replaying and approving require the original staff reports locally. Review decisions are in the local `civify.db`, not shared through Git. Staff accounts are local to `civify.db`; a pilot would use the City's single sign-on.
 
 For a new item, save its official page as `data/<actual-item-id>/Agenda_Item_History.pdf`, run `python -m civify.fetch data/<actual-item-id>`, then `ingest`, `draft` and `record` as above. For a saved agenda, run `python -m civify.agenda data/agendas/<file>.pdf --retrieved YYYY-MM-DD`. Only full IDs confirmed by sources receive direct item links.
 
