@@ -9,6 +9,7 @@ Routes
   GET  /items/{item_id}          resident view: approved claims only
   GET  /near?address=|ward=      items and public notices in the resident's ward (address looked up live, never stored)
   GET  /notices/{notice_id}      one public notice: the Clerk's text as published, with how to take part
+  GET  /meetings                 upcoming meetings from saved agendas: every item, by ward, with the City's rules quoted
 
 Rule enforced here: nothing reaches the resident view until a named reviewer
 approved it, and an edited sentence must still pass the verifier against the
@@ -24,7 +25,7 @@ from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from civify import db, geo, notices
+from civify import agenda, db, geo, notices
 from civify.extract import extract
 from civify.verify import Verifier
 
@@ -115,9 +116,20 @@ def near(request: Request, address: str = "", ward: str = ""):
             kms = [geo.distance_km(me, a) for a in n["addresses"]] if "lat" in me else []
             nearby.append({"n": n, "same_ward": n.get("ward") == me["ward"], "km": min(kms) if kms else None})
         nearby.sort(key=lambda r: (not r["same_ward"], r["km"] if r["km"] is not None else 1e9))
+    upcoming = []
+    if me:
+        for m in agenda.load_meetings():
+            for it in m["items"]:
+                if it.get("ward") == me["ward"]:
+                    upcoming.append({"meeting": m, "item": it})
     return templates.TemplateResponse(request, "near.html", {
         "wards": geo.WARDS, "address": address, "ward": ward, "me": me, "results": results, "nearby": nearby,
-        "searched": bool(address or ward)})
+        "upcoming": upcoming, "rules": agenda.load_rules(), "searched": bool(address or ward)})
+
+
+@app.get("/meetings", response_class=HTMLResponse)
+def meetings(request: Request):
+    return templates.TemplateResponse(request, "meetings.html", {"meetings": agenda.load_meetings(), "rules": agenda.load_rules(), "wards": geo.WARDS})
 
 
 @app.get("/notices/{notice_id}", response_class=HTMLResponse)

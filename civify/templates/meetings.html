@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Upcoming meetings{% endblock %}
+{% block body %}
+<h1>Upcoming meetings</h1>
+<p class="muted">Every item on each published agenda, with its ward. Click an item for the official page. Items that have been through the full pipeline (plain-language summary, checked and approved) are linked from the <a href="/">item list</a>.</p>
+{% for m in meetings %}
+<h2>{{ m.body }} · {{ m.meeting_date }} {{ m.meeting_time }}</h2>
+<p class="muted">{{ m.location }} · {{ m.agenda_status }} · saved {{ m.source.retrieved }}</p>
+{% for it in m['items'] %}
+<div class="panel">
+  <strong><a href="{{ it.official_url }}">{{ it.id }}</a></strong> · Ward {{ it.ward or '?' }}{% if it.ward %} ({{ wards.get(it.ward.zfill(2), '') }}){% endif %}<br>
+  {{ it.title }}
+  {% for n in it.notes %}<div class="muted">{{ n.date }}: {{ n.note }}</div>{% endfor %}
+</div>
+{% endfor %}
+{% else %}
+<p>No saved agendas yet. Save a meeting page into <code>data/agendas/</code> and run <code>python -m civify.agenda &lt;file&gt;</code>.</p>
+{% endfor %}
+{% if rules.quotes %}
+<h2>How to take part</h2>
+<div class="panel"><span class="muted">Quoted from the City's <a href="{{ rules.source }}">Participate in Council and Committee Meetings</a> page, retrieved {{ rules.retrieved }}.</span>
+{% for q in rules.quotes %}<blockquote>{{ q }}</blockquote>{% endfor %}</div>
+{% endif %}
+{% endblock %}

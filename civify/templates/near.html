@@ -38,6 +38,19 @@
   <p>No council items on file for your ward yet.</p>
   {% endif %}
 
+  {% if upcoming %}
+  <h2>Coming up at a meeting, in your ward</h2>
+  {% for u in upcoming %}
+  <div class="panel">
+    <strong><a href="{{ u.item.official_url }}">{{ u.item.id }} · {{ u.item.title }}</a></strong>
+    <div class="muted">{{ u.meeting.body }} · {{ u.meeting.meeting_date }} {{ u.meeting.meeting_time }} · {{ u.meeting.location }} · {{ u.meeting.agenda_status }}</div>
+    {% for n in u.item.notes %}<div class="muted">{{ n.date }}: {{ n.note }}</div>{% endfor %}
+  </div>
+  {% endfor %}
+  {% if rules.quotes %}<div class="panel"><strong>The City's rules for taking part</strong> <span class="muted">(quoted from <a href="{{ rules.source }}">toronto.ca</a>, retrieved {{ rules.retrieved }})</span>
+    {% for q in rules.quotes %}<blockquote>{{ q }}</blockquote>{% endfor %}</div>{% endif %}
+  {% endif %}
+
   {% if nearby %}
   <h2>Public notices from the City Clerk (last 60 days)</h2>
   {% for r in nearby %}

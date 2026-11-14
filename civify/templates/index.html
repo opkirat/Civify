@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 <h1>Council items</h1>
-<p><a href="/near"><strong>Residents: what's being decided near me?</strong></a></p>
+<p><a href="/near"><strong>Residents: what's being decided near me?</strong></a> · <a href="/meetings">Upcoming meetings</a></p>
 {% for it in items %}
 <div class="panel">
   <strong>{{ it.title }}</strong>
