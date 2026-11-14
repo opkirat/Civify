@@ -91,10 +91,8 @@
       "page": 1,
       "source_file": "backgroundfile-290992.pdf",
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -109,11 +107,8 @@
       "page": 3,
       "source_file": "backgroundfile-290992.pdf",
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision",
-        "states a condition or requirement"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -180,7 +175,7 @@
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
       "lane": "review",
       "reasons": [
-        "states a recommendation or decision",
+        "states a recommendation or decision that the source passage does not",
         "meaning check: not supported (The passage states that staff agree the property has cultural heritage value and meets five criteria, not that they recommend designating it.)"
       ],
       "meaning": {
@@ -197,12 +192,8 @@
       "page": 2,
       "source_file": "backgroundfile-290992.pdf",
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision",
-        "states a condition or requirement",
-        "states uncertainty"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -269,10 +260,8 @@
       "page": 3,
       "source_file": "backgroundfile-290992.pdf",
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -305,10 +294,8 @@
       "page": 3,
       "source_file": "backgroundfile-290992.pdf",
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,

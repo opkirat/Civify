@@ -165,10 +165,8 @@
       "page": 1,
       "source_file": "backgroundfile-290746.pdf",
       "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -201,7 +199,6 @@
       "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
       "lane": "review",
       "reasons": [
-        "states a recommendation or decision",
         "meaning check: not supported (The passage refers to the 'Parkdale HCD Plan', whereas the sentence expands it to 'Parkdale Main Street Heritage Conservation District Plan' which is not in this passage.)"
       ],
       "meaning": {
@@ -236,7 +233,6 @@
       "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
       "lane": "review",
       "reasons": [
-        "states a recommendation or decision",
         "meaning check: not supported (The passage does not explicitly state that 'City staff recommend' this action, and the sentence omits that the approval is subject to conditions.)"
       ],
       "meaning": {
@@ -255,8 +251,8 @@
       "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
       "lane": "review",
       "reasons": [
-        "states a recommendation or decision",
-        "states a condition or requirement"
+        "states a recommendation or decision that the source passage does not",
+        "states a condition or requirement that the source passage does not"
       ],
       "meaning": {
         "verdict": "supported",

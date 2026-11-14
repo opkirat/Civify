@@ -2,10 +2,8 @@
  {
   "index": 0,
   "sentence": "City staff recommend that City Council state its intention to designate the property at 19 Don Ridge Drive under the Ontario Heritage Act.",
-  "lane": "review",
-  "reasons": [
-   "states a recommendation or decision"
-  ],
+  "lane": "ready",
+  "reasons": [],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
@@ -15,11 +13,8 @@
  {
   "index": 1,
   "sentence": "If there are no objections to the designation, staff recommend that City Council let the City Solicitor introduce the designating bill.",
-  "lane": "review",
-  "reasons": [
-   "states a recommendation or decision",
-   "states a condition or requirement"
-  ],
+  "lane": "ready",
+  "reasons": [],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
@@ -66,7 +61,7 @@
   "sentence": "Staff recommend designating the property because it has cultural heritage value and meets five of the nine provincial criteria.",
   "lane": "review",
   "reasons": [
-   "states a recommendation or decision",
+   "states a recommendation or decision that the source passage does not",
    "meaning check: not supported (The passage states that staff agree the property has cultural heritage value and meets five criteria, not that they recommend designating it.)"
   ],
   "meaning": {
@@ -78,12 +73,8 @@
  {
   "index": 6,
   "sentence": "A property may be designated if it meets two or more of the nine criteria.",
-  "lane": "review",
-  "reasons": [
-   "states a recommendation or decision",
-   "states a condition or requirement",
-   "states uncertainty"
-  ],
+  "lane": "ready",
+  "reasons": [],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
@@ -130,10 +121,8 @@
  {
   "index": 10,
   "sentence": "Heritage designation allows City Council to review proposed changes or demolitions on the property and enforce maintenance standards.",
-  "lane": "review",
-  "reasons": [
-   "states a recommendation or decision"
-  ],
+  "lane": "ready",
+  "reasons": [],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
@@ -156,10 +145,8 @@
  {
   "index": 12,
   "sentence": "There are no financial impacts for the City from the recommendations in this report.",
-  "lane": "review",
-  "reasons": [
-   "states a recommendation or decision"
-  ],
+  "lane": "ready",
+  "reasons": [],
   "meaning": {
    "verdict": "supported",
    "neutral": true,

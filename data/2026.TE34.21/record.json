@@ -173,10 +173,8 @@
       "page": 1,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -223,10 +221,8 @@
       "page": 2,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states uncertainty"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -273,10 +269,8 @@
       "page": 14,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -357,7 +351,7 @@
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
       "lane": "review",
       "reasons": [
-        "states a recommendation or decision"
+        "states a recommendation or decision that the source passage does not"
       ],
       "meaning": {
         "verdict": "supported",
@@ -375,7 +369,7 @@
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
       "lane": "review",
       "reasons": [
-        "states a recommendation or decision"
+        "states a recommendation or decision that the source passage does not"
       ],
       "meaning": {
         "verdict": "supported",
@@ -393,7 +387,7 @@
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
       "lane": "review",
       "reasons": [
-        "states a recommendation or decision"
+        "states a recommendation or decision that the source passage does not"
       ],
       "meaning": {
         "verdict": "supported",
@@ -409,10 +403,8 @@
       "page": 15,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -427,10 +419,8 @@
       "page": 16,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states a condition or requirement"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -445,10 +435,8 @@
       "page": 16,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states a condition or requirement"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
@@ -463,11 +451,8 @@
       "page": 15,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states a condition or requirement",
-        "states uncertainty"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,

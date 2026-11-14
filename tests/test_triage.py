@@ -19,6 +19,25 @@ def test_risk_rules_catch_decisions_conditions_uncertainty_and_participation():
     assert risk_reasons("The site is on the south side of Queen Street West.") == []
 
 
+def test_risk_words_echoed_by_the_passage_do_not_need_a_person():
+    """A 'must' the passage also states is for the meaning check; a 'must' the passage lacks is for a person."""
+    assert risk_reasons("The owner must pay before the first permit.", "The owner shall pay prior to the first permit.") == []
+    assert risk_reasons("The owner must pay before the first permit.", "The owner pays before the first permit.") == \
+        ["states a condition or requirement that the source passage does not"]
+    assert risk_reasons("Staff recommend amending the plan.", "City Planning recommends that Council amend the plan.") == []
+    assert risk_reasons("The units may qualify for incentives.", "The units qualify for incentives.") == \
+        ["states uncertainty that the source passage does not"]
+    # participation is never delegated to the passage
+    assert risk_reasons("Comments are accepted until Monday.", "Comments are accepted until Monday.") == ["mentions taking part or a deadline"]
+
+
+def test_lane_uses_the_quote_when_judging_risk_words():
+    c = {"sentence": "Staff recommend amending the plan.", "quote": "City Planning recommends that Council amend the plan.", "verified": True, "reason": "ok"}
+    assert assign_lane(c, OK) == ("ready", [])
+    c["quote"] = "The plan would be amended under this option."
+    assert assign_lane(c, OK)[0] == "review"
+
+
 def test_lanes():
     assert assign_lane(claim("The site is on Queen Street."), OK) == ("ready", [])
     assert assign_lane(claim("The site is on Queen Street.", verified=False, reason="quote not found"), OK)[0] == "blocked"

@@ -2,9 +2,13 @@
 
 Two checks, then a lane:
 
-1. RISK RULES (plain code). Sentences that state a recommendation or decision,
-   a condition, uncertainty, or anything about taking part always go to a person.
-   These are the details where a small slip changes what a resident does.
+1. RISK RULES (plain code). Anything about taking part or a deadline always goes
+   to a person. A sentence that states a recommendation or decision, a condition,
+   or uncertainty goes to a person only when the quoted passage does not say the
+   same kind of thing: "must" in the sentence with no requirement in the passage,
+   "may" with no hedge in the passage, "recommend" with no recommendation. When
+   the passage echoes the word, the meaning check below is what confirms the
+   sentence kept it intact.
 2. MEANING CHECK (one model call per item). A second pass reads each sentence
    beside the quote it cites and answers: does the quote fully support it, with no
    condition dropped and nothing overstated? Is it neutral? This catches the gap
@@ -38,11 +42,13 @@ from pydantic import BaseModel
 
 from civify.draft import DEFAULT_MODEL, load_env
 
+# (label, pattern, always). "always" rules send the sentence to a person whenever they
+# match. The others only do so when the quoted passage has no match of its own.
 RISK_RULES = [
-    ("states a recommendation or decision", r"\b(recommend\w*|approv\w*|refus\w*|designat\w*|decid\w*|adopt\w*|reject\w*)\b"),
-    ("states a condition or requirement", r"\b(subject to|conditions?|must|requir\w*|unless|if)\b"),
-    ("states uncertainty", r"\b(may|might|could|possibl\w*)\b"),
-    ("mentions taking part or a deadline", r"\b(deadline|comments?|register\w*|appeal\w*|submissions?)\b"),
+    ("mentions taking part or a deadline", r"\b(deadline|comments?|register\w*|appeal\w*|submissions?)\b", True),
+    ("states a recommendation or decision", r"\b(recommend\w*|approv\w*|refus\w*|designat\w*|decid\w*|adopt\w*|reject\w*)\b", False),
+    ("states a condition or requirement", r"\b(subject to|conditions?|must|requir\w*|unless|if|shall)\b", False),
+    ("states uncertainty", r"\b(may|might|could|possibl\w*|anticipat\w*|expect\w*)\b", False),
 ]
 
 PROMPT = """You are checking plain-language sentences written for residents against the exact passage
@@ -72,8 +78,17 @@ class MeaningCheck(BaseModel):
     results: list[MeaningResult]
 
 
-def risk_reasons(sentence: str) -> list[str]:
-    return [label for label, pattern in RISK_RULES if re.search(pattern, sentence, re.I)]
+def risk_reasons(sentence: str, quote: str = "") -> list[str]:
+    """Why this sentence needs a person, before the meaning check is considered.
+
+    With no quote, every matching rule fires (the strict reading)."""
+    out = []
+    for label, pattern, always in RISK_RULES:
+        if not re.search(pattern, sentence, re.I):
+            continue
+        if always or not quote or not re.search(pattern, quote, re.I):
+            out.append(label if always or not quote else f"{label} that the source passage does not")
+    return out
 
 
 def build_prompt(claims: list[dict]) -> str:
@@ -107,7 +122,7 @@ def assign_lane(claim: dict, meaning: dict | None) -> tuple[str, list[str]]:
     """Lane and the human-readable reasons for it."""
     if not claim.get("verified"):
         return "blocked", [f"code check failed: {claim.get('reason')}"]
-    reasons = risk_reasons(claim["sentence"])
+    reasons = risk_reasons(claim["sentence"], claim.get("quote", ""))
     if meaning is None:
         reasons.append("meaning check not run")
     else:
