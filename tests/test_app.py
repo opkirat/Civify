@@ -273,6 +273,27 @@ def test_resident_page_shows_labelled_ai_summary_over_verified_sentences(staff, 
     assert "A plain summary of the change." not in staff.get(f"/items/{ITEM}").text
 
 
+def test_printable_notice_carries_the_same_ai_summary(staff, monkeypatch, tmp_path):
+    from civify import summary
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
+    live = db.load_record(ITEM)["claims"][1]["sentence"]
+    monkeypatch.setattr(summary, "path_for", lambda item_id: tmp_path / "summary.json")
+    page = staff.get(f"/items/{ITEM}/print").text
+    assert "AI-generated" not in page and live in page                              # no summary: sentences only
+    (tmp_path / "summary.json").write_text(json.dumps({"status": "ok", "based_on": [live],
+        "sentences": [{"text": "A plain summary of the change.", "uses": [live]}], "issues": []}))
+    page = staff.get(f"/items/{ITEM}/print").text
+    assert "AI-generated" in page and "A plain summary of the change." in page
+    assert page.index("A plain summary of the change.") < page.index(live)        # summary first, then the evidence
+    (tmp_path / "summary.json").write_text(json.dumps({"status": "held", "based_on": [live],
+        "sentences": [{"text": "A held summary.", "uses": [live]}], "issues": ["guardrail held"]}))
+    assert "A held summary." not in staff.get(f"/items/{ITEM}/print").text          # held summaries never print
+    (tmp_path / "summary.json").write_text(json.dumps({"status": "ok", "based_on": [live],
+        "sentences": [{"text": "A plain summary of the change.", "uses": [live]}], "issues": []}))
+    staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})                        # its source is gone: not printed
+    assert "A plain summary of the change." not in staff.get(f"/items/{ITEM}/print").text
+
+
 def test_pipeline_view_is_visible_on_dashboard_and_item_page(staff):
     for path in ("/staff", f"/staff/{ITEM}"):
         t = staff.get(path).text

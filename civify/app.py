@@ -556,7 +556,10 @@ def item(request: Request, item_id: str):
 def print_item(request: Request, item_id: str):
     rec = record_or_404(item_id)
     pub = db.latest_publication(db.connect(DB_PATH), item_id)
-    return templates.TemplateResponse(request, "print.html", {"rec": rec, "claims": pub["claims"] if pub else [], "publication": pub})
+    claims = pub["claims"] if pub else []
+    # Same rule as the item page: the summary prints only if it passed and every sentence it cites is still live.
+    return templates.TemplateResponse(request, "print.html", {"rec": rec, "claims": claims, "publication": pub,
+                                                              "summary": summary.for_residents(item_id, [c["sentence"] for c in claims])})
 
 
 @app.get("/items/{item_id}/qr.svg")

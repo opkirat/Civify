@@ -8,6 +8,8 @@
   .source-url { overflow-wrap:anywhere; font-size:12px; }
   .print-claims li { margin-bottom:12px; }
   .print-claims blockquote { font-size:12px; }
+  .print-summary { break-inside:avoid; border-left:3px solid var(--line); padding-left:12px; }
+  .print-summary .pill { font-size:11px; vertical-align:middle; }
   @page { size: auto; margin: 15mm; }
   @media print {
     :root { --ink:#000; --muted:#333; --line:#aaa; --bg:#fff; --panel:#fff; }
@@ -20,20 +22,26 @@
     .muted { font-size:9pt; }
     a { color:#000; }
     .print-claims li { break-inside:avoid; }
+    .print-summary .pill { border:1px solid #000; background:#fff; color:#000; }
   }
 </style>
 <div class="print-actions"><button type="button" onclick="window.print()">Print or save as PDF</button><a href="/items/{{ rec.item_id }}">Back to item</a><span class="muted">Long explanations may span more than one page.</span></div>
 <h1>{{ rec.title }}</h1>
 <p><strong>{{ rec|ward_label }}</strong> · {{ rec.item_id }} · Records retrieved {{ rec.retrieved }}</p>
 <p><strong>Stage in the saved record:</strong> {{ rec.current_stage.replace('_', ' ') }}.</p>
+{% if summary %}<section class="print-summary">
+<h2>Summary <span class="pill ai-pill">AI-generated</span></h2>
+<p>{% for x in summary.sentences %}{{ x.text }} {% endfor %}</p>
+<p class="muted">Written by AI from the checked sentences below, each with the City record it came from. The sentences and the official record are the authority.</p>
+</section>{% endif %}
 <h2>Can I still have a say?</h2>
 {% include 'participation.html' %}
-<h2>Reviewed explanation</h2>
+<h2>{% if summary %}Each sentence with its source{% else %}What the records say{% endif %}</h2>
 {% if claims %}
 <ol class="print-claims">{% for c in claims %}<li>{{ c.sentence }}
   <blockquote>“{{ c.quote }}” — {{ c.source_file }}, page {{ c.page }}</blockquote>
 </li>{% endfor %}</ol>
-<p class="muted">These sentences passed quote and number checks and were approved by a named reviewer. Reviewer identity is not authenticated in this demo.</p>
+<p class="muted">Each sentence was written by AI and checked against the City record: the quote must appear in the document and every number must match. Sentences the checks were unsure about were reviewed by City staff.</p>
 {% else %}<p>No explanation yet. Staff are reviewing the drafts.</p>{% endif %}
 <div class="notice-qr"><img src="/items/{{ rec.item_id }}/qr.svg" alt="QR code linking to the official City item page">
 <div><strong>Read the official record</strong><p>Scan for the City's item page and current participation information.</p><p class="source-url"><a href="{{ rec.official_url }}">{{ rec.official_url }}</a></p></div></div>
