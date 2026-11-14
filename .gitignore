@@ -7,3 +7,4 @@ __pycache__/
 
 # Source PDFs stay local for now (public letters contain residents' names); item.json is tracked.
 data/**/*.pdf
+data/_uploads/
