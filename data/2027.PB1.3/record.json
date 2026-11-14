@@ -1,0 +1,364 @@
+{
+  "item_id": "2027.PB1.3",
+  "title": "PB1.3 - 66 Gerrard Street East - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
+  "ward": "13",
+  "citywide": false,
+  "location": {
+    "address": "66 Gerrard St E",
+    "ward": "13",
+    "ward_name": "Toronto Centre",
+    "lat": 43.6599549521572,
+    "lon": -79.3788636882422
+  },
+  "retrieved": "2026-11-14",
+  "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2027.PB1.3",
+  "current_stage": "staff_recommendation",
+  "stages": [
+    {
+      "stage": "staff_recommendation",
+      "body": "Senior Manager, Heritage Planning, Urban Design, City Planning",
+      "date": "October 28, 2026",
+      "ward": "13 - Toronto Centre",
+      "application_number": null,
+      "summary": "This report recommends that City Council state its intention to designate the property at 66 Gerrard\nStreet East (including entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street\nEast) under Part IV, Section 29 of the Ontario Heritage Act for its cultural heritage value according to\nthe Statement of Significance which includes a description of heritage attributes found in Attachment 1.\n \nThe subject property at 66 Gerrard Street East is located on the north side of Gerrard Street East, at\nthe northwest corner of Church Street, within the Downtown Yonge East neighbourhood of downtown\nToronto.\n \nA location map and current photograph of the heritage property are included in Attachment 2.\n \nConstructed circa 1855, the property comprises a row of three attached brick house-form buildings,\nhistorically known as 62, 64, and 66 Gerrard Street East, designed in the Georgian architectural style\nand raised to two-and-a-half storeys c. 1875 with a Second Empire mansard roof spanning the three\nunits, together with a c. 1910 rear addition forming a streetwall along Church Street. The property forms\npart of the historic context of the Gerrard and Church Street area, at the southern edge of the present-\nday Church and Wellesley neighbourhood.\n \nThe subject property at 66 Gerrard Street East was listed on the City of Toronto's Heritage Register on\nNovember 6, 1974.\n \nThis property is one of eighteen pre-1870 listed properties citywide which have been identified as\ncandidates for designation through the City's implementation of Bill 23 amendments to the Ontario\nHeritage Act and its ongoing prioritization strategy for listed properties that must be designated or\nremoved from the Heritage Register by January 1, 2027.\n \nPart of the strategy for the review of listed properties on the Heritage Register includes the procurement\nof qualified heritage consultants to research, evaluate, and prepare heritage evaluation reports for a\nsubset of listed properties prioritized",
+      "recommendations": "The Senior Manager, Heritage Planning, Urban Design, City Planning recommends that:\n \n1. City Council state its intention to designate the property at 66 Gerrard Street East under Part IV,\nSection 29 of the Ontario Heritage Act in accordance with the Statement of Significance for 66 Gerrard\nStreet East (including entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street\nEast) (Reasons for Designation) attached as Attachment 1, to the report, October 28, 2026, from the\nSenior Manager, Heritage Planning, Urban Design, City Planning.\n \n2. If there are no objections to the designation, City Council authorize the City Solicitor to introduce the\nBill in Council designating the property under Part IV, Section 29 of the Ontario Heritage Act.",
+      "versions": [
+        {
+          "file": "backgroundfile-290748.pdf",
+          "date": "October 28, 2026"
+        }
+      ],
+      "source": {
+        "file": "backgroundfile-290748.pdf",
+        "sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+        "page": 1
+      }
+    },
+    {
+      "stage": "committee_decision",
+      "body": "Toronto Preservation Board",
+      "date": "November 16, 2026",
+      "status": "pending",
+      "recommendations": null,
+      "public_meeting": null,
+      "source": {
+        "file": "Agenda Item History - 2027.PB1.3.pdf",
+        "sha256": "df0927eee50ca974fbbd546c990fdcd13a8b2fd48c5e31d0a24b098d578e62ab"
+      }
+    },
+    {
+      "stage": "council_decision",
+      "body": "City Council",
+      "date": null,
+      "outcome": null,
+      "decision_text": null,
+      "motions": [],
+      "votes": [],
+      "declared_interests": null,
+      "source": {
+        "file": "Agenda Item History - 2027.PB1.3.pdf",
+        "sha256": "df0927eee50ca974fbbd546c990fdcd13a8b2fd48c5e31d0a24b098d578e62ab"
+      }
+    }
+  ],
+  "participation": {
+    "written_comments_rule": null,
+    "speaker_registration_rule": null,
+    "public_meeting": {},
+    "council_has_decided": false,
+    "next_meeting": {
+      "body": "Toronto Preservation Board",
+      "date": "November 16, 2026"
+    },
+    "basis": "This item will be considered by Toronto Preservation Board on November 16, 2026.",
+    "source": null,
+    "note": "Staff must confirm current participation status on the official item page before publishing."
+  },
+  "public_letters": 0,
+  "claims": [
+    {
+      "sentence": "Staff recommend that City Council state its intention to designate the property at 66 Gerrard Street East under Part IV, Section 29 of the Ontario Heritage Act.",
+      "quote": "This report recommends that City Council state its intention to designate the property at 66 Gerrard Street East (including entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street East) under Part IV, Section 29 of the Ontario Heritage Act",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "This property includes entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street East.",
+      "quote": "the property at 66 Gerrard Street East (including entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street East)",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "The property is located at the northwest corner of Gerrard Street East and Church Street in the Downtown Yonge East neighbourhood.",
+      "quote": "The subject property at 66 Gerrard Street East is located on the north side of Gerrard Street East, at the northwest corner of Church Street, within the Downtown Yonge East neighbourhood of downtown Toronto.",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "The property is in Ward 13 - Toronto Centre.",
+      "quote": "Wards: 13 - Toronto Centre",
+      "verified": false,
+      "reason": "quote is too short to count as evidence",
+      "page": null,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "blocked",
+      "reasons": [
+        "code check failed: quote is too short to count as evidence"
+      ],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": null,
+      "auto": false
+    },
+    {
+      "sentence": "If there are no objections to the designation, staff recommend that City Council let the City Solicitor introduce a bill to designate the property.",
+      "quote": "If there are no objections to the designation, City Council authorize the City Solicitor to introduce the Bill in Council designating the property under Part IV, Section 29 of the Ontario Heritage Act.",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "Designation lets City Council review proposed changes or demolitions and enforce heritage maintenance standards.",
+      "quote": "Designation enables City Council to review proposed alterations or demolitions to the property and enforce heritage property standards and maintenance.",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "A property may be designated if it meets two or more of the nine provincial criteria.",
+      "quote": "A property may be designated under Part IV, Section 29 of the Ontario Heritage Act, if it meets two or more of the nine criteria.",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "review",
+      "reasons": [
+        "meaning check: not supported (The passage states \"the nine criteria\" under the Ontario Heritage Act, not explicitly \"provincial criteria\".)",
+        "context check: held (The source does not explicitly describe the nine criteria as \"provincial criteria\".)"
+      ],
+      "meaning": {
+        "verdict": "not_supported",
+        "neutral": true,
+        "issue": "The passage states \"the nine criteria\" under the Ontario Heritage Act, not explicitly \"provincial criteria\"."
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The source does not explicitly describe the nine criteria as \"provincial criteria\".",
+        "suggestion": "A property may be designated under Part IV, Section 29 of the Ontario Heritage Act if it meets two or more of the nine criteria."
+      },
+      "auto": false
+    },
+    {
+      "sentence": "Staff and a heritage consultant agree that this property has cultural heritage value and meets five of the nine provincial criteria.",
+      "quote": "Staff have independently reviewed the research and heritage evaluations prepared by the Consultant and agree with the determination that the property at 66 Gerrard Street East (including entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street East) has cultural heritage value and meets five of the nine criteria",
+      "verified": true,
+      "reason": "ok",
+      "page": 4,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "review",
+      "reasons": [
+        "meaning check: not supported (The passage calls them \"the Consultant\" and \"the nine criteria\", not \"a heritage consultant\" or \"provincial criteria\".)",
+        "context check: held (The quote and page call them \"the Consultant\" and \"the nine criteria\", not \"a heritage consultant\" or \"provincial criteria\".)"
+      ],
+      "meaning": {
+        "verdict": "not_supported",
+        "neutral": true,
+        "issue": "The passage calls them \"the Consultant\" and \"the nine criteria\", not \"a heritage consultant\" or \"provincial criteria\"."
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The quote and page call them \"the Consultant\" and \"the nine criteria\", not \"a heritage consultant\" or \"provincial criteria\".",
+        "suggestion": "Staff and the Consultant agree that the property at 66 Gerrard Street East (including entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street East) has cultural heritage value and meets five of the nine criteria."
+      },
+      "auto": false
+    },
+    {
+      "sentence": "The property has design and physical value as a representative example of a Georgian style rowhouse built around 1855, with a Second Empire style mansard roof added around 1875 and a rear addition built around 1910.",
+      "quote": "Constructed circa 1855, the property comprises a row of three attached brick house-form buildings, historically known as 62, 64, and 66 Gerrard Street East, designed in the Georgian architectural style and raised to two-and-a-half storeys c. 1875 with a Second Empire mansard roof spanning the three units, together with a c. 1910 rear addition forming a streetwall along Church Street.",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "review",
+      "reasons": [
+        "meaning check: not supported (The passage does not explicitly state that the property has \"design and physical value as a representative example\".)",
+        "context check: held (The quote and page do not mention \"design and physical value as a representative example\".)"
+      ],
+      "meaning": {
+        "verdict": "not_supported",
+        "neutral": true,
+        "issue": "The passage does not explicitly state that the property has \"design and physical value as a representative example\"."
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The quote and page do not mention \"design and physical value as a representative example\".",
+        "suggestion": "Constructed circa 1855, the property comprises three attached brick house-form buildings (historically 62, 64, and 66 Gerrard Street East) in the Georgian style, raised to two-and-a-half storeys c. 1875 with a Second Empire mansard roof, plus a c. 1910 rear addition along Church Street."
+      },
+      "auto": false
+    },
+    {
+      "sentence": "The property has historical value because of its direct links to a person and businesses significant to Toronto's LGBTQ+ community.",
+      "quote": "The property at 66 Gerrard Street East has historical and associative value due to its direct associations with a person and businesses that are significant to Toronto’s LGBTQ+ community.",
+      "verified": true,
+      "reason": "ok",
+      "page": 7,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "The property also has contextual value because it helps maintain the historic 19th-century streetscape character around the intersection of Church and Gerrard Streets.",
+      "quote": "The subject property forms part of a collection of mid- to late-19th-century house-form buildings around the intersection of Church and Gerrard Streets that together maintain a fine-grained, pedestrian-scaled, streetscape characteristic of the 19th-century neighbourhood.",
+      "verified": true,
+      "reason": "ok",
+      "page": 7,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "review",
+      "reasons": [
+        "meaning check: not supported (The passage does not mention the phrase \"contextual value\".)"
+      ],
+      "meaning": {
+        "verdict": "not_supported",
+        "neutral": true,
+        "issue": "The passage does not mention the phrase \"contextual value\"."
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": false
+    },
+    {
+      "sentence": "There are no financial impacts to the City from the recommendations in this report.",
+      "quote": "There are no financial implications resulting from the recommendations included in this report in the current budget year or in future years.",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-290748.pdf",
+      "source_sha256": "47ffb71d6291c43ed4fa681ec6f70c6b30f81ad788933bbcae7998d168df3e2d",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    }
+  ]
+}

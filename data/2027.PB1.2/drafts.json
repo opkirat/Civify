@@ -1,0 +1,101 @@
+[
+  {
+    "sentence": "City staff recommend that City Council state its intention to designate the property at 106 Beverley Street under Part IV, Section 29 of the Ontario Heritage Act.",
+    "quote": "This report recommends that City Council state its intention to designate the property at 106 Beverley Street under Part IV, Section 29 of the Ontario Heritage Act for its cultural heritage value",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "The property at 106 Beverley Street is on the west side of Beverley Street, south of Dundas Street West, in the Grange neighbourhood of downtown Toronto.",
+    "quote": "The subject property at 106 Beverley Street, known originally as Esten House (1855), and later as Georgina House (1909), is located on the west side of Beverley Street, south of Dundas Street West, within the Grange neighbourhood of downtown Toronto.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "The property has a three-storey detached house that was built in 1855 for lawyer James Esten.",
+    "quote": "Constructed in 1855 for Toronto lawyer James Esten, the property contains a three-storey detached house-form building in the Italianate architectural style, which was designed by architect James Grand.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "The property was later converted into a women's residence called Georgina House and had additions built between 1909 and 1914.",
+    "quote": "Constructed in 1855, the property contains a three-storey detached house-form building in the Italianate architectural style designed by architect James Grand, which was later known as Georgina House, together with a front verandah and four-storey residential addition added by architect Eden Smith between 1909 and 1914.",
+    "verified": true,
+    "reason": "ok",
+    "page": 6,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "The property was listed on the City of Toronto's Heritage Register on November 21, 1977.",
+    "quote": "The subject property at 106 Beverley Street was listed on the City of Toronto's Heritage Register on November 21, 1977.",
+    "verified": true,
+    "reason": "ok",
+    "page": 1,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "This property is a candidate for designation because listed properties must be designated or removed from the Heritage Register by January 1, 2027.",
+    "quote": "This property is one of eighteen pre-1870 listed properties citywide which have been identified as candidates for designation through the City's implementation of Bill 23 amendments to the Ontario Heritage Act and its ongoing prioritization strategy for listed properties that must be designated or removed from the Heritage Register by January 1, 2027.",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "Staff and a heritage consultant agree that 106 Beverley Street has cultural heritage value and meets five of the provincial criteria for designation.",
+    "quote": "Staff have independently reviewed the Consultant's research and heritage evaluation and concur with the determination that the property at 106 Beverley Street has cultural heritage value and meets five of the Ontario Regulation 9/06 criteria prescribed for municipal designation under Part IV, Section 29 of the Ontario Heritage Act.",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "A property may be designated if it meets two or more of the nine provincial criteria.",
+    "quote": "A property may be designated under Part IV, Section 29 of the Ontario Heritage Act, if it meets two or more of the nine criteria.",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "Heritage designation allows City Council to review proposed changes or demolitions and enforce maintenance standards.",
+    "quote": "Designation enables City Council to review proposed alterations or demolitions to the property and enforce heritage property standards and maintenance.",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "If there are no objections to the designation, staff recommend that City Council authorize the City Solicitor to introduce a bill to designate the property.",
+    "quote": "If there are no objections to the designation, City Council authorize the City Solicitor to introduce the Bill in Council designating the property under Part IV, Section 29 of the Ontario Heritage Act.",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  },
+  {
+    "sentence": "There are no financial impacts to the City from these recommendations.",
+    "quote": "There are no financial implications resulting from the recommendations included in this report in the current budget year or in future years.",
+    "verified": true,
+    "reason": "ok",
+    "page": 2,
+    "source_file": "backgroundfile-290747.pdf",
+    "source_sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af"
+  }
+]

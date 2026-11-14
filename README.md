@@ -16,10 +16,13 @@ Built for the "Making municipal decisions easier to understand" challenge, on re
 - **Revised reports**: PB1.5 has three versions; drafting uses the newest dated report, November 13, 2026. Stored quote/number checks passed for 19/19 TE34.21 claims, 12/13 PB1.5 claims and 11/11 PB1.6 claims. Passing these checks does not establish meaning or staff approval.
 - **Public notices and agendas**: 14 saved Clerk notices and the six-item Preservation Board agenda, retrieved November 13, 2026. General participation rules are quoted separately from item-specific notices; no deadlines are calculated from meetings. Confirmed items link to their Civify record.
 - **Printable notice with QR code**: open an item's “Printable notice” link, then print or save as PDF. It includes approved sentences and full source quotes; the QR opens the official City item page. Long explanations may span multiple pages.
+- **SMS pilot flow**: residents choose a ward at `/alerts`, confirm a code, and can text STOP to leave. Staff review a short alert at `/staff/sms/overview` and send it once per published item to confirmed ward subscribers. Delivery is simulated by default; real carrier delivery has not been tested.
+
+The saved collection now includes eight items: the three described above, property tax item `2026.CC38.1`, and `2027.PB1.1`–`2027.PB1.4` (Arnold Avenue, Beverley Street, and two Gerrard Street items). The four new Preservation Board uploads finished processing on November 14. Pending sentences still need staff review; local publication decisions are not shared through Git.
 
 ## Planned, not built
 
-SMS alerts · translation · transit/budget examples · appeal stage · guaranteed one-page print layout. See [docs/limitations.md](docs/limitations.md) for the full, honest list.
+Live SMS provider setup · translation · transit/budget examples · appeal stage · guaranteed one-page print layout. See [docs/limitations.md](docs/limitations.md) for the full, honest list.
 
 ## Run it
 
@@ -54,6 +57,7 @@ For a new item, save its official page as `data/<actual-item-id>/Agenda_Item_His
 - [docs/decisions.md](docs/decisions.md) — each design choice with alternatives and trade-offs
 - [docs/sources.md](docs/sources.md) — libraries (versions, licences), data sources (dates), AI use and how it was checked
 - [docs/limitations.md](docs/limitations.md) — known gaps and what a pilot would need
+- [docs/sms.md](docs/sms.md) — SMS demo and live provider setup
 
 ## How AI is used, in one paragraph
 

@@ -11,13 +11,30 @@ import re
 import secrets
 import sqlite3
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from civify import db, geo
 
 
+def load_sms_env(path: str = ".env") -> None:
+    """Read local SMS settings without overriding process-provided values."""
+    file = Path(path)
+    if not file.is_file():
+        return
+    allowed = {"SMS_MODE", "TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_FROM_NUMBER", "SMS_WEBHOOK_URL"}
+    for line in file.read_text().splitlines():
+        if "=" not in line or line.lstrip().startswith("#"):
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if key in allowed:
+            os.environ.setdefault(key, value.strip().strip('"').strip("'"))
+
+
 def mode() -> str:
+    load_sms_env()
     return "twilio" if os.getenv("SMS_MODE") == "twilio" else "demo"
 
 

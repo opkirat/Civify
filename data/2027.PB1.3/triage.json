@@ -1,0 +1,226 @@
+[
+ {
+  "index": 0,
+  "sentence": "Staff recommend that City Council state its intention to designate the property at 66 Gerrard Street East under Part IV, Section 29 of the Ontario Heritage Act.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 1,
+  "sentence": "This property includes entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street East.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 2,
+  "sentence": "The property is located at the northwest corner of Gerrard Street East and Church Street in the Downtown Yonge East neighbourhood.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 3,
+  "sentence": "The property is in Ward 13 - Toronto Centre.",
+  "lane": "blocked",
+  "reasons": [
+   "code check failed: quote is too short to count as evidence"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": null,
+  "auto": false
+ },
+ {
+  "index": 4,
+  "sentence": "If there are no objections to the designation, staff recommend that City Council let the City Solicitor introduce a bill to designate the property.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 5,
+  "sentence": "Designation lets City Council review proposed changes or demolitions and enforce heritage maintenance standards.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 6,
+  "sentence": "A property may be designated if it meets two or more of the nine provincial criteria.",
+  "lane": "review",
+  "reasons": [
+   "meaning check: not supported (The passage states \"the nine criteria\" under the Ontario Heritage Act, not explicitly \"provincial criteria\".)",
+   "context check: held (The source does not explicitly describe the nine criteria as \"provincial criteria\".)"
+  ],
+  "meaning": {
+   "verdict": "not_supported",
+   "neutral": true,
+   "issue": "The passage states \"the nine criteria\" under the Ontario Heritage Act, not explicitly \"provincial criteria\"."
+  },
+  "confirm": {
+   "verdict": "hold",
+   "neutral": true,
+   "issue": "The source does not explicitly describe the nine criteria as \"provincial criteria\".",
+   "suggestion": "A property may be designated under Part IV, Section 29 of the Ontario Heritage Act if it meets two or more of the nine criteria."
+  },
+  "auto": false
+ },
+ {
+  "index": 7,
+  "sentence": "Staff and a heritage consultant agree that this property has cultural heritage value and meets five of the nine provincial criteria.",
+  "lane": "review",
+  "reasons": [
+   "meaning check: not supported (The passage calls them \"the Consultant\" and \"the nine criteria\", not \"a heritage consultant\" or \"provincial criteria\".)",
+   "context check: held (The quote and page call them \"the Consultant\" and \"the nine criteria\", not \"a heritage consultant\" or \"provincial criteria\".)"
+  ],
+  "meaning": {
+   "verdict": "not_supported",
+   "neutral": true,
+   "issue": "The passage calls them \"the Consultant\" and \"the nine criteria\", not \"a heritage consultant\" or \"provincial criteria\"."
+  },
+  "confirm": {
+   "verdict": "hold",
+   "neutral": true,
+   "issue": "The quote and page call them \"the Consultant\" and \"the nine criteria\", not \"a heritage consultant\" or \"provincial criteria\".",
+   "suggestion": "Staff and the Consultant agree that the property at 66 Gerrard Street East (including entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street East) has cultural heritage value and meets five of the nine criteria."
+  },
+  "auto": false
+ },
+ {
+  "index": 8,
+  "sentence": "The property has design and physical value as a representative example of a Georgian style rowhouse built around 1855, with a Second Empire style mansard roof added around 1875 and a rear addition built around 1910.",
+  "lane": "review",
+  "reasons": [
+   "meaning check: not supported (The passage does not explicitly state that the property has \"design and physical value as a representative example\".)",
+   "context check: held (The quote and page do not mention \"design and physical value as a representative example\".)"
+  ],
+  "meaning": {
+   "verdict": "not_supported",
+   "neutral": true,
+   "issue": "The passage does not explicitly state that the property has \"design and physical value as a representative example\"."
+  },
+  "confirm": {
+   "verdict": "hold",
+   "neutral": true,
+   "issue": "The quote and page do not mention \"design and physical value as a representative example\".",
+   "suggestion": "Constructed circa 1855, the property comprises three attached brick house-form buildings (historically 62, 64, and 66 Gerrard Street East) in the Georgian style, raised to two-and-a-half storeys c. 1875 with a Second Empire mansard roof, plus a c. 1910 rear addition along Church Street."
+  },
+  "auto": false
+ },
+ {
+  "index": 9,
+  "sentence": "The property has historical value because of its direct links to a person and businesses significant to Toronto's LGBTQ+ community.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 10,
+  "sentence": "The property also has contextual value because it helps maintain the historic 19th-century streetscape character around the intersection of Church and Gerrard Streets.",
+  "lane": "review",
+  "reasons": [
+   "meaning check: not supported (The passage does not mention the phrase \"contextual value\".)"
+  ],
+  "meaning": {
+   "verdict": "not_supported",
+   "neutral": true,
+   "issue": "The passage does not mention the phrase \"contextual value\"."
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": false
+ },
+ {
+  "index": 11,
+  "sentence": "There are no financial impacts to the City from the recommendations in this report.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ }
+]

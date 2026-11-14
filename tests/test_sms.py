@@ -2,7 +2,14 @@
 
 import re
 
+import pytest
+
 from civify import app as appmod, db, sms
+
+
+@pytest.fixture(autouse=True)
+def demo_only(monkeypatch):
+    monkeypatch.setenv("SMS_MODE", "demo")
 
 
 def test_signup_requires_consent_and_confirmation(client):

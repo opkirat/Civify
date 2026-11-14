@@ -1,0 +1,81 @@
+{
+  "results": [
+    {
+      "index": 1,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 2,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 3,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 5,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 6,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 7,
+      "verdict": "hold",
+      "neutral": true,
+      "issue": "The source does not explicitly describe the nine criteria as \"provincial criteria\".",
+      "suggestion": "A property may be designated under Part IV, Section 29 of the Ontario Heritage Act if it meets two or more of the nine criteria."
+    },
+    {
+      "index": 8,
+      "verdict": "hold",
+      "neutral": true,
+      "issue": "The quote and page call them \"the Consultant\" and \"the nine criteria\", not \"a heritage consultant\" or \"provincial criteria\".",
+      "suggestion": "Staff and the Consultant agree that the property at 66 Gerrard Street East (including entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street East) has cultural heritage value and meets five of the nine criteria."
+    },
+    {
+      "index": 9,
+      "verdict": "hold",
+      "neutral": true,
+      "issue": "The quote and page do not mention \"design and physical value as a representative example\".",
+      "suggestion": "Constructed circa 1855, the property comprises three attached brick house-form buildings (historically 62, 64, and 66 Gerrard Street East) in the Georgian style, raised to two-and-a-half storeys c. 1875 with a Second Empire mansard roof, plus a c. 1910 rear addition along Church Street."
+    },
+    {
+      "index": 10,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 11,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 12,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    }
+  ]
+}

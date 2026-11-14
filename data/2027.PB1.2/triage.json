@@ -1,0 +1,197 @@
+[
+ {
+  "index": 0,
+  "sentence": "City staff recommend that City Council state its intention to designate the property at 106 Beverley Street under Part IV, Section 29 of the Ontario Heritage Act.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 1,
+  "sentence": "The property at 106 Beverley Street is on the west side of Beverley Street, south of Dundas Street West, in the Grange neighbourhood of downtown Toronto.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 2,
+  "sentence": "The property has a three-storey detached house that was built in 1855 for lawyer James Esten.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 3,
+  "sentence": "The property was later converted into a women's residence called Georgina House and had additions built between 1909 and 1914.",
+  "lane": "review",
+  "reasons": [
+   "meaning check: not supported (The passage does not mention that the property was converted into a women's residence.)",
+   "context check: held (The cited quote and surrounding page text do not mention that the property was converted into a women's residence.)"
+  ],
+  "meaning": {
+   "verdict": "not_supported",
+   "neutral": true,
+   "issue": "The passage does not mention that the property was converted into a women's residence."
+  },
+  "confirm": {
+   "verdict": "hold",
+   "neutral": true,
+   "issue": "The cited quote and surrounding page text do not mention that the property was converted into a women's residence.",
+   "suggestion": "Built in 1855, the property was later known as Georgina House and had a front verandah and a four-storey residential addition added between 1909 and 1914."
+  },
+  "auto": false
+ },
+ {
+  "index": 4,
+  "sentence": "The property was listed on the City of Toronto's Heritage Register on November 21, 1977.",
+  "lane": "review",
+  "reasons": [
+   "mentions taking part or a deadline"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": null,
+  "auto": false
+ },
+ {
+  "index": 5,
+  "sentence": "This property is a candidate for designation because listed properties must be designated or removed from the Heritage Register by January 1, 2027.",
+  "lane": "review",
+  "reasons": [
+   "mentions taking part or a deadline"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": null,
+  "auto": false
+ },
+ {
+  "index": 6,
+  "sentence": "Staff and a heritage consultant agree that 106 Beverley Street has cultural heritage value and meets five of the provincial criteria for designation.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 7,
+  "sentence": "A property may be designated if it meets two or more of the nine provincial criteria.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 8,
+  "sentence": "Heritage designation allows City Council to review proposed changes or demolitions and enforce maintenance standards.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 9,
+  "sentence": "If there are no objections to the designation, staff recommend that City Council authorize the City Solicitor to introduce a bill to designate the property.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 10,
+  "sentence": "There are no financial impacts to the City from these recommendations.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ }
+]

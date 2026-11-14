@@ -1,0 +1,200 @@
+[
+ {
+  "index": 0,
+  "sentence": "City staff recommend that City Council state its intention to designate the property at 8 Arnold Avenue under Part IV, Section 29 of the Ontario Heritage Act.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 1,
+  "sentence": "The property at 8 Arnold Avenue is located south of Lambton Avenue in the Rockcliffe-Smythe neighbourhood.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 2,
+  "sentence": "The house is a red-brick Ontario Farmhouse-style building from the 1870s or 1880s known as the George Marshall Residence.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 3,
+  "sentence": "The building is the earliest known house in the Mount Dennis community.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 4,
+  "sentence": "On August 19, 2026, Toronto Building received an application to demolish the house at 8 Arnold Avenue.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 5,
+  "sentence": "The property owner must give at least 60 days' written notice to Heritage Planning of their intention to demolish a structure on a listed property.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 6,
+  "sentence": "At the time of the report, the property owner had not yet submitted this notice to Heritage Planning.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 7,
+  "sentence": "Staff found that the property meets three of the nine provincial criteria required for municipal heritage designation.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 8,
+  "sentence": "A property may be designated if it meets two or more of the nine criteria.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 9,
+  "sentence": "Designation allows City Council to review proposed changes or demolitions and enforce heritage maintenance standards.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 10,
+  "sentence": "If there are no objections to the designation, staff recommend that City Council allow the City Solicitor to introduce a bill to designate the property.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ }
+]

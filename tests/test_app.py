@@ -157,7 +157,10 @@ def test_meetings_page_and_upcoming_items_in_ward(client):
     assert "Toronto Preservation Board" in t and "2027.PB1.6" in t and "1337 Queen Street West" in t
     assert "register by 12:00 p.m. the day before" in t
     near = client.get("/near", params={"ward": "13"}).text
-    assert "Coming up at a meeting, in your ward" in near and "66 Gerrard Street East" in near and "8 Arnold Avenue" not in near
+    assert "Coming up at a meeting, in your ward" in near
+    # Other wards can appear in the separate collapsed browse section.
+    upcoming = near.split("Coming up at a meeting, in your ward", 1)[1].split("</details>", 1)[0]
+    assert "66 Gerrard Street East" in upcoming and "8 Arnold Avenue" not in upcoming
 
 
 # --- publishing versions, escalation, dashboard ------------------------------------

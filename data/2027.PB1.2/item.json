@@ -1,0 +1,31 @@
+{
+  "item_id": "2027.PB1.2",
+  "retrieved": "2026-11-14",
+  "source_folder": "data/2027.PB1.2",
+  "documents": [
+    {
+      "filename": "Agenda Item History - 2027.PB1.2.pdf",
+      "sha256": "5a5898c69a16f9b226639e3f99685f849e888cb1fb201e46d0f0d474d4f113ee",
+      "pages": 2,
+      "doc_type": "item_page",
+      "author": "City Clerk (TMMIS)",
+      "evidence": "Item - 2027.PB1.2",
+      "fields": {
+        "item_id": "2027.PB1.2"
+      }
+    },
+    {
+      "filename": "backgroundfile-290747.pdf",
+      "sha256": "074a2b034a92866df4432d5014fc7f37520415233f28ac8c27c9c9a5e1c141af",
+      "pages": 28,
+      "doc_type": "staff_report",
+      "author": "Senior Manager, Heritage Planning, Urban Design, City Planning",
+      "evidence": "REPORT FOR ACTION",
+      "fields": {
+        "Date": "October 28, 2026",
+        "To": "Toronto Preservation Board",
+        "From": "Senior Manager, Heritage Planning, Urban Design, City Planning"
+      }
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+[
+ {
+  "index": 0,
+  "sentence": "Staff recommend that City Council state its intention to designate the property at 70 Gerrard Street East under Part IV, Section 29 of the Ontario Heritage Act.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 1,
+  "sentence": "If there are no objections to the designation, staff recommend that City Council authorize the City Solicitor to introduce a bill to designate the property.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 2,
+  "sentence": "The property at 70 Gerrard Street East is on the north side of Gerrard Street East, at the northeast corner of Church Street, in the Downtown Yonge East neighbourhood.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 3,
+  "sentence": "The property is located in Ward 13 - Toronto Centre.",
+  "lane": "blocked",
+  "reasons": [
+   "code check failed: quote is too short to count as evidence"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": null,
+  "auto": false
+ },
+ {
+  "index": 4,
+  "sentence": "The building was constructed around 1845 in the Georgian style and was substantially altered in 1886 in the Queen Anne Revival style.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 5,
+  "sentence": "The property is historically known as the Dr. James Elliot Graham House and has also been home to Egerton's Restaurant, The Edge music venue, and Under 21/Covenant House.",
+  "lane": "review",
+  "reasons": [
+   "meaning check: not supported (The cited passage does not mention that the property is historically known as the Dr. James Elliot Graham House.)"
+  ],
+  "meaning": {
+   "verdict": "not_supported",
+   "neutral": true,
+   "issue": "The cited passage does not mention that the property is historically known as the Dr. James Elliot Graham House."
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": false
+ },
+ {
+  "index": 6,
+  "sentence": "The property was listed on the City of Toronto's Heritage Register on March 15, 1974.",
+  "lane": "review",
+  "reasons": [
+   "mentions taking part or a deadline"
+  ],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": null,
+  "auto": false
+ },
+ {
+  "index": 7,
+  "sentence": "Staff and a heritage consultant determined that the property has cultural heritage value and meets six of the nine provincial criteria for municipal heritage designation.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 8,
+  "sentence": "A property may be designated if it meets two or more of the nine provincial criteria.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 9,
+  "sentence": "Heritage designation allows City Council to review proposed alterations or demolitions to the property and enforce heritage property standards and maintenance.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ },
+ {
+  "index": 10,
+  "sentence": "There are no financial impacts to the City resulting from the recommendations in this report.",
+  "lane": "ready",
+  "reasons": [],
+  "meaning": {
+   "verdict": "supported",
+   "neutral": true,
+   "issue": ""
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
+ }
+]

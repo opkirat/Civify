@@ -1,4 +1,18 @@
-# Civify continuation — November 13, 2026
+# Civify continuation — November 14, 2026
+
+## Current handoff
+
+This section supersedes the historical notes below.
+
+- Eight saved items now exist: property tax item 2026.CC38.1, College Street 2026.TE34.21, and Preservation Board items 2027.PB1.1 through PB1.6.
+- Upload jobs 2–5 completed successfully for PB1.1–PB1.4. Their local published explanations contain 11, 8, 7 and 8 approved sentences respectively. Pending sentences still require staff review. Publications and accounts live in the ignored local SQLite database and are not shipped through GitHub.
+- The user authorized pushing the pending commits and Codex edits to GitHub. They deferred the manual sentence-review walkthrough. Do not approve those sentences on their behalf.
+- SMS signup, code confirmation, ward matching and staff dispatch are implemented in demo mode. Local Twilio credentials authenticated on November 13; that account was Trial and had no owned sender numbers. Live sending and a public webhook remain unconfigured. See `sms.md`; never commit `.env` files.
+- The app now binds reviews to content and records publication versions. The older warning below about index-only approvals is obsolete.
+- No permission was given to relax numeric verification to accept a year elsewhere on the page. Keep the existing verification rule. The proposed expired-deadline labels also remain pending.
+- Remaining external inputs: human review; a real phone/QR walkthrough; team names and roles for the readiness report; and the Kennedy Road item page when available. The handoff suggested checking for that page November 18–20, not treating its absence today as an error.
+
+## Historical notes — November 13
 
 This records the state after continuing the supplied Claude conversation. The original brief and rubric are in `.claude/skills/civify-context/`. `README.md` describes implemented features; `docs/limitations.md` records gaps.
 

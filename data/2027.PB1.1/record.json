@@ -1,0 +1,333 @@
+{
+  "item_id": "2027.PB1.1",
+  "title": "PB1.1 - 8 Arnold Avenue - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
+  "ward": "5",
+  "citywide": false,
+  "location": {
+    "address": "8 Arnold Ave",
+    "ward": "5",
+    "ward_name": "York South-Weston",
+    "lat": 43.6825561738188,
+    "lon": -79.4884244283848
+  },
+  "retrieved": "2026-11-14",
+  "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2027.PB1.1",
+  "current_stage": "staff_recommendation",
+  "stages": [
+    {
+      "stage": "staff_recommendation",
+      "body": "Senior Manager, Heritage Planning, Urban Design, City Planning",
+      "date": "October 28, 2026",
+      "ward": "5 - York South - Weston",
+      "application_number": null,
+      "summary": "This report recommends that City Council state its intention to designate the property at 8 Arnold\nAvenue under Part IV, Section 29 of the Ontario Heritage Act for its cultural heritage value according to\nthe Statement of Significance and description of heritage attributes found in Attachment 1.\n \nThe subject property at 8 Arnold Avenue is located just within the northern boundary of the Rockcliffe-\nSmythe neighbourhood, south of Lambton Avenue. The residence is notable as a red-brick, one-and-a-\nhalf-storey, Ontario Farmhouse-style property, dating from c.1870s – 1880s, and historically known as\nthe George Marshall Residence. The property, which is the earliest known house in the Mount Dennis\ncommunity, serves to recall the community’s former farming and settlement past. A location map and\ncurrent photograph of the property are found in Attachment 2.\n \nIn 2021 the Mount Dennis Cultural Heritage Resource Assessment (CHRA) was completed by the\nheritage consulting firm, Common Bond Collective, as part of the Picture Mount Dennis Planning\nFramework Study. The CHRA identified the property at 8 Arnold Avenue as having potential heritage\nvalue for its design/physical, and historical/associative value. The Mount Dennis Secondary Plan and\nthe associated Official Plan Amendment (OPA 571) was approved by the Ontario Land Tribunal on\nOctober 11, 2024.  \n \nCity Council listed the property at 8 Arnold Avenue on the City of Toronto's Heritage Register on May\n20, 2026.\n \nOn August 19, 2026, Toronto Building received an application to demolish the dwelling at 8 Arnold\nAvenue. On October 14, 2026, Toronto Building issued an Applicable Law Notice to the applicant\nidentifying outstanding requirements relating to demolition control under S.33 of the Planning Act and\nnotice under the Ontario Heritage Act.\n \nThe owner must submit to Heritage Planning a Notice of Intention to Demolish, as required under\nS.27(9) of the Ontario Heritage Act, to give a municipal council at least 60 days’ no",
+      "recommendations": "The Senior Manager, Heritage Planning, Urban Design, City Planning recommends that:\n \n1. City Council state its intention to designate the property at 8 Arnold Avenue under Part IV, Section 29\nof the Ontario Heritage Act in accordance with the Statement of Significance for 8 Arnold Avenue\n(Reasons for Designation) attached as Attachment 1, to the report, October 28, 2026, from the Senior\nManager, Heritage Planning, Urban Design, City Planning.\n \n2. If there are no objections to the designation, City Council authorize the City Solicitor to introduce the\nBill in Council designating the property under Part IV, Section 29 of the Ontario Heritage Act.",
+      "versions": [
+        {
+          "file": "backgroundfile-290751.pdf",
+          "date": "October 28, 2026"
+        }
+      ],
+      "source": {
+        "file": "backgroundfile-290751.pdf",
+        "sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+        "page": 1
+      }
+    },
+    {
+      "stage": "committee_decision",
+      "body": "Toronto Preservation Board",
+      "date": "November 16, 2026",
+      "status": "pending",
+      "recommendations": null,
+      "public_meeting": null,
+      "source": {
+        "file": "Agenda Item History - 2027.PB1.1.pdf",
+        "sha256": "4e4c9b82d6c2c8f460c4075be6fad7fcb52a77c577e119cd103ffce4da0d0327"
+      }
+    },
+    {
+      "stage": "council_decision",
+      "body": "City Council",
+      "date": null,
+      "outcome": null,
+      "decision_text": null,
+      "motions": [],
+      "votes": [],
+      "declared_interests": null,
+      "source": {
+        "file": "Agenda Item History - 2027.PB1.1.pdf",
+        "sha256": "4e4c9b82d6c2c8f460c4075be6fad7fcb52a77c577e119cd103ffce4da0d0327"
+      }
+    }
+  ],
+  "participation": {
+    "written_comments_rule": null,
+    "speaker_registration_rule": null,
+    "public_meeting": {},
+    "council_has_decided": false,
+    "next_meeting": {
+      "body": "Toronto Preservation Board",
+      "date": "November 16, 2026"
+    },
+    "basis": "This item will be considered by Toronto Preservation Board on November 16, 2026.",
+    "source": null,
+    "note": "Staff must confirm current participation status on the official item page before publishing."
+  },
+  "public_letters": 0,
+  "claims": [
+    {
+      "sentence": "City staff recommend that City Council state its intention to designate the property at 8 Arnold Avenue under Part IV, Section 29 of the Ontario Heritage Act.",
+      "quote": "This report recommends that City Council state its intention to designate the property at 8 Arnold Avenue under Part IV, Section 29 of the Ontario Heritage Act for its cultural heritage value",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "The property at 8 Arnold Avenue is located south of Lambton Avenue in the Rockcliffe-Smythe neighbourhood.",
+      "quote": "The subject property at 8 Arnold Avenue is located just within the northern boundary of the Rockcliffe-Smythe neighbourhood, south of Lambton Avenue.",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "The house is a red-brick Ontario Farmhouse-style building from the 1870s or 1880s known as the George Marshall Residence.",
+      "quote": "The residence is notable as a red-brick, one-and-a-half-storey, Ontario Farmhouse-style property, dating from c.1870s – 1880s, and historically known as the George Marshall Residence.",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "The building is the earliest known house in the Mount Dennis community.",
+      "quote": "The property, which is the earliest known house in the Mount Dennis community, serves to recall the community’s former farming and settlement past.",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "On August 19, 2026, Toronto Building received an application to demolish the house at 8 Arnold Avenue.",
+      "quote": "On August 19, 2026, Toronto Building received an application to demolish the dwelling at 8 Arnold Avenue.",
+      "verified": true,
+      "reason": "ok",
+      "page": 1,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "The property owner must give at least 60 days' written notice to Heritage Planning of their intention to demolish a structure on a listed property.",
+      "quote": "The owner must submit to Heritage Planning a Notice of Intention to Demolish, as required under S.27(9) of the Ontario Heritage Act, to give a municipal council at least 60 days’ notice in writing of their intention to demolish or remove a structure on a “listed” property.",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "At the time of the report, the property owner had not yet submitted this notice to Heritage Planning.",
+      "quote": "At the time of this report, the owner had not yet submitted the notice to Heritage Planning.",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "Staff found that the property meets three of the nine provincial criteria required for municipal heritage designation.",
+      "quote": "Staff have determined that 8 Arnold Avenue meets three out of nine criteria in Ontario Regulation 9/06, the criteria prescribed for municipal designation under Part IV, Section 29 of the Ontario Heritage Act.",
+      "verified": true,
+      "reason": "ok",
+      "page": 5,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "A property may be designated if it meets two or more of the nine criteria.",
+      "quote": "A property may be designated under Part IV, Section 29 of the Ontario Heritage Act, if it meets two or more of the nine criteria.",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "Designation allows City Council to review proposed changes or demolitions and enforce heritage maintenance standards.",
+      "quote": "Designation enables City Council to review proposed alterations or demolitions to the property and enforce heritage property standards and maintenance.",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    },
+    {
+      "sentence": "If there are no objections to the designation, staff recommend that City Council allow the City Solicitor to introduce a bill to designate the property.",
+      "quote": "If there are no objections to the designation, City Council authorize the City Solicitor to introduce the Bill in Council designating the property under Part IV, Section 29 of the Ontario Heritage Act.",
+      "verified": true,
+      "reason": "ok",
+      "page": 2,
+      "source_file": "backgroundfile-290751.pdf",
+      "source_sha256": "599b69720c1780545dd1b6cc8b97e0b42351a94dc0b9a8f469558ad1d6c54693",
+      "lane": "ready",
+      "reasons": [],
+      "meaning": {
+        "verdict": "supported",
+        "neutral": true,
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
+    }
+  ]
+}
