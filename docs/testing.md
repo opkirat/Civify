@@ -10,23 +10,24 @@ Open http://127.0.0.1:8000 on the same computer. The preview is local, so this a
 
 ## Resident walkthrough
 
-1. On the homepage, choose **Ward 4 · Parkdale-High Park**, then **Find issues**. This works without an external address lookup. The issue at 1337 Queen Street West should appear under “Issues in your ward.”
-2. Open the issue. Its status should be **Proposed**, with a saved board meeting date of November 16, 2026. The participation panel should explicitly say that an open comment window has not been verified.
-3. Check the explanation. Until a person reviews the drafts, “No approved explanation yet” is expected. The app must not publish drafts simply because they passed quote checks.
-4. Use **Decision timeline**, **Official item page**, and **Printable notice with QR code**. The QR leads to the City’s official page. Printing should retain the source text and hide navigation; long approved explanations can span pages.
-5. Use the navigation to open **Meetings**, then return to **Explore issues** and open the College Street item. It should show the enacted stage and Council amendment motions.
+1. On the homepage, choose **Ward 4 · Parkdale-High Park** and search. The issue at 1337 Queen Street West appears, along with the city-wide property tax item (city-wide items show for every ward).
+2. Open the issue. It leads with a short summary labelled **AI-generated**. Expand it to see each verified sentence with its exact source quote and page.
+3. Check **Can I still have a say?** and **Where it stands**. The item is a staff recommendation with a saved board meeting date of November 16, 2026; no deadline is calculated.
+4. Open 106 Beverley Street (Ward 10). It has no AI summary because the summary's guardrail held it (it stated a staff judgement as fact). Residents see the verified sentences directly.
+5. Open the College Street item. It shows Council's decision, the enacted stage and the amendment motions.
+6. Use **Print with QR code**. The QR opens the City's official item page.
 
 ## Reviewer walkthrough
 
-Review actions persist in the local `civify.db` and change the resident view. Use your own name and approve only after reading the sentence against its evidence.
+Sign in at `/staff` with a staff account (`python -m civify.auth add <username> --name "<Name>"`). Decisions persist in the local `civify.db` and change the resident page immediately.
 
-1. Open **Staff workspace → 1337 Queen Street West → Review drafts**.
-2. Use **Jump to draft sentences**. Each card pairs the proposed explanation with its supporting quote and page.
-3. Read a sentence and its evidence, enter your name, and approve it if it is accurate. Use **Preview resident view** to confirm that sentence appears with its source.
-4. For a validation test, edit a sentence to introduce an unsupported number such as `99999`, then submit it. The edit should be refused and the prior review should remain unchanged.
-5. Reject a previously approved sentence and confirm it disappears from the resident and print views.
+1. The dashboard shows each item's pipeline (documents → draft → source check → meaning check → reviewed → live → AI summary) and a list of exactly what needs a person.
+2. Open an item with sentences that need you. Each card shows the reasons it was flagged, the quote highlighted in its paragraph, **Open the PDF** at that page, and often a suggested fix.
+3. Approve a sentence. The notice says it is live and names the new resident page version; check it on **Resident view**.
+4. Validation test: choose **Edit, then approve**, add an unsupported number such as `99999`, and submit. It is refused and nothing is saved.
+5. Reject a live sentence (including one approved by `auto-check`) and confirm it disappears from the resident and print pages, and that any AI summary citing it is withdrawn until rebuilt.
 
-Do not regenerate or reorder reviewed drafts during this walkthrough. Reviews currently use claim indices; content-bound approval persistence remains an outstanding fix.
+Approvals are bound to the exact sentence, quote and source checksum, so re-drafting an item sends changed sentences back to review.
 
 ## Usability check with a teammate
 
@@ -41,7 +42,7 @@ Record where they hesitate. Separately, test at a narrow browser width and use T
 
 ## Checks completed for the UI refresh
 
-- 21 existing app and pending-item regression tests passed.
+- At the time, 21 app and pending-item regression tests passed (163 tests in the suite now).
 - Home, staff queue, review, ward results, meetings, issue, print and stylesheet routes returned HTTP 200.
 - Headless Chrome checked six screens at a true 390px viewport with no horizontal overflow; screenshots were inspected for the homepage, issue and staff review layouts.
 - The browser submitted the actual ward-search form and reached Ward 4 results.

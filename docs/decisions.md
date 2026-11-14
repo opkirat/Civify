@@ -1,6 +1,6 @@
 # Architecture decisions
 
-Each entry: the choice, the alternatives considered, and the trade-off. Written as the decision was made, not after.
+Each entry: the choice, the alternatives considered, and the trade-off. Written as the decision was made, not after; when a later decision replaces part of an earlier one, the earlier entry says so and is kept. D-22 and D-23 were added out of order and are listed last.
 
 ## D-01 · Verify quotes in code; let the AI only propose
 
@@ -64,19 +64,12 @@ Each entry: the choice, the alternatives considered, and the trade-off. Written 
 **Alternative.** Diff committee recommendations against the Council decision.
 **Trade-off.** The diff was noisy (flagged "191-199" vs "191 to 199") and missed the substantive change; the motions state exactly what was altered, by whom, and whether it carried — and they are the record's own explanation.
 
-## D-12 · Confirm item identity independently of the meeting year
-
-The November 2026 Preservation Board agenda uses 2027 item IDs. The parser retains a short ID when the full ID is absent, rather than constructing a URL from the meeting year. A local record resolves an agenda entry only when short ID, body, meeting date and ward agree. This leaves some entries without direct links but prevents navigation to an unrelated or nonexistent item.
-
-## D-13 · Printable notices retain evidence and use official-page QR codes
-
-The print route uses the resident approval gate and includes complete approved sentences and their source quotes. Segno generates QR SVG locally, pointing to the official City item page so a phone does not need access to the demo's localhost. Long content can span multiple pages; fitting it by truncation could remove a condition or citation. Physical print layout and QR scanning still require manual verification.
-
 ## D-12 · One meaning-check call and risk rules, not a multi-agent pipeline
 
 **Choice.** Keep the drafter, add one second model call per item that judges each sentence against its own quote, plus plain-code risk rules. Route sentences into ready / review / blocked lanes.
 **Alternatives.** (a) A four-agent pipeline (curator, validator, impact & personalisation, engagement guide). (b) Send every sentence to a person (status quo). (c) Publish ready sentences with no human action.
-**Trade-off.** (a) adds cost, latency and failure points; its "impact level" and demographic matching would put AI judgement on political decisions and need personal data, against the brief's neutrality and data-minimisation constraints; stages and participation are already read from the record, so an engagement agent would only add risk. (b) was the friction staff asked us to remove: on the real items, 18 of 43 sentences were ready for one-click approval under the first rule, 31 of 43 under D-17. (c) removes the one human signature the brief's "checked against the records" rule relies on; one click per item keeps it nearly frictionless. The meaning check fails safe: if it errors or isn't run, everything goes to review.
+**Trade-off.** (a) adds cost, latency and failure points; its "impact level" and demographic matching would put AI judgement on political decisions and need personal data, against the brief's neutrality and data-minimisation constraints; stages and participation are already read from the record, so an engagement agent would only add risk. (b) was the friction we hit reviewing the items ourselves: on the real items, 18 of 43 sentences were ready for one-click approval under the first rule, 31 of 43 under D-17. (c) removes the one human signature the brief's "checked against the records" rule relies on; one click per item keeps it nearly frictionless. The meaning check fails safe: if it errors or isn't run, everything goes to review.
+**Later.** Option (c) was revisited in D-19 with a second, differently framed AI check added; the one-click button remains for when automatic approval is turned off (`CIVIFY_AUTO_APPROVE=0`).
 
 ## D-13 · Local accounts with server-side sessions
 
@@ -91,6 +84,7 @@ The print route uses the resident approval gate and includes complete approved s
 ## D-15 · Published versions instead of live approvals
 
 **Choice.** Approving a sentence no longer shows it to residents. A worker publishes a numbered version: a frozen copy of the approved sentences with their quotes and sources (no lanes, reasons, notes or reviewer names).
+**Later.** Replaced by D-20: approving now publishes. Frozen numbered versions remain.
 **Why.** It gives the City one deliberate "this is what we're telling residents" moment per item, an exact record of what residents saw and when, and stops a half-reviewed item from leaking out sentence by sentence.
 
 ## D-16 · Steps, not "agents"; reasons, not confidence scores; no assignment yet
@@ -107,23 +101,30 @@ A review prompt asked for per-agent progress, numeric confidence and assigned wo
 
 **Choice.** Each card shows the page's own text around the quote with the quote highlighted, and a link that opens the PDF at that page. The excerpt comes from the same extracted text the verifier searched, with headers and footers removed; matching tolerates line breaks, hyphenation, dashes and curly quotes but is otherwise exact.
 **Alternatives.** (a) Name the file and page and leave the reviewer to open the PDF and search. (b) Embed a PDF viewer with coordinates highlighted.
-**Trade-off.** (a) is what the first version did; reviewers told us it made every check a hunt. (b) needs text-position extraction and a viewer, and still breaks on scanned pages. The excerpt gives the surrounding paragraph in one glance, and the PDF link covers the cases where layout matters.
+**Trade-off.** (a) is what the first version did; in our own review it made every check a hunt through the PDF. (b) needs text-position extraction and a viewer, and still breaks on scanned pages. The excerpt gives the surrounding paragraph in one glance, and the PDF link covers the cases where layout matters.
 
 ## D-19 · Approve automatically when two AI checks and the code agree; people publish
 
-**Choice.** Add a second AI call that reads each sentence against the whole page around its quote, is told that an approval goes to residents with no person reading it first, and is told to hold when in doubt. When the code checks pass, the first AI check says "supported and neutral", the second says "approve", and the sentence is not about taking part or a deadline, the sentence is approved automatically under the name `auto-check`. A person still clicks Publish for each version, and can reject or edit any automatic approval. Held sentences come with suggested wording that is re-verified before it can be saved.
+**Choice.** Add a second AI call that reads each sentence against the whole page around its quote, is told that an approval goes to residents with no person reading it first, and is told to hold when in doubt. When the code checks pass, the first AI check says "supported and neutral", the second says "approve", and the sentence is not about taking part or a deadline, the sentence is approved automatically under the name `auto-check`. A person can reject or edit any automatic approval. (As first built, a person still clicked Publish; D-20 removed that step.) Held sentences come with suggested wording that is re-verified before it can be saved.
 **Alternatives.** (a) Keep a person approving every sentence, with one click for the ready ones (D-12). (b) Approve on the first AI check alone. (c) Publish automatically as well.
-**Trade-off.** (a) left 43 decisions across three items. Workers asked for less, and most of those clicks were rubber stamps. (b) puts one model judgement between a sentence and residents. Two differently framed reads (the quote alone, then the page) plus the deterministic quote and number checks catch more than either check alone. On the real items, every held sentence named a real slip: a proposal stated as fact, a dropped condition, an attribution the page doesn't make. (c) would remove the last person accountable for what residents see. With this design that person reviews about 4 sentences per item and clicks Publish. On the real items: 32 of 43 approved automatically, 10 need a person, 1 blocked.
+**Trade-off.** (a) left 43 decisions across three items. Most of those clicks were rubber stamps. (b) puts one model judgement between a sentence and residents. Two differently framed reads (the quote alone, then the page) plus the deterministic quote and number checks catch more than either check alone. On the real items, every held sentence named a real slip: a proposal stated as fact, a dropped condition, an attribution the page doesn't make. (c) would remove the last person accountable for what residents see. With this design a person reviews about 4 sentences per item. On the first three items: 32 of 43 approved automatically, 10 needed a person, 1 blocked; across all 8 items: 88 of 119 automatic, 25 flagged, 6 blocked.
 
 ## D-20 · Approving is publishing
 
 **Choice.** A sentence goes live for residents as soon as it is approved: automatically when every check agrees (D-19), or when a worker clicks Approve. Rejecting or editing updates the resident page the same way. Each change still creates a new frozen, numbered version (D-15), so the record of what residents saw and when is kept. The separate Publish step is gone from the worker's screen.
 **Alternatives.** (a) Keep "approve, then publish" (D-15). (b) Publish automatically only for AI approvals, and keep the Publish button for staff decisions.
-**Trade-off.** In testing, workers found (a) confusing: an approved sentence moved to "decided" but residents still couldn't see it. (b) keeps two ways for a sentence to go live, which is the same confusion. The cost of this design is that no person signs off on a version as a whole, and auto-approved sentences reach residents without anyone reading them. The safeguards are the code checks, two AI checks, the rule that taking part and deadlines never auto-approve, one-click takedown, and the full version history.
+**Trade-off.** In our own testing, (a) was confusing: an approved sentence moved to "decided" but residents still couldn't see it. (b) keeps two ways for a sentence to go live, which is the same confusion. The cost of this design is that no person signs off on a version as a whole, and auto-approved sentences reach residents without anyone reading them. The safeguards are the code checks, two AI checks, the rule that taking part and deadlines never auto-approve, one-click takedown, and the full version history.
 
 ## D-21 · An AI summary for residents, built only from verified sentences
 
 **Choice.** The resident page leads with a two- or three-sentence summary, labelled "AI-generated", with a note saying how it was made and that the sentences and official page are the authority. The summary is written only from sentences that are already live, and each summary sentence cites the ones it uses. Code checks that every citation is live and that every number appears in the cited sentences. A second AI call, told it is the last check before residents and to hold when in doubt, must approve each summary sentence. If either check fails, the writer gets the reasons and one more try. No person approves the summary. Expanding it shows every verified sentence with its source quote.
 **Alternatives.** (a) No summary, only the sentence list. (b) Staff choose one to three sentences as "key points" (an approach tried and withdrawn). (c) A summary written from the whole report.
-**Trade-off.** (a) is accurate but long: 8 to 22 sentences is a lot to read on a phone. (b) puts a manual step back in front of every item, which is the friction workers asked us to remove. (c) cannot be traced back to evidence sentence by sentence. Building from live sentences means the summary cannot introduce a fact that hasn't already passed the source checks, and citations let it be withdrawn the moment a sentence it relies on is rejected. On the real items, the guardrail held drafts that said "will create" where the report says "proposed to create", and that stated a staff recommendation as settled. After one repair, 7 of 8 summaries passed; the eighth falls back to the sentence list.
+**Trade-off.** (a) is accurate but long: 8 to 22 sentences is a lot to read on a phone. (b) puts a manual step back in front of every item, which is the friction this design set out to remove. (c) cannot be traced back to evidence sentence by sentence. Building from live sentences means the summary cannot introduce a fact that hasn't already passed the source checks, and citations let it be withdrawn the moment a sentence it relies on is rejected. On the real items, the guardrail held drafts that said "will create" where the report says "proposed to create", and that stated a staff recommendation as settled. After one repair, 7 of 8 summaries passed; the eighth falls back to the sentence list.
 
+## D-22 · Confirm item identity independently of the meeting year
+
+The November 2026 Preservation Board agenda uses 2027 item IDs. The parser retains a short ID when the full ID is absent, rather than constructing a URL from the meeting year. A local record resolves an agenda entry only when short ID, body, meeting date and ward agree. This leaves some entries without direct links but prevents navigation to an unrelated or nonexistent item.
+
+## D-23 · Printable notices retain evidence and use official-page QR codes
+
+The print route uses the resident approval gate and includes complete approved sentences and their source quotes. Segno generates QR SVG locally, pointing to the official City item page so a phone does not need access to the demo's localhost. Long content can span multiple pages; fitting it by truncation could remove a condition or citation. Physical print layout and QR scanning still require manual verification.

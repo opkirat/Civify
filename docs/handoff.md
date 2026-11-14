@@ -1,5 +1,7 @@
 # Civify continuation — November 14, 2026
 
+Working notes passed between development sessions. Where they disagree with the README or the other docs, those are current; for example, budget and SMS (demo mode) are now built and sentences can go live automatically (D-19, D-20).
+
 ## Current handoff
 
 This section supersedes the historical notes below.
