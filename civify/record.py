@@ -177,14 +177,15 @@ def participation(notice: dict | None, council: dict, text: str) -> dict:
 
 
 def with_triage(claims: list[dict], path: Path) -> list[dict]:
-    """Attach lane, reasons and meaning-check result from triage.json, matched by index and sentence."""
+    """Attach lane, reasons and both AI-check results from triage.json, matched by index and sentence."""
     if not path.exists():
         return claims
     by_index = {t["index"]: t for t in json.loads(path.read_text())}
     out = []
     for i, c in enumerate(claims):
         t = by_index.get(i)
-        out.append({**c, "lane": t["lane"], "reasons": t["reasons"], "meaning": t["meaning"]} if t and t["sentence"] == c["sentence"] else c)
+        out.append({**c, "lane": t["lane"], "reasons": t["reasons"], "meaning": t["meaning"],
+                    "confirm": t.get("confirm"), "auto": t.get("auto", False)} if t and t["sentence"] == c["sentence"] else c)
     return out
 
 

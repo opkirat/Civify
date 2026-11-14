@@ -26,6 +26,7 @@ def tmp_data(tmp_path, monkeypatch):
     monkeypatch.setattr(pipeline, "FETCH_HTTP", lambda url: (SRC / url.rsplit("/", 1)[-1]).read_bytes())
     monkeypatch.setattr(pipeline, "DRAFT_CALL", lambda _p: (SRC / "draft_response.json").read_text())
     monkeypatch.setattr(pipeline, "MEANING_CALL", lambda _p: (SRC / "meaning_response.json").read_text())
+    monkeypatch.setattr(pipeline, "CONFIRM_CALL", lambda _p: (SRC / "confirm_response.json").read_text())
     return data
 
 
@@ -78,7 +79,9 @@ def test_full_processing_run_then_review(staff, tmp_data):
     assert "11 sentences" in j["steps"][3]["detail"]
     rec = json.loads((tmp_data / "2027.PB1.6" / "record.json").read_text())
     assert rec["item_id"] == "2027.PB1.6" and len(rec["claims"]) == 11 and all("lane" in c for c in rec["claims"])
-    assert "passed every check" in staff.get("/staff/2027.PB1.6").text
+    page = staff.get("/staff/2027.PB1.6").text
+    assert "Approved automatically (8)" in page and "need a person" in page
+    assert "8 sentence(s) auto-approved" in j["steps"][5]["detail"]
 
 
 def test_missing_staff_report_blocks_and_retry_resumes(staff, tmp_data, monkeypatch):

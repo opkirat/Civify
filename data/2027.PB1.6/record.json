@@ -3,11 +3,11 @@
   "title": "PB1.6 - 1337 Queen Street West - Demolition and New Construction on a Designated Heritage Property under Part V, Section 42 of the Ontario Heritage Act - Approval",
   "ward": "4",
   "location": {
-    "address": "1337 Queen St E",
-    "ward": "14",
-    "ward_name": "Toronto-Danforth",
-    "lat": 43.6639309698279,
-    "lon": -79.3265226466053
+    "address": "1337 Queen St W",
+    "ward": "4",
+    "ward_name": "Parkdale-High Park",
+    "lat": 43.6408329800092,
+    "lon": -79.4339214087117
   },
   "retrieved": "2026-11-13",
   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2027.PB1.6",
@@ -89,7 +89,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "This property is known as the West Block of the Parkdale Hub project and currently has a one-storey building on it.",
@@ -105,7 +112,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The proposal is to tear down the existing building and build a 16-storey mixed-use tower with a 4-storey podium.",
@@ -121,7 +135,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The new building will stay owned by the City and will include purpose-built affordable housing.",
@@ -137,7 +158,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The demolition and new building are proposed to create new affordable rental housing, better community facilities, and updated public spaces.",
@@ -147,15 +175,20 @@
       "page": 4,
       "source_file": "backgroundfile-290746.pdf",
       "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
-      "lane": "review",
-      "reasons": [
-        "meaning check: not supported (The passage only mentions the demolition of the existing building, not the new building.)"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
-        "verdict": "not_supported",
+        "verdict": "supported",
         "neutral": true,
-        "issue": "The passage only mentions the demolition of the existing building, not the new building."
-      }
+        "issue": ""
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "City Council previously approved a heritage permit for this project on June 24 and 25, 2026.",
@@ -171,7 +204,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The updated proposal raises the height of the 4-storey podium by 1.2m to allow for taller ceilings in the ground floor community space.",
@@ -187,7 +227,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "Because the revised proposal no longer follows policies 7.6.4 and 7.6.5 of the Parkdale Main Street Heritage Conservation District Plan, it needs a new Section 42 approval under the Ontario Heritage Act.",
@@ -199,13 +246,21 @@
       "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
       "lane": "review",
       "reasons": [
-        "meaning check: not supported (The passage refers to the 'Parkdale HCD Plan', whereas the sentence expands it to 'Parkdale Main Street Heritage Conservation District Plan' which is not in this passage.)"
+        "meaning check: not supported (The passage calls it the \"Parkdale HCD Plan\", not the \"Parkdale Main Street Heritage Conservation District Plan\", and does not state that the proposal \"no longer\" follows the policies (only that it \"does not meet\" them).)",
+        "context check: held (The full name of the HCD Plan and the fact that the proposal 'no longer' follows the policies are not stated on page 8.)"
       ],
       "meaning": {
         "verdict": "not_supported",
         "neutral": true,
-        "issue": "The passage refers to the 'Parkdale HCD Plan', whereas the sentence expands it to 'Parkdale Main Street Heritage Conservation District Plan' which is not in this passage."
-      }
+        "issue": "The passage calls it the \"Parkdale HCD Plan\", not the \"Parkdale Main Street Heritage Conservation District Plan\", and does not state that the proposal \"no longer\" follows the policies (only that it \"does not meet\" them)."
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The full name of the HCD Plan and the fact that the proposal 'no longer' follows the policies are not stated on page 8.",
+        "suggestion": "Because the proposal does not meet Policies 7.6.4. and 7.6.5 of the Parkdale HCD Plan, it needs a new Section 42 approval under the Ontario Heritage Act."
+      },
+      "auto": false
     },
     {
       "sentence": "A separate minor variance application is also needed for the proposed changes.",
@@ -221,7 +276,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "City staff recommend that City Council approve the demolition and the construction of the new 16-storey building at 1337 Queen Street West.",
@@ -233,13 +295,21 @@
       "source_sha256": "6dd878189a7cda9314a7c3478135e5b980edfba77a89128747859b5d9c93438c",
       "lane": "review",
       "reasons": [
-        "meaning check: not supported (The passage does not explicitly state that 'City staff recommend' this action, and the sentence omits that the approval is subject to conditions.)"
+        "meaning check: not supported (The passage does not explicitly mention \"City staff recommend\" and states the approval is subject to conditions, which the sentence omits.)",
+        "context check: held (The sentence omits that the recommended approval is subject to conditions.)"
       ],
       "meaning": {
         "verdict": "not_supported",
         "neutral": true,
-        "issue": "The passage does not explicitly state that 'City staff recommend' this action, and the sentence omits that the approval is subject to conditions."
-      }
+        "issue": "The passage does not explicitly mention \"City staff recommend\" and states the approval is subject to conditions, which the sentence omits."
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The sentence omits that the recommended approval is subject to conditions.",
+        "suggestion": "City staff recommend that City Council approve the demolition of the non-contributing building and the construction of a new 16-storey mixed-use building at 1337 Queen Street West, subject to conditions."
+      },
+      "auto": false
     },
     {
       "sentence": "This approval is subject to the condition that the replacement building is built substantially according to the plans by LGA Architectural Partners dated September 25, 2026.",
@@ -252,13 +322,21 @@
       "lane": "review",
       "reasons": [
         "states a recommendation or decision that the source passage does not",
-        "states a condition or requirement that the source passage does not"
+        "states a condition or requirement that the source passage does not",
+        "context check: held (The sentence states the condition as part of an active approval rather than a recommended condition, and omits 'and elevations'.)"
       ],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The sentence states the condition as part of an active approval rather than a recommended condition, and omits 'and elevations'.",
+        "suggestion": "A recommended condition is that the replacement building for 1337 Queen Street West be built substantially according to the plans and elevations by LGA Architectural Partners dated September 25, 2026."
+      },
+      "auto": false
     }
   ]
 }

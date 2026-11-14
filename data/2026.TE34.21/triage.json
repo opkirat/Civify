@@ -8,7 +8,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 1,
@@ -19,7 +26,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 2,
@@ -30,7 +44,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 3,
@@ -41,7 +62,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 4,
@@ -52,18 +80,34 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 5,
   "sentence": "The proposed building will also include 1,931 square metres of retail space on the first three levels.",
-  "lane": "ready",
-  "reasons": [],
+  "lane": "review",
+  "reasons": [
+   "context check: held (The sentence states the building 'will' include the retail space instead of presenting it as a proposal.)"
+  ],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "hold",
+   "neutral": true,
+   "issue": "The sentence states the building 'will' include the retail space instead of presenting it as a proposal.",
+   "suggestion": "The proposal includes 1,931 square metres of retail space at ground level fronting College Street and on the second and third levels."
+  },
+  "auto": false
  },
  {
   "index": 6,
@@ -74,7 +118,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 7,
@@ -85,7 +136,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 8,
@@ -96,7 +154,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 9,
@@ -107,7 +172,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 10,
@@ -118,7 +190,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 11,
@@ -129,46 +208,68 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 12,
   "sentence": "Staff recommend that City Council amend the Official Plan for 191-199 College Street and 74-76 Henry Street.",
-  "lane": "review",
-  "reasons": [
-   "states a recommendation or decision that the source passage does not"
-  ],
+  "lane": "ready",
+  "reasons": [],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 13,
   "sentence": "Staff recommend that City Council amend Zoning By-law 569-2013 for the site.",
-  "lane": "review",
-  "reasons": [
-   "states a recommendation or decision that the source passage does not"
-  ],
+  "lane": "ready",
+  "reasons": [],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 14,
   "sentence": "Staff recommend that City Council allow the City Solicitor to update or replace existing agreements for dwelling room replacement and affordable housing.",
-  "lane": "review",
-  "reasons": [
-   "states a recommendation or decision that the source passage does not"
-  ],
+  "lane": "ready",
+  "reasons": [],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 15,
@@ -179,18 +280,34 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 16,
   "sentence": "If the accepted servicing report shows that new or upgraded municipal infrastructure is needed, the owner must secure it with financial securities or build it before the holding provision is removed.",
-  "lane": "ready",
-  "reasons": [],
+  "lane": "review",
+  "reasons": [
+   "context check: held ( neither the quote nor the page text states that this condition is 'before the holding provision is removed'.)"
+  ],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "hold",
+   "neutral": true,
+   "issue": " neither the quote nor the page text states that this condition is 'before the holding provision is removed'.",
+   "suggestion": "If the accepted Functional Servicing and Stormwater Management Report shows that new or upgraded municipal infrastructure is needed to support the development, the owner or applicant must either secure its design, construction, and financial securities in an agreement, or have it constructed and operational."
+  },
+  "auto": false
  },
  {
   "index": 17,
@@ -201,17 +318,33 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 18,
   "sentence": "Nine new City street trees are proposed to be planted, and cash-in-lieu will be required if it is not physically possible to plant all required replacement trees.",
-  "lane": "ready",
-  "reasons": [],
+  "lane": "review",
+  "reasons": [
+   "context check: held (The suggestion must keep the number '9' exactly as written in the quote, or we can approve if spelling out is fine, but holding to keep '9' as digits.)"
+  ],
   "meaning": {
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "hold",
+   "neutral": true,
+   "issue": "The suggestion must keep the number '9' exactly as written in the quote, or we can approve if spelling out is fine, but holding to keep '9' as digits.",
+   "suggestion": "A total of 9 new City street trees are proposed to be planted, and cash-in-lieu will be required if it is not physically possible to plant all required replacement trees."
+  },
+  "auto": false
  }
 ]

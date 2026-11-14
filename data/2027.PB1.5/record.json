@@ -97,7 +97,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "If there are no objections to the designation, staff recommend that City Council let the City Solicitor introduce the designating bill.",
@@ -113,7 +120,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The property at 19 Don Ridge Drive is known as St. John's York Mills Anglican Church and is on the east side of Yonge Street, north of York Mills Road, in North York.",
@@ -129,7 +143,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The property is located in Ward 15, Don Valley West.",
@@ -147,7 +168,9 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": null,
+      "auto": false
     },
     {
       "sentence": "This report focuses on the original 1843–44 church building, and not on later additions, other buildings, or the burial grounds.",
@@ -163,7 +186,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "Staff recommend designating the property because it has cultural heritage value and meets five of the nine provincial criteria.",
@@ -175,14 +205,20 @@
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
       "lane": "review",
       "reasons": [
-        "states a recommendation or decision that the source passage does not",
-        "meaning check: not supported (The passage states that staff agree the property has cultural heritage value and meets five criteria, not that they recommend designating it.)"
+        "meaning check: not supported (The passage states that staff agree with the determination of heritage value, not that staff recommend designation.)"
       ],
       "meaning": {
         "verdict": "not_supported",
         "neutral": true,
-        "issue": "The passage states that staff agree the property has cultural heritage value and meets five criteria, not that they recommend designating it."
-      }
+        "issue": "The passage states that staff agree with the determination of heritage value, not that staff recommend designation."
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": false
     },
     {
       "sentence": "A property may be designated if it meets two or more of the nine criteria.",
@@ -198,7 +234,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The church has design value as a Gothic Revival building designed by architect John George Howard in the 1840s.",
@@ -210,13 +253,21 @@
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
       "lane": "review",
       "reasons": [
-        "meaning check: not supported (The passage does not mention \"design value\" or explicitly state that John George Howard designed this specific church.)"
+        "meaning check: not supported (The passage does not explicitly state that the church has 'design value' or that Howard designed this specific building.)",
+        "context check: held (The quote says the property is an example of the style employed by Howard across Southern Ontario, rather than stating directly in the quote that Howard designed this building.)"
       ],
       "meaning": {
         "verdict": "not_supported",
         "neutral": true,
-        "issue": "The passage does not mention \"design value\" or explicitly state that John George Howard designed this specific church."
-      }
+        "issue": "The passage does not explicitly state that the church has 'design value' or that Howard designed this specific building."
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The quote says the property is an example of the style employed by Howard across Southern Ontario, rather than stating directly in the quote that Howard designed this building.",
+        "suggestion": "The property at 19 Don Ridge Drive is a representative example of the Gothic Revival style of church architecture used by architect John George Howard in the 1840s."
+      },
+      "auto": false
     },
     {
       "sentence": "The property has historical value for its direct links to the founding of the Anglican Church in Upper Canada and St. John’s York Mills parish.",
@@ -232,7 +283,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The property has contextual value because it is historically linked to nearby heritage properties from a similar time period.",
@@ -244,13 +302,21 @@
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
       "lane": "review",
       "reasons": [
-        "meaning check: not supported (The passage refers to surrounding properties from a similar construction period, not specifically \"heritage properties.\")"
+        "meaning check: not supported (The passage refers to 'several properties' from a similar period, not specifically 'heritage properties'.)",
+        "context check: held (The quote describes the nearby properties as sharing a similar period of construction, not specifically as 'heritage properties'.)"
       ],
       "meaning": {
         "verdict": "not_supported",
         "neutral": true,
-        "issue": "The passage refers to surrounding properties from a similar construction period, not specifically \"heritage properties.\""
-      }
+        "issue": "The passage refers to 'several properties' from a similar period, not specifically 'heritage properties'."
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The quote describes the nearby properties as sharing a similar period of construction, not specifically as 'heritage properties'.",
+        "suggestion": "The property at 19 Don Ridge Drive has contextual value because it is historically linked to its surroundings, which include several properties built during a similar time period."
+      },
+      "auto": false
     },
     {
       "sentence": "Heritage designation allows City Council to review proposed changes or demolitions on the property and enforce maintenance standards.",
@@ -266,7 +332,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The Anglican Diocese of Toronto confirmed that none of the identified heritage attributes are liturgical elements, which would be exempt from regulation while the congregation uses the property.",
@@ -278,13 +351,20 @@
       "source_sha256": "a14c4d6bc517b4e15bdcf1ef3e5084a32ea07a75bc73813831adf4f7fcde1bb2",
       "lane": "review",
       "reasons": [
-        "meaning check: not supported (The passage does not state that liturgical elements are exempt from regulation while the congregation uses the property.)"
+        "meaning check: not supported (The passage does not mention that liturgical elements would be exempt from regulation while the congregation uses the property.)"
       ],
       "meaning": {
         "verdict": "not_supported",
         "neutral": true,
-        "issue": "The passage does not state that liturgical elements are exempt from regulation while the congregation uses the property."
-      }
+        "issue": "The passage does not mention that liturgical elements would be exempt from regulation while the congregation uses the property."
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": false
     },
     {
       "sentence": "There are no financial impacts for the City from the recommendations in this report.",
@@ -300,7 +380,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     }
   ]
 }

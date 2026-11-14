@@ -8,7 +8,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 1,
@@ -19,7 +26,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 2,
@@ -30,7 +44,14 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 3,
@@ -43,7 +64,9 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": null,
+  "auto": false
  },
  {
   "index": 4,
@@ -54,21 +77,34 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 5,
   "sentence": "Staff recommend designating the property because it has cultural heritage value and meets five of the nine provincial criteria.",
   "lane": "review",
   "reasons": [
-   "states a recommendation or decision that the source passage does not",
-   "meaning check: not supported (The passage states that staff agree the property has cultural heritage value and meets five criteria, not that they recommend designating it.)"
+   "meaning check: not supported (The passage states that staff agree with the determination of heritage value, not that staff recommend designation.)"
   ],
   "meaning": {
    "verdict": "not_supported",
    "neutral": true,
-   "issue": "The passage states that staff agree the property has cultural heritage value and meets five criteria, not that they recommend designating it."
-  }
+   "issue": "The passage states that staff agree with the determination of heritage value, not that staff recommend designation."
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": false
  },
  {
   "index": 6,
@@ -79,20 +115,35 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 7,
   "sentence": "The church has design value as a Gothic Revival building designed by architect John George Howard in the 1840s.",
   "lane": "review",
   "reasons": [
-   "meaning check: not supported (The passage does not mention \"design value\" or explicitly state that John George Howard designed this specific church.)"
+   "meaning check: not supported (The passage does not explicitly state that the church has 'design value' or that Howard designed this specific building.)",
+   "context check: held (The quote says the property is an example of the style employed by Howard across Southern Ontario, rather than stating directly in the quote that Howard designed this building.)"
   ],
   "meaning": {
    "verdict": "not_supported",
    "neutral": true,
-   "issue": "The passage does not mention \"design value\" or explicitly state that John George Howard designed this specific church."
-  }
+   "issue": "The passage does not explicitly state that the church has 'design value' or that Howard designed this specific building."
+  },
+  "confirm": {
+   "verdict": "hold",
+   "neutral": true,
+   "issue": "The quote says the property is an example of the style employed by Howard across Southern Ontario, rather than stating directly in the quote that Howard designed this building.",
+   "suggestion": "The property at 19 Don Ridge Drive is a representative example of the Gothic Revival style of church architecture used by architect John George Howard in the 1840s."
+  },
+  "auto": false
  },
  {
   "index": 8,
@@ -103,20 +154,35 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 9,
   "sentence": "The property has contextual value because it is historically linked to nearby heritage properties from a similar time period.",
   "lane": "review",
   "reasons": [
-   "meaning check: not supported (The passage refers to surrounding properties from a similar construction period, not specifically \"heritage properties.\")"
+   "meaning check: not supported (The passage refers to 'several properties' from a similar period, not specifically 'heritage properties'.)",
+   "context check: held (The quote describes the nearby properties as sharing a similar period of construction, not specifically as 'heritage properties'.)"
   ],
   "meaning": {
    "verdict": "not_supported",
    "neutral": true,
-   "issue": "The passage refers to surrounding properties from a similar construction period, not specifically \"heritage properties.\""
-  }
+   "issue": "The passage refers to 'several properties' from a similar period, not specifically 'heritage properties'."
+  },
+  "confirm": {
+   "verdict": "hold",
+   "neutral": true,
+   "issue": "The quote describes the nearby properties as sharing a similar period of construction, not specifically as 'heritage properties'.",
+   "suggestion": "The property at 19 Don Ridge Drive has contextual value because it is historically linked to its surroundings, which include several properties built during a similar time period."
+  },
+  "auto": false
  },
  {
   "index": 10,
@@ -127,20 +193,34 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  },
  {
   "index": 11,
   "sentence": "The Anglican Diocese of Toronto confirmed that none of the identified heritage attributes are liturgical elements, which would be exempt from regulation while the congregation uses the property.",
   "lane": "review",
   "reasons": [
-   "meaning check: not supported (The passage does not state that liturgical elements are exempt from regulation while the congregation uses the property.)"
+   "meaning check: not supported (The passage does not mention that liturgical elements would be exempt from regulation while the congregation uses the property.)"
   ],
   "meaning": {
    "verdict": "not_supported",
    "neutral": true,
-   "issue": "The passage does not state that liturgical elements are exempt from regulation while the congregation uses the property."
-  }
+   "issue": "The passage does not mention that liturgical elements would be exempt from regulation while the congregation uses the property."
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": false
  },
  {
   "index": 12,
@@ -151,6 +231,13 @@
    "verdict": "supported",
    "neutral": true,
    "issue": ""
-  }
+  },
+  "confirm": {
+   "verdict": "approve",
+   "neutral": true,
+   "issue": "",
+   "suggestion": ""
+  },
+  "auto": true
  }
 ]

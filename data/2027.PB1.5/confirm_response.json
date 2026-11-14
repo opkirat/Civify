@@ -1,0 +1,88 @@
+{
+  "results": [
+    {
+      "index": 1,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 2,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 3,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 5,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 6,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 7,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 8,
+      "verdict": "hold",
+      "neutral": true,
+      "issue": "The quote says the property is an example of the style employed by Howard across Southern Ontario, rather than stating directly in the quote that Howard designed this building.",
+      "suggestion": "The property at 19 Don Ridge Drive is a representative example of the Gothic Revival style of church architecture used by architect John George Howard in the 1840s."
+    },
+    {
+      "index": 9,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 10,
+      "verdict": "hold",
+      "neutral": true,
+      "issue": "The quote describes the nearby properties as sharing a similar period of construction, not specifically as 'heritage properties'.",
+      "suggestion": "The property at 19 Don Ridge Drive has contextual value because it is historically linked to its surroundings, which include several properties built during a similar time period."
+    },
+    {
+      "index": 11,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 12,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 13,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    }
+  ]
+}

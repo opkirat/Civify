@@ -1,0 +1,81 @@
+{
+  "results": [
+    {
+      "index": 1,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 2,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 3,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 4,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 5,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 6,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 7,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 8,
+      "verdict": "hold",
+      "neutral": true,
+      "issue": "The full name of the HCD Plan and the fact that the proposal 'no longer' follows the policies are not stated on page 8.",
+      "suggestion": "Because the proposal does not meet Policies 7.6.4. and 7.6.5 of the Parkdale HCD Plan, it needs a new Section 42 approval under the Ontario Heritage Act."
+    },
+    {
+      "index": 9,
+      "verdict": "approve",
+      "neutral": true,
+      "issue": "",
+      "suggestion": ""
+    },
+    {
+      "index": 10,
+      "verdict": "hold",
+      "neutral": true,
+      "issue": "The sentence omits that the recommended approval is subject to conditions.",
+      "suggestion": "City staff recommend that City Council approve the demolition of the non-contributing building and the construction of a new 16-storey mixed-use building at 1337 Queen Street West, subject to conditions."
+    },
+    {
+      "index": 11,
+      "verdict": "hold",
+      "neutral": true,
+      "issue": "The sentence states the condition as part of an active approval rather than a recommended condition, and omits 'and elevations'.",
+      "suggestion": "A recommended condition is that the replacement building for 1337 Queen Street West be built substantially according to the plans and elevations by LGA Architectural Partners dated September 25, 2026."
+    }
+  ]
+}

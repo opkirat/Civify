@@ -6,7 +6,7 @@ preliminary output, so the Processing page can show real progress and a Retry
 button can resume from the step that failed.
 
 Steps: save files → fetch linked records → classify → draft + source check (AI)
-       → meaning check (AI) → build record
+       → two AI checks (meaning, then in context) → build record + auto-approve
 
 AI output is reused automatically when nothing it depends on has changed
 (same staff report for drafting; same sentences for the meaning check), so
@@ -33,13 +33,14 @@ STEPS = [
     ("fetch", "Fetch linked records"),
     ("classify", "Classify documents"),
     ("draft", "Draft summary and check sources (AI + code)"),
-    ("meaning", "Meaning check (AI)"),
-    ("record", "Build the item record"),
+    ("meaning", "Two AI checks: meaning, then in context"),
+    ("record", "Build the record and auto-approve"),
 ]
 
 # Swappable in tests; None means "call the real model".
 DRAFT_CALL: Callable[[str], str] | None = None
 MEANING_CALL: Callable[[str], str] | None = None
+CONFIRM_CALL: Callable[[str], str] | None = None
 FETCH_HTTP: Callable[[str], bytes] | None = None
 
 
@@ -79,7 +80,7 @@ def _set(con, job_id, pos, **fields):
 def run(db_path: str, job_id: int) -> None:
     """Run (or resume) a job. Steps already done are skipped, so Retry resumes."""
     con = db.connect(db_path)
-    j = job(con, job_id)
+    j = job(con, job_id) | {"db_path": db_path}
     con.execute("UPDATE jobs SET status = 'running', finished_at = NULL WHERE id = ?", (job_id,)); con.commit()
     folder = db.DATA / j["item_id"]
     final = "done"
@@ -159,31 +160,54 @@ def step_draft(j, folder):
 
 def step_meaning(j, folder):
     claims = json.loads((folder / "drafts.json").read_text())
-    saved, tri = folder / "meaning_response.json", folder / "triage.json"
-    reuse = saved.exists() and tri.exists() and [t["sentence"] for t in json.loads(tri.read_text())] == [c["sentence"] for c in claims]
-    call = (lambda _p: saved.read_text()) if reuse else (MEANING_CALL or _live_call("meaning"))
-    raw, meaning = triage.check_meaning(claims, call)
+    saved, saved_c, tri = folder / "meaning_response.json", folder / "confirm_response.json", folder / "triage.json"
+    same = tri.exists() and [t["sentence"] for t in json.loads(tri.read_text())] == [c["sentence"] for c in claims]
+    reuse_m, reuse_c = same and saved.exists(), same and saved_c.exists()
+    raw, meaning = triage.check_meaning(claims, (lambda _p: saved.read_text()) if reuse_m else (MEANING_CALL or _live_call("meaning")))
     saved.write_text(raw)
-    result = triage.triage(claims, meaning)
+    contexts = triage.contexts_for(claims, folder)
+    raw, confirm = triage.check_confirm(claims, contexts, meaning,
+                                        (lambda _p: saved_c.read_text()) if reuse_c else (CONFIRM_CALL or _live_call("confirm")))
+    saved_c.write_text(raw)
+    result = triage.triage(claims, meaning, confirm)
     tri.write_text(json.dumps(result, indent=1, ensure_ascii=False))
+    auto = sum(t["auto"] for t in result)
     lanes = {l: sum(t["lane"] == l for t in result) for l in ("ready", "review", "blocked")}
-    return (("reused the saved meaning check: " if reuse else "") + f"{lanes['ready']} ready, {lanes['review']} need a look, {lanes['blocked']} blocked"), \
-        {"lanes": lanes}, "done"
+    return (("reused the saved AI checks: " if reuse_m and reuse_c else "") +
+            f"{auto} can be approved automatically, {lanes['review']} need a person, {lanes['blocked']} blocked"), \
+        {"lanes": lanes | {"auto": auto}}, "done"
 
 
 def step_record(j, folder):
     rec = record.build(folder)
     (folder / "record.json").write_text(json.dumps(rec, indent=2, ensure_ascii=False))
-    return f"{rec['item_id']} · stage: {rec['current_stage'].replace('_', ' ')} · ward {rec.get('ward') or '?'}", \
-        {"title": rec["title"], "stage": rec["current_stage"]}, "done"
+    n = db.auto_approve(db.connect(j["db_path"]), rec)
+    return f"{rec['item_id']} · stage: {rec['current_stage'].replace('_', ' ')} · ward {rec.get('ward') or '?'} · {n} sentence(s) auto-approved", \
+        {"title": rec["title"], "stage": rec["current_stage"], "auto_approved": n}, "done"
 
 
 def _live_call(kind: str):
     load_env()
     if "GEMINI_API_KEY" not in os.environ:
         raise Blocked("No AI key configured (GEMINI_API_KEY). Ask an administrator to add it, then retry.")
-    return __import__("civify.draft", fromlist=["call_gemini"]).call_gemini if kind == "draft" else triage.call_gemini
+    return {"draft": __import__("civify.draft", fromlist=["call_gemini"]).call_gemini,
+            "meaning": triage.call_gemini, "confirm": triage.call_gemini_confirm}[kind]
 
 
 STEP_FUNCS = {"save": step_save, "fetch": step_fetch, "classify": step_classify,
               "draft": step_draft, "meaning": step_meaning, "record": step_record}
+
+
+def main() -> int:
+    """Auto-approve an item that was processed from the command line:
+    python -m civify.pipeline data/2027.PB1.6"""
+    import sys
+    folder = Path(sys.argv[1])
+    rec = db.load_record(folder.name)
+    n = db.auto_approve(db.connect("civify.db"), rec)
+    print(f"{rec['item_id']}: {n} sentence(s) auto-approved. Publish from the staff review screen.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

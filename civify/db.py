@@ -155,6 +155,26 @@ def save_review(con: sqlite3.Connection, item_id: str, idx: int, claim: dict, st
     con.commit()
 
 
+AUTO_REVIEWER = "auto-check"   # not a valid username, so no person can sign in as it
+AUTO_NOTE = ("Approved automatically: the quote is in the source, every number matches, and two separate "
+             "AI checks (against the quote, then against the whole page) found the sentence fully supported and neutral.")
+
+
+def auto_approve(con: sqlite3.Connection, record: dict) -> int:
+    """Approve every sentence the triage marked "auto", unless a person already decided
+    this exact sentence or it is escalated. Logged like any decision; a person can
+    reject or edit it later, and nothing reaches residents until someone publishes."""
+    iid = record["item_id"]
+    reviews = reviews_for(con, iid)
+    escalated = {e["claim_index"] for e in open_escalations(con, iid)}
+    n = 0
+    for i, c in enumerate(record.get("claims", [])):
+        if c.get("auto") and c.get("verified") and i not in escalated and current_review(reviews.get(i), c) is None:
+            save_review(con, iid, i, c, "approved", c["sentence"], AUTO_REVIEWER, AUTO_NOTE)
+            n += 1
+    return n
+
+
 # --- escalations: "a senior reviewer should decide this", with an internal note --------
 
 def escalate(con: sqlite3.Connection, item_id: str, idx: int, claim: dict, note: str, who: str) -> None:

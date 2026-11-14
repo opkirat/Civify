@@ -163,7 +163,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The application proposes to increase the approved building height from 31 storeys to 45 storeys.",
@@ -179,7 +186,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The proposal increases the total number of residential units from 490 to 684, which includes 545 affordable rental units.",
@@ -195,7 +209,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The proposal adds 137 affordable two-bedroom rental units, which would have affordable rents for 40 years.",
@@ -211,7 +232,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The 137 additional affordable units may qualify for financial incentives from the City, such as waived fees and charges.",
@@ -227,7 +255,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The proposed building will also include 1,931 square metres of retail space on the first three levels.",
@@ -237,13 +272,22 @@
       "page": 7,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "ready",
-      "reasons": [],
+      "lane": "review",
+      "reasons": [
+        "context check: held (The sentence states the building 'will' include the retail space instead of presenting it as a proposal.)"
+      ],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The sentence states the building 'will' include the retail space instead of presenting it as a proposal.",
+        "suggestion": "The proposal includes 1,931 square metres of retail space at ground level fronting College Street and on the second and third levels."
+      },
+      "auto": false
     },
     {
       "sentence": "The development will continue to provide 12 replacement rental dwelling rooms, and eligible tenants would keep the right to return at similar rents.",
@@ -259,7 +303,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The designated heritage properties on the site are to be kept and built into the new development.",
@@ -275,7 +326,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "The proposal includes 6 vehicle parking spaces at ground level.",
@@ -291,7 +349,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "A total of 695 bicycle parking spaces are proposed for the building.",
@@ -307,7 +372,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "An Official Plan Amendment is needed to change Site and Area Specific Policy 533 to allow the new building height.",
@@ -323,7 +395,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "A Zoning By-law Amendment is needed to change Exception CR 1010 to allow the increased density, height, massing, and other standards.",
@@ -339,7 +418,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "Staff recommend that City Council amend the Official Plan for 191-199 College Street and 74-76 Henry Street.",
@@ -349,15 +435,20 @@
       "page": 1,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision that the source passage does not"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "Staff recommend that City Council amend Zoning By-law 569-2013 for the site.",
@@ -367,15 +458,20 @@
       "page": 1,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision that the source passage does not"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "Staff recommend that City Council allow the City Solicitor to update or replace existing agreements for dwelling room replacement and affordable housing.",
@@ -385,15 +481,20 @@
       "page": 2,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "review",
-      "reasons": [
-        "states a recommendation or decision that the source passage does not"
-      ],
+      "lane": "ready",
+      "reasons": [],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "Staff recommend putting a holding provision on the Zoning By-law until the Functional Servicing and Stormwater Management Report is revised, reviewed, and accepted.",
@@ -409,7 +510,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "If the accepted servicing report shows that new or upgraded municipal infrastructure is needed, the owner must secure it with financial securities or build it before the holding provision is removed.",
@@ -419,13 +527,22 @@
       "page": 16,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "ready",
-      "reasons": [],
+      "lane": "review",
+      "reasons": [
+        "context check: held ( neither the quote nor the page text states that this condition is 'before the holding provision is removed'.)"
+      ],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": " neither the quote nor the page text states that this condition is 'before the holding provision is removed'.",
+        "suggestion": "If the accepted Functional Servicing and Stormwater Management Report shows that new or upgraded municipal infrastructure is needed to support the development, the owner or applicant must either secure its design, construction, and financial securities in an agreement, or have it constructed and operational."
+      },
+      "auto": false
     },
     {
       "sentence": "The owner must pay cash-in-lieu for parkland dedication before the first above-ground building permit is issued.",
@@ -441,7 +558,14 @@
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "approve",
+        "neutral": true,
+        "issue": "",
+        "suggestion": ""
+      },
+      "auto": true
     },
     {
       "sentence": "Nine new City street trees are proposed to be planted, and cash-in-lieu will be required if it is not physically possible to plant all required replacement trees.",
@@ -451,13 +575,22 @@
       "page": 15,
       "source_file": "backgroundfile-288412.pdf",
       "source_sha256": "b376d7151f5d9fa4b10d8652d7acf368858e0e67e3fd804418827fd0b2ace331",
-      "lane": "ready",
-      "reasons": [],
+      "lane": "review",
+      "reasons": [
+        "context check: held (The suggestion must keep the number '9' exactly as written in the quote, or we can approve if spelling out is fine, but holding to keep '9' as digits.)"
+      ],
       "meaning": {
         "verdict": "supported",
         "neutral": true,
         "issue": ""
-      }
+      },
+      "confirm": {
+        "verdict": "hold",
+        "neutral": true,
+        "issue": "The suggestion must keep the number '9' exactly as written in the quote, or we can approve if spelling out is fine, but holding to keep '9' as digits.",
+        "suggestion": "A total of 9 new City street trees are proposed to be planted, and cash-in-lieu will be required if it is not physically possible to plant all required replacement trees."
+      },
+      "auto": false
     }
   ]
 }
