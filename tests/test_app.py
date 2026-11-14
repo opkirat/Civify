@@ -219,6 +219,7 @@ def test_review_cards_link_to_the_pdf_page_and_show_the_quote_in_context(staff):
     assert r.status_code == 200 and r.headers["content-type"] == "application/pdf" and r.content[:4] == b"%PDF"
     assert staff.get(f"/staff/{ITEM}/source/..%2F..%2Fcivify.db").status_code == 404
     assert staff.get(f"/staff/{ITEM}/source/record.json").status_code == 404
+    assert staff.get(f"/staff/{ITEM}/source/communicationfile-215691.pdf").status_code == 404   # public letters: never served
     staff.post("/logout")                                        # signed out: the PDF is staff-only
     r = staff.get(f"/staff/{ITEM}/source/{c['source_file']}", follow_redirects=False)
     assert r.status_code == 303 and r.headers["location"].startswith("/login")

@@ -486,7 +486,9 @@ def source_pdf(request: Request, item_id: str, filename: str):
     """The PDF a quote came from, for the reviewer's own eyes. Opened with #page=N by the review screen."""
     staff_user(request)
     path = db.DATA / item_id / filename
-    if "/" in filename or filename.startswith(".") or path.suffix.lower() != ".pdf" or not path.is_file():
+    cited = {c.get("source_file") for c in (db.load_record(item_id) or {}).get("claims", [])}
+    # Only the documents sentences actually quote (staff reports): never public letters, which carry residents' names.
+    if filename not in cited or "/" in filename or filename.startswith(".") or path.suffix.lower() != ".pdf" or not path.is_file():
         raise HTTPException(404, "no such source file")
     return FileResponse(path, media_type="application/pdf", headers={"Content-Disposition": f'inline; filename="{filename}"'})
 

@@ -4,6 +4,33 @@ Civify turns municipal council decisions into plain-language explanations that r
 
 Built for the "Making municipal decisions easier to understand" challenge, on real City of Toronto records.
 
+## Try it
+
+**Live demo: https://humidity-sydney-landing-giants.trycloudflare.com**
+
+The demo runs from the team's laptop through a Cloudflare tunnel during judging. If the link doesn't load, run it locally in two minutes (see [Run it](#run-it)).
+
+### As a resident (no sign-in)
+
+1. On the home page, choose **Ward 11** and search. Open **191-199 College Street**: a short summary labelled *AI-generated*, then **See each sentence with its source** to check every sentence against the exact passage it came from.
+2. Look at **Can I still have a say?** and **Where it stands**. Council has already decided this one; try **Ward 4 → 1337 Queen Street West** for an item still at the staff recommendation stage.
+3. Use **Print with QR code** for the offline version.
+4. **Text alerts** (simulated, nothing is really sent): open **Text alerts** (`/alerts`), enter any 10-digit number such as `416 555 0123`, choose **Ward 11**, tick consent and sign up. The code appears on an on-screen phone; enter it, then **Open the demo phone**. Texts about what is already explained in Ward 11 are waiting.
+
+### As City staff
+
+Sign in at **/staff** (or **Staff sign-in** at the bottom of any page):
+
+| Username | Password |
+|---|---|
+| `judge` | `civify-judge-2026` |
+
+1. The dashboard (**What needs you today**) shows each item's pipeline and exactly what needs a person; use **Filter and sort** to narrow it. Of 119 sentences across 8 items, 88 went live automatically; only the rest wait here.
+2. Open **Budget Implementation Including Property Tax Rates**. Each card shows why it was flagged, the quote highlighted in its paragraph, and **Open the PDF at page N**.
+3. Try **Edit, then approve** with a number the source doesn't contain (for example `99999`): it is refused, with the reason on the card. On a property tax sentence blocked for "2026", delete the year and approve: it goes live on the resident page straight away.
+
+This is a shared demo: approvals and rejections change what everyone sees. Edits are always re-checked against the source, so nothing unsupported can be published.
+
 ## What works today
 
 - **Pipeline** on a folder of downloaded PDFs: extract text with page numbers → classify each file (staff report, Clerk's notice, draft by-law, Council bill, item page, declaration, public letter) → draft plain-language sentences with Gemini, each with an exact quote → verify every quote and number in code → build one `record.json` per item with distinct staff, committee and Council stages, enacted by-laws where available, votes, motions and quoted participation rules.
