@@ -402,6 +402,17 @@ def processing_retry(request: Request, job_id: int, background: BackgroundTasks)
     return RedirectResponse(f"/staff/processing/{job_id}", status_code=303)
 
 
+def plain_reason(reason: str) -> str:
+    """The verifier's reason, said so a worker knows what to do next."""
+    if reason.startswith("number(s) in the sentence are not in the quote: "):
+        nums = reason.split(": ", 1)[1]
+        return (f"{nums} {'is' if ',' not in nums else 'are'} not in the quoted passage. Remove or correct "
+                f"{'it' if ',' not in nums else 'them'}, or reject the sentence.")
+    if reason.startswith("quote"):
+        return f"the {reason}. No edit can fix this; reject the sentence."
+    return reason + "."
+
+
 @app.get("/staff/{item_id}", response_class=HTMLResponse)
 def staff(request: Request, item_id: str):
     user = staff_user(request)
@@ -411,7 +422,12 @@ def staff(request: Request, item_id: str):
     for c in workflow.lanes(rec):
         raw = reviews.get(c["index"])
         ctx = source.locate(document_for(item_id, c["source_file"]), c["quote"], c.get("page")) if c.get("source_file") else None
-        rows.append({**c, "review": db.current_review(raw, c), "stale": raw is not None and db.current_review(raw, c) is None, "context": ctx})
+        rows.append({**c, "review": db.current_review(raw, c), "stale": raw is not None and db.current_review(raw, c) is None, "context": ctx,
+                     "quote_unusable": not c.get("verified") and not str(c.get("reason", "")).startswith("number")})
+    at, error = request.query_params.get("at"), request.query_params.get("error")
+    for r in rows:
+        if error and at == str(r["index"]):
+            r["error"], r["draft"] = error, request.query_params.get("draft")
     groups = {
         "review": [r for r in rows if not r["review"] and r["lane"] == "review"],
         "blocked": [r for r in rows if not r["review"] and r["lane"] == "blocked"],
@@ -432,7 +448,7 @@ def staff(request: Request, item_id: str):
     history = con.execute("SELECT * FROM audit WHERE item_id = ? ORDER BY id DESC LIMIT 40", (item_id,)).fetchall()
     return templates.TemplateResponse(request, "staff.html", {"rec": rec, "groups": groups, "pipeline": pipeline_status, "user": user,
                                                               "publication": pub, "changes": changes, "history": history,
-                                                              "error": request.query_params.get("error"), "notice": request.query_params.get("notice")})
+                                                              "error": None if at else error, "notice": request.query_params.get("notice")})
 
 
 @app.get("/staff/sms/overview", response_class=HTMLResponse)
@@ -528,7 +544,9 @@ def decide(request: Request, item_id: str, index: int, background: BackgroundTas
             return RedirectResponse(f"/staff/{item_id}?error=Edited+sentence+is+empty#claim-{index}", status_code=303)
         check = verifier_for(item_id, claim["source_file"]).check(final, claim["quote"])
         if not check.verified:
-            return RedirectResponse(f"/staff/{item_id}?error=Not+saved:+{quote(check.reason)}#claim-{index}", status_code=303)
+            # Shown on the card the worker is looking at, with their edit kept so they can fix it.
+            return RedirectResponse(f"/staff/{item_id}?error={quote('Not saved: ' + plain_reason(check.reason))}&at={index}"
+                                    f"&draft={quote(final)}#claim-{index}", status_code=303)
         db.save_review(con, item_id, index, claim, "approved", final, user["name"], note)
     else:
         raise HTTPException(400, "unknown action")

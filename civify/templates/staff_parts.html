@@ -56,16 +56,18 @@
     <span class="muted">Re-checked against the source before it goes live.</span>
   </form>
   {% endif %}
+  {% if r.error %}<p class="error card-error" role="alert">{{ r.error }}</p>{% endif %}
+  {% if r.quote_unusable and not r.review %}<p class="muted">This sentence's quote can't be used as evidence, so editing the sentence won't make it pass. Reject it; residents still see the rest.</p>{% endif %}
   <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
     {% set has_fix = not r.review and r.confirm and r.confirm.suggestion and r.confirm.suggestion != r.sentence %}
     {% if r.lane != 'blocked' and not (r.review and r.review.status == 'approved') %}<button {{ '' if has_fix else 'class="primary"' }} name="action" value="approve">{{ 'Approve original instead' if has_fix else 'Approve (goes live)' }}</button>{% endif %}
     <button name="action" value="reject">Reject</button>
-    <details {% if r.lane == 'blocked' %}open{% endif %}>
+    {% if not (r.quote_unusable and not r.review) %}<details {% if (r.lane == 'blocked' and not r.review) or r.error %}open{% endif %}>
       <summary>Edit, then approve</summary>
-      <textarea name="sentence" rows="2" aria-label="Edited sentence">{{ r.review.sentence if r.review else r.sentence }}</textarea>
+      <textarea name="sentence" rows="2" aria-label="Edited sentence">{{ r.draft if r.draft else (r.review.sentence if r.review else r.sentence) }}</textarea>
       <button name="action" value="edit">Approve edited sentence</button>
       <span class="muted">Your edit is checked against the same source before saving.</span>
-    </details>
+    </details>{% endif %}
     <details class="review-notes">
       <summary>Add a note{% if not r.escalation %} or ask for a second opinion{% endif %}</summary>
       <label class="note-field">Internal note <span class="muted">— not shown to residents</span><input type="text" name="note" maxlength="500"></label>

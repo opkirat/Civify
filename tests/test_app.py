@@ -33,7 +33,10 @@ def test_rejected_claim_never_shows_and_reviewer_comes_from_login(staff):
 
 def test_edit_is_rechecked_against_the_quote(staff):
     bad = staff.post(f"/staff/{ITEM}/1", data={"action": "edit", "sentence": "The height goes from 31 to 54 storeys."}, follow_redirects=False)
-    assert bad.status_code == 303 and "Not+saved" in bad.headers["location"] and "54" in bad.headers["location"]
+    assert bad.status_code == 303 and "Not%20saved" in bad.headers["location"] and "54" in bad.headers["location"]
+    card = staff.get(bad.headers["location"]).text                                   # the refusal shows on the card itself
+    assert "54 is not in the quoted passage. Remove or correct it, or reject the sentence." in card
+    assert "The height goes from 31 to 54 storeys.</textarea>" in card                # the worker's edit is kept
     assert "No explanation yet" in staff.get(f"/items/{ITEM}").text
     staff.post(f"/staff/{ITEM}/1", data={"action": "edit", "sentence": "The building would go from 31 to 45 storeys."})
     assert "The building would go from 31 to 45 storeys." in staff.get(f"/items/{ITEM}").text
@@ -292,6 +295,16 @@ def test_printable_notice_carries_the_same_ai_summary(staff, monkeypatch, tmp_pa
         "sentences": [{"text": "A plain summary of the change.", "uses": [live]}], "issues": []}))
     staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})                        # its source is gone: not printed
     assert "A plain summary of the change." not in staff.get(f"/items/{ITEM}/print").text
+
+
+def test_blocked_sentence_with_an_unusable_quote_says_to_reject_instead_of_offering_an_edit(staff):
+    item = "2027.PB1.3"                                   # sentence 4's quote is too short to be evidence
+    rec = db.load_record(item)
+    assert rec["claims"][3]["reason"] == "quote is too short to count as evidence"
+    card = staff.get(f"/staff/{item}").text.split('id="claim-3"', 1)[1].split('class="claim ', 1)[0]
+    assert "editing the sentence won't make it pass" in card and "Approve edited sentence" not in card and ">Reject<" in card
+    r = staff.post(f"/staff/{item}/3", data={"action": "edit", "sentence": "The property is in Ward 13."}, follow_redirects=False)
+    assert "No%20edit%20can%20fix%20this" in r.headers["location"]
 
 
 def test_pipeline_view_is_visible_on_dashboard_and_item_page(staff):
