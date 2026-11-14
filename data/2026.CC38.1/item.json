@@ -1,0 +1,190 @@
+{
+  "item_id": "2026.CC38.1",
+  "retrieved": "2026-11-14",
+  "source_folder": "data/2026.CC38.1",
+  "documents": [
+    {
+      "filename": "Agenda Item History - 2026.CC38.1.pdf",
+      "sha256": "0891543404dc4c327cedcce83eab2eb76d41570559288f76e16e69e6e28f5eed",
+      "pages": 24,
+      "doc_type": "item_page",
+      "author": "City Clerk (TMMIS)",
+      "evidence": "Item - 2026.CC38.1",
+      "fields": {
+        "item_id": "2026.CC38.1",
+        "tracking_status": "City Council adopted this item on February 10, 2026 with amendments."
+      }
+    },
+    {
+      "filename": "backgroundfile-284333.pdf",
+      "sha256": "3e3c1011ef979099e9c5372ec5e35c118184804eddc11f86651c0601c72f2f64",
+      "pages": 30,
+      "doc_type": "staff_report",
+      "author": "Chief Financial Officer and Treasurer",
+      "evidence": "REPORT FOR ACTION",
+      "fields": {
+        "Date": "February 3, 2026",
+        "To": "City Council",
+        "From": "Chief Financial Officer and Treasurer"
+      }
+    },
+    {
+      "filename": "backgroundfile-284334.pdf",
+      "sha256": "a8f2ad21be3a0512c30c4c94095a1e606d97f6b48f1141d29bf0ad8c4b782677",
+      "pages": 2,
+      "doc_type": "appendix",
+      "author": "City staff (appendix to a report)",
+      "evidence": "APPENDIX A",
+      "fields": {
+        "label": "APPENDIX A"
+      }
+    },
+    {
+      "filename": "backgroundfile-284335.pdf",
+      "sha256": "bd7427e8b4e31f7b2f23f341325805c92b201300a1df35e9af38346bf7b9eae7",
+      "pages": 2,
+      "doc_type": "appendix",
+      "author": "City staff (appendix to a report)",
+      "evidence": "APPENDIX B",
+      "fields": {
+        "label": "APPENDIX B"
+      }
+    },
+    {
+      "filename": "backgroundfile-284336.pdf",
+      "sha256": "e110bc3c88a8b1641c8fd19e72dbc2e858b3c32ff6814e9a1f64700af94d1549",
+      "pages": 4,
+      "doc_type": "appendix",
+      "author": "City staff (appendix to a report)",
+      "evidence": "APPENDIX C",
+      "fields": {
+        "label": "APPENDIX C"
+      }
+    },
+    {
+      "filename": "backgroundfile-284337.pdf",
+      "sha256": "8c09b515c24e9ca18b5cd01617bfc24115401bd63e6b04ddfa33bd1fe065ec58",
+      "pages": 4,
+      "doc_type": "appendix",
+      "author": "City staff (appendix to a report)",
+      "evidence": "Appendix D",
+      "fields": {
+        "label": "Appendix D"
+      }
+    },
+    {
+      "filename": "backgroundfile-284368.pdf",
+      "sha256": "607ead2fbb86eebfd17f42d462bf6ebab16ce138b5d9ea19dc362fe0819e3914",
+      "pages": 30,
+      "doc_type": "staff_report",
+      "author": "Chief Financial Officer and Treasurer",
+      "evidence": "REPORT FOR ACTION",
+      "fields": {
+        "Date": "February 6, 2026",
+        "To": "City Council",
+        "From": "Chief Financial Officer and Treasurer"
+      }
+    },
+    {
+      "filename": "communicationfile-204818.pdf",
+      "sha256": "d8e30f1a9ee3438f74a28717bbf4eca6ae77f1f98058d2349803e9839c8bd980",
+      "pages": 2,
+      "doc_type": "public_letter",
+      "author": null,
+      "evidence": "City filename prefix 'communicationfile-'",
+      "fields": {
+        "date": "February 5, 2026"
+      }
+    },
+    {
+      "filename": "law0131.pdf",
+      "sha256": "34e82ef46fad1500a2c2e4b99bdb94757fa3e3f5ea461b2c9ba03acb6667270b",
+      "pages": 3,
+      "doc_type": "enacted_bylaw",
+      "author": "City Clerk (enacted by-law)",
+      "evidence": "BY-LAW 131-2026",
+      "fields": {
+        "bylaw_number": "131-2026",
+        "title": "To amend City of Toronto Municipal Code Chapter 767, Taxation, Property Tax, Municipal Code Chapter 844, Waste Collection, Residential Properties and Chapter 8",
+        "council_vote_date": "February 10, 2026",
+        "mayoral_decision": "5-2026",
+        "mayoral_decision_date": "February 10, 2026"
+      }
+    },
+    {
+      "filename": "law0133.pdf",
+      "sha256": "19c7a9d0251b64bfb5680064e4cf885bcd0222901857b40f34677ab9235b120e",
+      "pages": 11,
+      "doc_type": "enacted_bylaw",
+      "author": "City Clerk (enacted by-law)",
+      "evidence": "BY-LAW 133-2026",
+      "fields": {
+        "bylaw_number": "133-2026",
+        "title": "Tax Levy By-law for 2026. Whereas subsection 228(1) of the City of Toronto Act, 2006, as amended (the \"Act\"), provides for the City in each year to adopt a bud",
+        "council_vote_date": "February 10, 2026",
+        "mayoral_decision": "5-2026",
+        "mayoral_decision_date": "February 10, 2026"
+      }
+    },
+    {
+      "filename": "law0247.pdf",
+      "sha256": "a026441af3e22ea1d47d1431117617d4dfe9eca3adf8cd85cf9d1aa0733f0cf7",
+      "pages": 185,
+      "doc_type": "enacted_bylaw",
+      "author": "City Clerk (enacted by-law)",
+      "evidence": "BY-LAW 247-2026",
+      "fields": {
+        "bylaw_number": "247-2026",
+        "title": "To amend City of Toronto Municipal Code Chapter 441, Fees and Charges, to update the fees and charges for 2026. Whereas authority is given to Council to adopt",
+        "council_vote_date": "March 26, 2026",
+        "mayoral_decision": "7-2026",
+        "mayoral_decision_date": "March 26, 2026"
+      }
+    },
+    {
+      "filename": "law1120.pdf",
+      "sha256": "117844c33f13d83c6b1a27e0dea06a7e73f6753be5b3210de35b681670712d0e",
+      "pages": 2,
+      "doc_type": "enacted_bylaw",
+      "author": "City Clerk (enacted by-law)",
+      "evidence": "BY-LAW 1120-2026",
+      "fields": {
+        "bylaw_number": "1120-2026",
+        "title": "To amend Schedule C, Administrative Fees, Part 1: Designated By-Law Provisions, of City of Toronto Municipal Code Chapter 610, Penalties, Administration of, to",
+        "council_vote_date": "July 30, 2026",
+        "mayoral_decision": "13-2026",
+        "mayoral_decision_date": "July 30, 2026"
+      }
+    },
+    {
+      "filename": "law1150.pdf",
+      "sha256": "521d3930fa31c6817d042dc77b2846f38b659eb50d1699619ed8a0337f1b5b0a",
+      "pages": 12,
+      "doc_type": "enacted_bylaw",
+      "author": "City Clerk (enacted by-law)",
+      "evidence": "BY-LAW 1150-2026",
+      "fields": {
+        "bylaw_number": "1150-2026",
+        "title": "To amend City of Toronto Municipal Code Chapter 79, Fire Services; Chapter 349, Animals; Chapter 395, Clothing Drop Boxes; Chapter 459, Filming; Chapter 466, F",
+        "council_vote_date": "July 30, 2026",
+        "mayoral_decision": "13-2026",
+        "mayoral_decision_date": "July 30, 2026"
+      }
+    },
+    {
+      "filename": "law1336.pdf",
+      "sha256": "b36e5c6da388654714a7907beadef00cb10098d85a574670ca1e192d7a2253d3",
+      "pages": 3,
+      "doc_type": "enacted_bylaw",
+      "author": "City Clerk (enacted by-law)",
+      "evidence": "BY-LAW 1336-2025",
+      "fields": {
+        "bylaw_number": "1336-2025",
+        "title": "To provide for the levy and collection of 2026 interim property taxes and penalties for non- payment. Whereas subsection 281(1) of the City of Toronto Act, 200",
+        "council_vote_date": "November 13, 2025",
+        "mayoral_decision": "14-2025",
+        "mayoral_decision_date": "November 13, 2025"
+      }
+    }
+  ]
+}
