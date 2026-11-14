@@ -77,14 +77,14 @@ def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row],
             continue
         attention.append({"text": f"Sentence {c['index'] + 1} needs a look: {'; '.join(c['reasons'])}.", "href": f"/staff/{iid}#claim-{c['index']}"})
     if ready:
-        attention.append({"text": f"{len(ready)} sentence(s) passed every check. Publish them with one click.", "href": f"/staff/{iid}#ready"})
+        attention.append({"text": f"{len(ready)} sentence(s) passed every check. Review and approve them, then publish.", "href": f"/staff/{iid}#ready"})
     changes = changes or {"added": 0, "removed": 0}
     unpublished = changes["added"] + changes["removed"]
     if unpublished:
         nxt = (publication["version"] + 1) if publication else 1
         attention.append({"text": f"{unpublished} approved change(s) are not visible to residents yet. Publish version {nxt}.", "href": f"/staff/{iid}#publish"})
     if claims and not meaning_run:
-        attention.append({"text": "Meaning check has not run; every sentence will need a look. Run `python -m civify.triage`.", "href": None})
+        attention.append({"text": "Meaning check has not run. Review each sentence against its source.", "href": f"/staff/{iid}#review"})
     p = record.get("participation", {})
     if not p.get("council_has_decided") and not (p.get("written_comments_rule") or p.get("speaker_registration_rule")):
         attention.append({"text": "No item-specific rule for taking part was found. Confirm on the official item page before telling residents.", "href": record.get("official_url")})

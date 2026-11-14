@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block body_class %}worker-page{% endblock %}
+{% block head_extra %}<link rel="stylesheet" href="{{ url_for('static', path='/staff.css') }}">{% endblock %}
+{% block navigation %}
+<nav class="main-nav" aria-label="Staff navigation">
+<a href="/staff" {% if request.url.path == '/staff' or (request.url.path.startswith('/staff/') and not request.url.path.startswith('/staff/intake') and not request.url.path.startswith('/staff/processing')) %}aria-current="page"{% endif %}>Work queue</a>
+<a href="/staff/intake" {% if request.url.path.startswith('/staff/intake') %}aria-current="page"{% endif %}>Add documents</a>
+<a href="/staff/processing" {% if request.url.path.startswith('/staff/processing') %}aria-current="page"{% endif %}>Processing</a>
+<a href="/">Resident site ↗</a>
+</nav>
+{% endblock %}

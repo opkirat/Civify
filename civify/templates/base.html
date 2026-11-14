@@ -8,17 +8,17 @@
 <link rel="stylesheet" href="{{ url_for('static', path='/app.css') }}">
 {% block head_extra %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
 <a class="skip-link" href="#main-content">Skip to content</a>
 <header class="site-header">
 <div class="header-inner">
 <a class="brand" href="/" aria-label="Civify home"><svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M8 24V13l5-4v15M16 24V8l8 5v11M6 24h20" stroke="#e8efcf" stroke-width="2" stroke-linejoin="round"/></svg>Civify<span style="color:#658253">.</span></a>
-<nav class="main-nav" aria-label="Main navigation">
+{% block navigation %}<nav class="main-nav" aria-label="Main navigation">
 <a href="/" {% if request.url.path == '/' or request.url.path.startswith('/items/') %}aria-current="page"{% endif %}>Explore issues</a>
 <a href="/near" {% if request.url.path == '/near' or request.url.path.startswith('/notices/') %}aria-current="page"{% endif %}>Near me</a>
 <a href="/meetings" {% if request.url.path == '/meetings' %}aria-current="page"{% endif %}>Meetings</a>
 <a class="staff-nav" href="/staff" aria-label="Staff workspace" {% if request.url.path.startswith('/staff') %}aria-current="page"{% endif %}><span class="nav-long">Staff workspace</span><span class="nav-short">Staff</span></a>
-</nav>
+</nav>{% endblock %}
 </div>
 </header>
 <main id="main-content" tabindex="-1">{% block body %}{% endblock %}</main>

@@ -1,52 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'staff_base.html' %}
 {% from 'staff_parts.html' import pipeline_strip, signed_in, status_pill %}
 {% block title %}Staff dashboard{% endblock %}
 {% block body %}
-<div class="page-head">
-  <p class="eyebrow">Staff workspace</p>
-  <h1>What needs you today</h1>
-  <p class="lead">Sentences that passed every check publish together in one click. Only the ones that are unsure, or that state a decision, condition or deadline, wait for you.</p>
-  {{ signed_in(user) }}
-  <div class="actions"><a class="button primary" href="/staff/intake">+ Add documents</a></div>
-</div>
-
+{{ signed_in(user) }}
+<div class="worker-heading"><div><p class="eyebrow">Work queue</p><h1>What needs you today</h1><p class="lead">Choose an item, review its explanation, then publish when you’re ready.</p></div><a class="button primary" href="/staff/intake">+ Add documents</a></div>
 {% set active = jobs | selectattr('status', 'in', ['queued', 'running', 'failed', 'blocked']) | list %}
-{% if active %}
-<section class="panel">
-  <h2>Processing runs needing attention</h2>
-  <ul class="job-list">{% for j in active %}
-    <li>{{ status_pill(j.status) }} <a href="/staff/processing/{{ j.id }}">Run {{ j.id }} · {{ j.item_id }}</a> <span class="muted">started by {{ j.started_by }} · {{ j.created_at[:16].replace('T', ' ') }}</span></li>
-  {% endfor %}</ul>
-</section>
-{% endif %}
-
-<form method="get" action="/staff" class="filter-bar">
-  <label>Search<input type="text" name="q" value="{{ q }}" placeholder="Item, address or ward"></label>
-  <label>Show<select name="show">{% for key, label in filters.items() %}<option value="{{ key }}" {{ 'selected' if show == key }}>{{ label }} ({{ counts[key] }})</option>{% endfor %}</select></label>
-  <label>Sort<select name="sort">
-    <option value="attention" {{ 'selected' if sort == 'attention' }}>Most to do</option>
-    <option value="updated" {{ 'selected' if sort == 'updated' }}>Recently updated</option>
-    <option value="ward" {{ 'selected' if sort == 'ward' }}>Ward</option></select></label>
-  <button type="submit">Apply</button>
+{% if active %}<details class="fold work-alert"><summary>{{ active|length }} processing {{ 'run needs' if active|length == 1 else 'runs need' }} attention</summary><ul class="job-list">{% for j in active %}<li>{{ status_pill(j.status) }} <a href="/staff/processing/{{ j.id }}">{{ j.item_id or 'New upload' }} · Run {{ j.id }}</a></li>{% endfor %}</ul></details>{% endif %}
+<form method="get" action="/staff" class="worker-search">
+<label for="queue-search">Find an item<input id="queue-search" type="text" name="q" value="{{ q }}" placeholder="Search by address, item or ward"></label><button type="submit">Search</button>
+<details class="queue-filters" {% if show != 'all' or sort != 'attention' %}open{% endif %}><summary>Filter and sort{% if show != 'all' %} · {{ filters.get(show, show) }}{% endif %}</summary><div class="filter-controls"><label>Show<select name="show">{% for key, label in filters.items() %}<option value="{{ key }}" {{ 'selected' if show == key }}>{{ label }} ({{ counts[key] }})</option>{% endfor %}</select></label><label>Sort<select name="sort"><option value="attention" {{ 'selected' if sort == 'attention' }}>Most to do</option><option value="updated" {{ 'selected' if sort == 'updated' }}>Recently updated</option><option value="ward" {{ 'selected' if sort == 'ward' }}>Ward</option></select></label><button type="submit">Apply</button><a href="/staff">Reset</a></div></details>
 </form>
-
-{% for it in items %}
-{% set p = it.pipeline %}
-<article class="panel">
-  <div class="meta-row"><span class="pill">{{ it.item_id }}</span><span>Ward {{ it.ward or '?' }}</span><span>{{ it.current_stage|stage_label }}</span>
-    {% if it.publication %}<span class="pill proposed">Version {{ it.publication.version }} live</span>{% endif %}
-    <span>Updated {{ (it.last_update or '')[:16].replace('T', ' ') }}{% if it.last_by %} by {{ it.last_by.reviewer }}{% endif %}</span></div>
-  <h2 class="queue-title"><a href="/staff/{{ it.item_id }}">{{ it.title|item_name }}</a></h2>
-  <p class="muted">{{ it.title|item_topic }}</p>
-  {{ pipeline_strip(p.steps) }}
-  <p class="next-action"><strong>Next:</strong> {{ it.next_action }}</p>
-  {% if p.attention|length > 1 %}
-  <details class="attention"><summary>All {{ p.attention|length }} things that need a person</summary>
-    <ul>{% for a in p.attention %}<li>{% if a.href %}<a href="{{ a.href }}">{{ a.text }}</a>{% else %}{{ a.text }}{% endif %}</li>{% endfor %}</ul>
-  </details>
-  {% endif %}
-  <div class="actions"><a class="button primary" href="/staff/{{ it.item_id }}">Open review →</a><a class="button" href="/items/{{ it.item_id }}">Resident view</a>
-    {% if it.job %}<a class="button" href="/staff/processing/{{ it.job.id }}">Last processing run</a>{% endif %}</div>
+<div class="queue-list">
+{% for it in items %}{% set p = it.pipeline %}{% set remaining = p.counts.total - p.counts.decided %}
+<article class="work-item">
+<div class="work-item-main"><div><div class="meta-row"><span>{{ it.item_id }} · Ward {{ it.ward or '?' }}</span>{% if it.publication %}<span class="pill proposed">Version {{ it.publication.version }} live</span>{% endif %}</div><h2><a href="/staff/{{ it.item_id }}">{{ it.title|item_name }}</a></h2><p class="queue-count">{% if remaining %}<strong>{{ remaining }} sentences</strong> left to review{% elif p.counts.unpublished %}<strong>{{ p.counts.unpublished }} changes</strong> ready to publish{% else %}Review complete{% endif %}{% if p.counts.escalated %} · {{ p.counts.escalated }} awaiting a second opinion{% endif %}</p></div><a class="button primary" href="/staff/{{ it.item_id }}">{{ 'Continue review' if remaining else 'Open item' }} →</a></div>
+<details class="item-more"><summary>Item details</summary><p class="muted">{{ it.title|item_topic }}</p><p class="next-action"><strong>Next:</strong> {{ it.next_action }}</p>{{ pipeline_strip(p.steps) }}<p class="muted">Updated {{ (it.last_update or '')[:16].replace('T', ' ') }}{% if it.last_by %} by {{ it.last_by.reviewer }}{% endif %}</p><div class="actions"><a href="/items/{{ it.item_id }}">Resident view ↗</a>{% if it.job %}<a href="/staff/processing/{{ it.job.id }}">Processing details</a>{% endif %}</div></details>
 </article>
-{% else %}<div class="empty-state">No items match. <a href="/staff">Clear filters</a> or <a href="/staff/intake">add documents</a>.</div>{% endfor %}
+{% else %}<div class="empty-state"><h2>No matching items</h2><p><a href="/staff">Clear filters</a> or <a href="/staff/intake">add documents</a> to get started.</p></div>{% endfor %}
+</div>
 {% endblock %}

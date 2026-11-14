@@ -1,12 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'staff_base.html' %}
 {% from 'staff_parts.html' import signed_in %}
 {% block title %}Add documents{% endblock %}
 {% block body %}
 <div class="page-head">
   <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/staff">Staff workspace</a><span aria-hidden="true">/</span><span>Add documents</span></nav>
-  <p class="eyebrow">Document intake</p>
-  <h1>Add an agenda item's documents</h1>
-  <p class="lead">Upload the staff report, or the saved item page (we fetch the reports it links to). Each file is checked before anything is processed.</p>
+  <h1>Add documents</h1>
+  <p class="lead">Choose the PDFs for one council item. We’ll check the files, then guide you to the next step.</p>
   {{ signed_in(user) }}
 </div>
 
@@ -16,8 +15,8 @@
     <span class="muted">PDF only, up to {{ max_mb }} MB each. Several related files at once is fine.</span>
     <input type="file" id="files" name="files" accept="application/pdf,.pdf" multiple required></label>
   <ul id="chosen" class="muted"></ul>
-  <label for="item_id">Agenda item number <span class="muted">(optional if you include the item page, e.g. 2027.PB1.6)</span>
-    <input type="text" id="item_id" name="item_id" placeholder="2027.PB1.6"></label>
+  <details><summary>Adding only a staff report? Enter the item number.</summary><label for="item_id">Agenda item number <span class="muted">(optional if you include the item page, e.g. 2027.PB1.6)</span>
+    <input type="text" id="item_id" name="item_id" placeholder="2027.PB1.6"></label></details>
   <button class="primary" type="submit">Upload and check</button>
 </form>
 <p class="muted">How to save an item page: open the item on the City's council site, choose Print, then "Save as PDF".</p>
@@ -25,20 +24,17 @@
 <section class="panel">
   <h2>Files in this upload</h2>
   <div class="table-wrap"><table class="files">
-    <thead><tr><th>File</th><th>Size</th><th>Pages</th><th>Type</th><th>Check</th><th></th></tr></thead>
+    <thead><tr><th>File</th><th>Check</th><th></th></tr></thead>
     <tbody>
     {% for f in m.files %}
       <tr class="{{ 'invalid' if f.state != 'valid' }}">
-        <td class="source-file">{{ f.filename }}{% if f.author %}<div class="muted">{{ f.author }}</div>{% endif %}</td>
-        <td>{{ '%.1f'|format(f.size / 1048576) }} MB</td>
-        <td>{{ f.pages or '—' }}</td>
-        <td>{{ (f.doc_type or '—').replace('_', ' ') }}</td>
+        <td class="source-file"><strong>{{ f.filename }}</strong><details><summary>File details</summary><p>{{ '%.1f'|format(f.size / 1048576) }} MB · {{ f.pages or '—' }} pages · {{ (f.doc_type or '—').replace('_', ' ') }}</p>{% if f.author %}<p>{{ f.author }}</p>{% endif %}</details></td>
         <td>{% if f.state == 'valid' %}<span class="ok">✓ Valid</span>{% else %}<span class="warn">✗ {{ f.error }}</span>{% endif %}
           {% if f.needs_ocr %}<div class="warn">Needs OCR</div>{% endif %}
           {% for w in f.warnings %}<div class="muted">⚠ {{ w }}</div>{% endfor %}</td>
         <td><form method="post" action="/staff/intake/{{ m.upload_id }}/remove"><input type="hidden" name="filename" value="{{ f.filename }}"><button class="small" type="submit" aria-label="Remove {{ f.filename }}">Remove</button></form></td>
       </tr>
-    {% else %}<tr><td colspan="6" class="muted">No files yet.</td></tr>{% endfor %}
+    {% else %}<tr><td colspan="3" class="muted">No files yet.</td></tr>{% endfor %}
     </tbody></table></div>
   <form method="post" action="/staff/intake/{{ m.upload_id }}/files" enctype="multipart/form-data" class="inline">
     <label class="dropzone small-zone" for="more"><strong>Add or replace files</strong><span class="muted">To replace a file, remove it and add the new one.</span>

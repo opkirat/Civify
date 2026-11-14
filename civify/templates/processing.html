@@ -1,12 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'staff_base.html' %}
 {% from 'staff_parts.html' import signed_in, status_pill %}
 {% block title %}Processing{% endblock %}
-{% block head_extra %}{% if job and job.status in ['queued', 'running'] %}<meta http-equiv="refresh" content="3">{% endif %}{% endblock %}
+{% block head_extra %}{{ super() }}{% if job and job.status in ['queued', 'running'] %}<meta http-equiv="refresh" content="3">{% endif %}{% endblock %}
 {% block body %}
 <div class="page-head">
   <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/staff">Staff workspace</a><span aria-hidden="true">/</span><a href="/staff/processing">Processing</a>{% if job %}<span aria-hidden="true">/</span><span>Run {{ job.id }}</span>{% endif %}</nav>
-  <p class="eyebrow">Processing and outputs</p>
-  {% if job %}<h1>{{ job.item_id }} · run {{ job.id }}</h1>{% else %}<h1>Processing runs</h1>{% endif %}
+  {% if job %}<h1>{{ "Documents checked" if job.status == "done" else "Processing needs attention" if job.status in ["failed", "blocked"] else "Preparing your documents" }}</h1><p class="lead">{{ job.item_id }} · Run {{ job.id }}</p>{% else %}<h1>Processing runs</h1>{% endif %}
   {{ signed_in(user) }}
 </div>
 
@@ -31,10 +30,10 @@
 {% for s in job.steps %}
 <li class="run-step state-{{ s.status }}">
   <div class="run-step-head">{{ status_pill(s.status) }} <strong>{{ s.label }}</strong>
-    {% if s.started_at and s.finished_at %}<span class="muted">{{ s.started_at[11:19] }}–{{ s.finished_at[11:19] }} UTC</span>{% endif %}</div>
-  {% if s.detail %}<p class="{{ 'warn' if s.status in ['failed', 'blocked'] else '' }}">{{ s.detail }}</p>{% endif %}
+    </div>
+  {% if s.detail and s.status in ['failed', 'blocked', 'running'] %}<p class="{{ 'warn' if s.status in ['failed', 'blocked'] else '' }}">{{ s.detail }}</p>{% endif %}
   {% if s.output %}
-  <details><summary>Preliminary output</summary>
+  <details><summary>Step details</summary>{% if s.detail %}<p>{{ s.detail }}</p>{% endif %}{% if s.started_at %}<p class="muted">Started {{ s.started_at }}{% if s.finished_at %} · Finished {{ s.finished_at }}{% endif %}</p>{% endif %}
     {% if s.output.documents %}<ul>{% for d in s.output.documents %}<li>{{ d.file }} · {{ d.type.replace('_', ' ') }} · {{ d.pages }} pp{% if d.author %} · {{ d.author }}{% endif %}</li>{% endfor %}</ul>{% endif %}
     {% if s.output.files %}<ul>{% for f in s.output.files %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
     {% if s.output.sentences %}<ol>{% for c in s.output.sentences %}<li>{% if c.verified %}<span class="ok">✓ p.{{ c.page }}</span>{% else %}<span class="warn">✗ {{ c.reason }}</span>{% endif %} {{ c.sentence }}</li>{% endfor %}</ol>
