@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {% block title %}Upcoming meetings{% endblock %}
 {% block body %}
-<h1>Upcoming meetings</h1>
-<p class="muted">Every item on each published agenda, with its ward. Click an item for the official page. Items that have been through the full pipeline (plain-language summary, checked and approved) are linked from the <a href="/">item list</a>.</p>
+<div class="page-head"><p class="eyebrow">Follow the conversation</p><h1>Upcoming meetings</h1><p class="lead">See what’s on the agenda, find your ward, and check the City’s guidance for taking part.</p></div>
+<p class="muted">Items and meeting dates from saved agendas. Confirm current details with the City. An item link appears when its full ID is confirmed by a saved source; explanations appear after staff review.</p>
 {% for m in meetings %}
-<h2>{{ m.body }} · {{ m.meeting_date }} {{ m.meeting_time }}</h2>
+<div class="section-heading"><div><p class="eyebrow">{{ m.meeting_date }} · {{ m.meeting_time }}</p><h2>{{ m.body }}</h2></div><span class="pill">{{ m.agenda_status }}</span></div>
 <p class="muted">{{ m.location }} · {{ m.agenda_status }} · saved {{ m.source.retrieved }}</p>
 {% for it in m['items'] %}
 <div class="panel">
-  <strong><a href="{{ it.official_url }}">{{ it.id }}</a></strong> · Ward {{ it.ward or '?' }}{% if it.ward %} ({{ wards.get(it.ward.zfill(2), '') }}){% endif %}<br>
+  <strong>{% if it.official_url %}<a href="{{ it.official_url }}">{{ it.id }}</a>{% else %}{{ it.id }}{% endif %}</strong> · Ward {{ it.ward or '?' }}{% if it.ward %} ({{ wards.get(it.ward.zfill(2), '') }}){% endif %}<br>
   {{ it.title }}
+  {% if it.local_url %}<p><a href="{{ it.local_url }}">View decision and reviewed explanation</a></p>{% endif %}
+  {% if not it.official_url %}<p class="muted">Full item ID not confirmed. Find this item on the <a href="https://secure.toronto.ca/council/">City's meeting agendas</a>.</p>{% endif %}
   {% for n in it.notes %}<div class="muted">{{ n.date }}: {{ n.note }}</div>{% endfor %}
 </div>
 {% endfor %}
 {% else %}
-<p>No saved agendas yet. Save a meeting page into <code>data/agendas/</code> and run <code>python -m civify.agenda &lt;file&gt;</code>.</p>
+<div class="empty-state"><h2>No saved agendas yet.</h2><p>Check the <a href="https://secure.toronto.ca/council/">City’s meeting calendar</a> for upcoming meetings.</p></div>
 {% endfor %}
 {% if rules.quotes %}
 <h2>How to take part</h2>

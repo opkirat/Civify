@@ -3,38 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}Civify{% endblock %}</title>
-<style>
-  :root { --ink:#1a1a1a; --muted:#555; --line:#d8d8d8; --ok:#1b6e3a; --warn:#9a3b00; --bg:#fff; --panel:#f5f5f5; }
-  body { font: 17px/1.5 system-ui, sans-serif; color: var(--ink); background: var(--bg); margin: 0; padding: 0 16px 48px; }
-  main { max-width: 56rem; margin: 0 auto; }
-  header { padding: 12px 0; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
-  header a { color: inherit; text-decoration: none; font-weight: 700; }
-  h1 { font-size: 1.5rem; line-height: 1.25; }
-  h2 { font-size: 1.15rem; margin-top: 1.6em; }
-  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
-  .muted { color: var(--muted); font-size: .95rem; }
-  .ok { color: var(--ok); font-weight: 700; } .warn { color: var(--warn); font-weight: 700; }
-  .stage { display: grid; grid-template-columns: 1fr; gap: 8px; }
-  .stage li { list-style: none; padding: 10px 12px; border-left: 4px solid var(--line); background: var(--panel); }
-  .stage li.current { border-left-color: var(--ok); }
-  blockquote { margin: 8px 0; padding: 8px 12px; border-left: 3px solid var(--line); color: var(--muted); font-size: .95rem; }
-  .claim { border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
-  .claim.approved { border-color: var(--ok); } .claim.rejected { opacity: .6; }
-  form.inline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
-  textarea { width: 100%; font: inherit; padding: 6px; }
-  button { font: inherit; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: #fff; cursor: pointer; }
-  button.primary { background: var(--ok); color: #fff; border-color: var(--ok); }
-  input[type=text] { font: inherit; padding: 6px; }
-  .error { background: #fde8e8; border: 1px solid #c33; padding: 8px 12px; border-radius: 6px; }
-  a { color: #0b57d0; }
-  @media (prefers-color-scheme: dark) { :root { --ink:#eee; --muted:#bbb; --line:#444; --bg:#111; --panel:#1c1c1c; --ok:#5fcf85; --warn:#f0a060; } button { background:#222; color:#eee } button.primary { color:#111 } a { color:#8ab4f8 } .error { background:#3a1a1a } }
-</style>
+<meta name="theme-color" content="#245b43">
+<title>{% block title %}Your neighbourhood, explained{% endblock %} · Civify</title>
+<link rel="stylesheet" href="{{ url_for('static', path='/app.css') }}">
 </head>
 <body>
-<main>
-<header><a href="/">Civify</a> <span class="muted">· plain-language council decisions, checked against the record</span></header>
-{% block body %}{% endblock %}
-</main>
+<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="/" aria-label="Civify home"><svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M8 24V13l5-4v15M16 24V8l8 5v11M6 24h20" stroke="#e8efcf" stroke-width="2" stroke-linejoin="round"/></svg>Civify<span style="color:#658253">.</span></a>
+<nav class="main-nav" aria-label="Main navigation">
+<a href="/" {% if request.url.path == '/' or request.url.path.startswith('/items/') %}aria-current="page"{% endif %}>Explore issues</a>
+<a href="/near" {% if request.url.path == '/near' or request.url.path.startswith('/notices/') %}aria-current="page"{% endif %}>Near me</a>
+<a href="/meetings" {% if request.url.path == '/meetings' %}aria-current="page"{% endif %}>Meetings</a>
+<a class="staff-nav" href="/staff" aria-label="Staff workspace" {% if request.url.path.startswith('/staff') %}aria-current="page"{% endif %}><span class="nav-long">Staff workspace</span><span class="nav-short">Staff</span></a>
+</nav>
+</div>
+</header>
+<main id="main-content" tabindex="-1">{% block body %}{% endblock %}</main>
+<footer class="site-footer"><div><strong>Civify · Toronto pilot</strong><p>Making local decisions easier to understand. An independent prototype.</p></div><div class="footer-links"><a href="/meetings">Meeting agendas</a><a href="https://secure.toronto.ca/council/">City records ↗</a></div></footer>
 </body>
 </html>

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Printable notice · {{ rec.item_id }}{% endblock %}
+{% block body %}
+<style>
+  .print-actions { display:flex; flex-wrap:wrap; gap:16px; align-items:center; }
+  .notice-qr { display:flex; align-items:center; gap:16px; break-inside:avoid; }
+  .notice-qr img { width:132px; height:132px; background:white; }
+  .source-url { overflow-wrap:anywhere; font-size:12px; }
+  .print-claims li { margin-bottom:12px; }
+  .print-claims blockquote { font-size:12px; }
+  @page { size: auto; margin: 15mm; }
+  @media print {
+    :root { --ink:#000; --muted:#333; --line:#aaa; --bg:#fff; --panel:#fff; }
+    body { font-size:10pt; padding:0; }
+    main { max-width:none; }
+    header { font-size:11pt; margin-bottom:10px; }
+    header .muted, .print-actions { display:none; }
+    h1 { font-size:17pt; } h2 { font-size:12pt; margin-top:14px; }
+    p, blockquote { margin-top:6px; margin-bottom:6px; }
+    .muted { font-size:9pt; }
+    a { color:#000; }
+    .print-claims li { break-inside:avoid; }
+  }
+</style>
+<div class="print-actions"><button type="button" onclick="window.print()">Print or save as PDF</button><a href="/items/{{ rec.item_id }}">Back to item</a><span class="muted">Long explanations may span more than one page.</span></div>
+<h1>{{ rec.title }}</h1>
+<p><strong>Ward {{ rec.ward or 'not recorded' }}</strong> · {{ rec.item_id }} · Records retrieved {{ rec.retrieved }}</p>
+<p><strong>Stage in the saved record:</strong> {{ rec.current_stage.replace('_', ' ') }}.</p>
+<h2>Can I still have a say?</h2>
+{% include 'participation.html' %}
+<h2>Reviewed explanation</h2>
+{% if claims %}
+<ol class="print-claims">{% for c in claims %}<li>{{ c.sentence }}
+  <blockquote>“{{ c.quote }}” — {{ c.source_file }}, page {{ c.page }}</blockquote>
+</li>{% endfor %}</ol>
+<p class="muted">These sentences passed quote and number checks and were approved by a named reviewer. Reviewer identity is not authenticated in this demo.</p>
+{% else %}<p>No approved explanation yet. Staff are reviewing the drafts.</p>{% endif %}
+<div class="notice-qr"><img src="/items/{{ rec.item_id }}/qr.svg" alt="QR code linking to the official City item page">
+<div><strong>Read the official record</strong><p>Scan for the City's item page and current participation information.</p><p class="source-url"><a href="{{ rec.official_url }}">{{ rec.official_url }}</a></p></div></div>
+<p class="muted">Civify prototype · This is a summary of saved records, not an official City notice. Proposals, conditions and participation opportunities may have changed.</p>
+{% endblock %}

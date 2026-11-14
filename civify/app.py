@@ -20,18 +20,29 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
+from io import BytesIO
+
+import segno
 
 from fastapi import FastAPI, Form, HTTPException, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 from civify import agenda, db, geo, notices
 from civify.extract import extract
 from civify.verify import Verifier
 
 app = FastAPI(title="Civify")
+app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 DB_PATH = "civify.db"
+
+STAGE_LABELS = {"staff_recommendation": "Proposed", "committee_decision": "Committee considered",
+                "council_decision": "Council decided", "enacted": "By-laws enacted"}
+templates.env.filters["stage_label"] = lambda value: STAGE_LABELS.get(value, value.replace("_", " "))
+templates.env.filters["item_name"] = lambda title: (title or "Untitled item").split(" - ", 2)[1] if " - " in (title or "") else title
+templates.env.filters["item_topic"] = lambda title: (title or "").split(" - ", 2)[2] if (title or "").count(" - ") >= 2 else ""
 
 
 @lru_cache(maxsize=16)
@@ -48,13 +59,18 @@ def record_or_404(item_id: str) -> dict:
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
+    return templates.TemplateResponse(request, "index.html", {"items": db.list_items(), "wards": geo.WARDS})
+
+
+@app.get("/staff", response_class=HTMLResponse)
+def staff_queue(request: Request):
     con = db.connect(DB_PATH)
     items = []
     for rec in db.list_items():
         reviews = db.reviews_for(con, rec["item_id"])
         items.append({**rec, "approved": sum(r["status"] == "approved" for r in reviews.values()),
                       "reviewed": len(reviews)})
-    return templates.TemplateResponse(request, "index.html", {"items": items})
+    return templates.TemplateResponse(request, "staff_queue.html", {"items": items})
 
 
 @app.get("/staff/{item_id}", response_class=HTMLResponse)
@@ -97,6 +113,22 @@ def item(request: Request, item_id: str):
     return templates.TemplateResponse(request, "item.html", {"rec": rec, "claims": claims})
 
 
+@app.get("/items/{item_id}/print", response_class=HTMLResponse)
+def print_item(request: Request, item_id: str):
+    rec = record_or_404(item_id)
+    claims = db.approved_claims(db.connect(DB_PATH), rec)
+    return templates.TemplateResponse(request, "print.html", {"rec": rec, "claims": claims})
+
+
+@app.get("/items/{item_id}/qr.svg")
+def item_qr(item_id: str):
+    rec = record_or_404(item_id)
+    out = BytesIO()
+    # The official URL works on a resident's phone even when this demo is local.
+    segno.make_qr(rec["official_url"], error="m").save(out, kind="svg", scale=4, border=4)
+    return Response(out.getvalue(), media_type="image/svg+xml")
+
+
 @app.get("/near", response_class=HTMLResponse)
 def near(request: Request, address: str = "", ward: str = ""):
     """Resident lookup. The address goes to the City's API for one request and is not kept."""
@@ -118,7 +150,7 @@ def near(request: Request, address: str = "", ward: str = ""):
         nearby.sort(key=lambda r: (not r["same_ward"], r["km"] if r["km"] is not None else 1e9))
     upcoming = []
     if me:
-        for m in agenda.load_meetings():
+        for m in agenda.load_meetings(db.list_items()):
             for it in m["items"]:
                 if it.get("ward") == me["ward"]:
                     upcoming.append({"meeting": m, "item": it})
@@ -129,7 +161,7 @@ def near(request: Request, address: str = "", ward: str = ""):
 
 @app.get("/meetings", response_class=HTMLResponse)
 def meetings(request: Request):
-    return templates.TemplateResponse(request, "meetings.html", {"meetings": agenda.load_meetings(), "rules": agenda.load_rules(), "wards": geo.WARDS})
+    return templates.TemplateResponse(request, "meetings.html", {"meetings": agenda.load_meetings(db.list_items()), "rules": agenda.load_rules(), "wards": geo.WARDS})
 
 
 @app.get("/notices/{notice_id}", response_class=HTMLResponse)

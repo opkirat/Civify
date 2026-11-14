@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Notice {{ n.notice_id }}{% endblock %}
 {% block body %}
-<h1>{{ n.title }}</h1>
+<div class="page-head"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/near">Near me</a><span aria-hidden="true">/</span><span>Public notice</span></nav><p class="eyebrow">From the City Clerk</p><h1>{{ n.title }}</h1></div>
 <p class="muted">Public notice #{{ n.notice_id }} · posted {{ n.posted }} · {{ n.decision_body or '' }}{% if n.ward %} · Ward {{ n.ward }}{% endif %}
   · signed {{ n.signed_by }}</p>
 
@@ -28,7 +28,6 @@
 <ul>{% for i in n.agenda_items %}<li><a href="{{ i.url }}">{{ i.description }}</a></li>{% endfor %}</ul>
 {% endif %}
 
-<h2>The notice, as published by the City Clerk</h2>
-<div class="panel" style="white-space: pre-line">{{ n.text }}</div>
+<details class="fold"><summary>The notice, as published by the City Clerk</summary><div style="white-space:pre-line">{{ n.text }}</div></details>
 <p class="muted">Source: <a href="{{ n.source.dataset }}">City of Toronto Open Data, Public Notices</a>, retrieved {{ n.source.retrieved }}. Shown as published; nothing here was rewritten by software.</p>
 {% endblock %}

@@ -1,0 +1,17 @@
+{% if rec.participation.council_has_decided %}
+<p><strong>City Council has already decided this item.</strong></p>
+<p class="muted">{{ rec.participation.basis }}</p>
+{% elif rec.participation.next_meeting %}
+<p><strong>Next meeting in the saved record:</strong> {{ rec.participation.next_meeting.body }} · {{ rec.participation.next_meeting.date }}.</p>
+<p>A meeting date is not a submission deadline. Confirm current participation options on the official item page.</p>
+{% else %}
+<p><strong>Check the official item page for how to take part.</strong></p>
+{% endif %}
+{% if rec.participation.written_comments_rule or rec.participation.speaker_registration_rule %}
+<p class="muted">The Clerk's notice said ({{ rec.participation.source.file }}):</p>
+{% if rec.participation.written_comments_rule %}<blockquote>{{ rec.participation.written_comments_rule }}</blockquote>{% endif %}
+{% if rec.participation.speaker_registration_rule %}<blockquote>{{ rec.participation.speaker_registration_rule }}</blockquote>{% endif %}
+{% else %}
+<p>No item-specific participation rule was found in the saved records. An open comment window has not been verified.</p>
+{% endif %}
+<p><a href="{{ rec.official_url }}">Confirm details on the official item page</a>.</p>

@@ -95,7 +95,7 @@ def test_near_lists_public_notices_and_notice_page_quotes_the_clerk(client):
 @pytest.mark.skipif(not Path("data/agendas/2026-11-16-PB1.json").exists(), reason="agenda not parsed")
 def test_meetings_page_and_upcoming_items_in_ward(client):
     t = client.get("/meetings").text
-    assert "Toronto Preservation Board" in t and "2026.PB1.6" in t and "1337 Queen Street West" in t
+    assert "Toronto Preservation Board" in t and "2027.PB1.6" in t and "1337 Queen Street West" in t
     assert "register by 12:00 p.m. the day before" in t
     near = client.get("/near", params={"ward": "13"}).text
     assert "Coming up at a meeting, in your ward" in near and "66 Gerrard Street East" in near and "8 Arnold Avenue" not in near

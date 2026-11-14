@@ -1,0 +1,22 @@
+{% macro issue_card(it, same_ward=false, km=none) %}
+<article class="issue-card">
+<div class="meta-row"><span class="pill {{ 'proposed' if it.current_stage == 'staff_recommendation' else 'decided' }}">{{ it.current_stage|stage_label }}</span><span>Ward {{ it.ward or '?' }}</span></div>
+<h3><a href="/items/{{ it.item_id }}">{{ it.title|item_name }}</a></h3>
+<p class="topic">{{ it.title|item_topic }}</p>
+{% if same_ward %}<p class="muted"><span class="ok">In your ward</span>{% if km is not none %} · about {{ '%.1f'|format(km) }} km from your address{% endif %}</p>{% elif km is not none %}<p class="muted">About {{ '%.1f'|format(km) }} km from your address</p>{% endif %}
+<div class="card-bottom"><span>{{ 'Council has decided' if it.participation.council_has_decided else 'Participation: check details' }}</span><a href="/items/{{ it.item_id }}" aria-label="View issue: {{ it.title|item_name }}">View issue →</a></div>
+</article>
+{% endmacro %}
+
+{% macro search_form(wards, address='', ward='') %}
+<form method="get" action="/near" class="search-panel">
+<h2>Find out what’s happening near you</h2>
+<div class="search-grid">
+<label for="address">Toronto street address<input type="text" id="address" name="address" value="{{ address }}" placeholder="e.g. 100 Queen St W" autocomplete="street-address" aria-describedby="search-help"></label>
+<span class="or">or</span>
+<label for="ward">Choose your ward<select id="ward" name="ward"><option value="">Select a ward</option>{% for num,name in wards.items() %}<option value="{{ num|int }}" {% if ward == num|int|string %}selected{% endif %}>{{ num|int }} · {{ name }}</option>{% endfor %}</select></label>
+<button class="primary" type="submit">Find issues <span aria-hidden="true">→</span></button>
+</div>
+<p class="muted" id="search-help">No account needed. Address lookup uses the City’s service; choose a ward to search without an address. If both are entered, we use the address.</p>
+</form>
+{% endmacro %}

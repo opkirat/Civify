@@ -1,14 +1,12 @@
 {% extends "base.html" %}
+{% from 'components.html' import issue_card, search_form %}
 {% block body %}
-<h1>Council items</h1>
-<p><a href="/near"><strong>Residents: what's being decided near me?</strong></a> · <a href="/meetings">Upcoming meetings</a></p>
-{% for it in items %}
-<div class="panel">
-  <strong>{{ it.title }}</strong>
-  <div class="muted">Stage: {{ it.current_stage.replace('_',' ') }} · {{ it.claims|length }} draft sentences, {{ it.approved }} approved, {{ it.reviewed }} reviewed</div>
-  <p><a href="/staff/{{ it.item_id }}">Staff review</a> · <a href="/items/{{ it.item_id }}">Resident view</a> · <a href="{{ it.official_url }}">Official item page</a></p>
-</div>
-{% else %}
-<p>No items yet. Run the pipeline on a folder in <code>data/</code>.</p>
-{% endfor %}
+<section class="hero" aria-labelledby="welcome">
+<div><p class="eyebrow">Toronto, a little clearer</p><h1 id="welcome">Your neighbourhood.<br><span>Your say.</span></h1><p class="lead">Understand the decisions shaping your community. See what’s proposed, where it stands, and how you can take part.</p><span class="pill">Toronto pilot · {{ items|length }} saved issues</span></div>
+<aside class="hero-aside" aria-label="How Civify works"><h2>From City Hall to your street.</h2><ol class="steps"><li><div><strong>Find your neighbourhood</strong><p>Search by address or choose your ward.</p></div></li><li><div><strong>Understand the issue</strong><p>Read an explanation reviewed against the original records.</p></div></li><li><div><strong>Know your next step</strong><p>Check meeting dates and the City’s participation details.</p></div></li></ol></aside>
+</section>
+{{ search_form(wards) }}
+<section aria-labelledby="browse-heading"><div class="section-heading"><div><p class="eyebrow">Explore the pilot</p><h2 id="browse-heading">Local decisions, explained</h2><p class="muted">Saved City records. Check each issue for its source date and review status.</p></div><a href="/meetings">See meeting agendas →</a></div>
+<div class="card-grid">{% for it in items %}{{ issue_card(it) }}{% else %}<div class="empty-state"><h3>No issues available yet</h3><p>Check back when the first records have been added.</p></div>{% endfor %}</div></section>
+<div class="trust-note"><strong>Built around the source.</strong><p>AI drafts the explanation. Code checks quotes and numbers. A reviewer approves each sentence before it appears here.</p></div>
 {% endblock %}

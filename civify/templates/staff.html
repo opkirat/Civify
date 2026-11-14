@@ -1,34 +1,39 @@
 {% extends "base.html" %}
 {% block title %}Staff review · {{ rec.item_id }}{% endblock %}
 {% block body %}
-<h1>Staff review: {{ rec.title }}</h1>
+<div class="page-head"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/staff">Staff workspace</a><span aria-hidden="true">/</span><span>{{ rec.item_id }}</span></nav><p class="eyebrow">Review before publishing</p><h1>{{ rec.title|item_name }}</h1><p class="lead">{{ rec.title|item_topic }}</p><div class="actions"><a class="button" href="/items/{{ rec.item_id }}">Preview resident view →</a><a class="button" href="#drafts">Jump to draft sentences ↓</a></div></div>
 <p class="muted">Each sentence below was drafted by an AI model and then checked by code against the staff report.
 A green check means the quote exists in the report and the numbers match. <strong>Code cannot check meaning</strong>:
 read each sentence against its quote before approving. Only approved sentences reach residents.</p>
 
 {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
 
-<div class="panel">
-  <strong>Stages (from the record)</strong>
+<details class="fold">
+  <summary>Stages and report versions (from the record)</summary>
   <ol class="stage">
   {% for s in rec.stages %}
     <li class="{{ 'current' if s.stage == rec.current_stage }}">
-      <strong>{{ s.stage.replace('_',' ')|capitalize }}</strong> · {{ s.date or 'date not found' }}
+      <strong>{{ s.stage.replace('_',' ')|capitalize }}</strong> · {{ s.date or 'No decision recorded' }}
       {% if s.status %} · {{ s.status }}{% endif %}
-      <div class="muted">{{ s.body }} · source: {{ s.source.file }}</div>
+      <div class="muted">{{ s.body or 'Body not recorded' }} · source: {{ s.source.file }}</div>
+      {% if s.versions and s.versions|length > 1 %}
+      <details><summary>{{ s.versions|length }} staff report versions — using {{ s.source.file }}</summary>
+      <ul>{% for version in s.versions %}<li>{{ version.date }} · {{ version.file }}</li>{% endfor %}</ul></details>
+      {% endif %}
     </li>
   {% endfor %}
   </ol>
-</div>
+</details>
 
-<div class="panel">
-  <strong>Participation (quoted from the Clerk's notice, {{ rec.participation.source.file if rec.participation.source else 'no notice found' }})</strong>
+<details class="fold">
+  <summary>Participation (quoted from the Clerk's notice, {{ rec.participation.source.file if rec.participation.source else 'no notice found' }})</summary>
   <blockquote>{{ rec.participation.written_comments_rule or 'No written-comments rule found.' }}</blockquote>
   <blockquote>{{ rec.participation.speaker_registration_rule or 'No speaker-registration rule found.' }}</blockquote>
   <div>Council has decided: <strong>{{ 'yes' if rec.participation.council_has_decided else 'no' }}</strong>
-    <span class="muted">(basis: “{{ rec.participation.basis }}”)</span></div>
+    <span class="muted">(basis: “{{ rec.participation.basis or 'No Council outcome found' }}”)</span></div>
+  {% if rec.participation.next_meeting %}<p>Next meeting in the saved record: {{ rec.participation.next_meeting.body }} · {{ rec.participation.next_meeting.date }}. This is not a submission deadline.</p>{% endif %}
   <div class="muted">{{ rec.participation.note }}</div>
-</div>
+</details>
 
 
 {% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
@@ -42,15 +47,15 @@ read each sentence against its quote before approving. Only approved sentences r
 </div>
 {% endfor %}
 {% endif %}
-<h2>Draft sentences ({{ rows|length }})</h2>
+<div class="section-heading" id="drafts"><div><p class="eyebrow">Review queue</p><h2>Draft sentences ({{ rows|length }})</h2></div><a href="/items/{{ rec.item_id }}">Preview resident view →</a></div>
 {% for r in rows %}
 <section class="claim {{ r.review.status if r.review }}" id="claim-{{ r.index }}" aria-labelledby="s{{ r.index }}">
   <p id="s{{ r.index }}"><strong>{{ r.index + 1 }}.</strong>
     {% if r.verified %}<span class="ok" title="quote found, numbers match">✓ verified</span>{% else %}<span class="warn">⚠ unverified: {{ r.reason }}</span>{% endif %}
     {% if r.review %} · <em>{{ r.review.status }} by {{ r.review.reviewer }} at {{ r.review.reviewed_at }}</em>{% endif %}
   </p>
-  <p>{{ r.review.sentence if r.review else r.sentence }}</p>
-  <blockquote>“{{ r.quote }}” <span class="muted">— {{ r.source_file }}{% if r.page %}, page {{ r.page }}{% endif %}</span></blockquote>
+  <div class="review-columns"><div><p class="eyebrow">Resident explanation</p><p>{{ r.review.sentence if r.review else r.sentence }}</p></div><div><p class="eyebrow">Supporting source</p>
+  <blockquote>“{{ r.quote }}” <span class="muted">— {{ r.source_file }}{% if r.page %}, page {{ r.page }}{% endif %}</span></blockquote></div></div>
   <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
     <label>Reviewer <input type="text" name="reviewer" required value="{{ r.review.reviewer if r.review else '' }}"></label>
     <button class="primary" name="action" value="approve">Approve as written</button>
