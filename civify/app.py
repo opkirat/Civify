@@ -181,10 +181,16 @@ def _item_state(con, rec: dict) -> dict:
     pub = db.latest_publication(con, iid)
     esc = db.open_escalations(con, iid)
     changes = db.unpublished_changes(con, rec)
-    st = workflow.status(rec, db.load_item(iid), db.reviews_for(con, iid), pub, esc, changes)
+    st = workflow.status(rec, db.load_item(iid), db.reviews_for(con, iid), pub, esc, changes,
+                         summary.state(iid, [c["sentence"] for c in pub["claims"]] if pub else []))
     last = con.execute("SELECT MAX(at) FROM audit WHERE item_id = ?", (iid,)).fetchone()[0]
     job = con.execute("SELECT * FROM jobs WHERE item_id = ? ORDER BY id DESC LIMIT 1", (iid,)).fetchone()
     stamps = [x for x in (last, job["finished_at"] or job["created_at"] if job else None) if x]
+    if job and job["status"] in ("failed", "blocked"):
+        failed = con.execute("SELECT label, detail FROM job_steps WHERE job_id = ? AND status IN ('failed', 'blocked') ORDER BY position LIMIT 1", (job["id"],)).fetchone()
+        st["attention"].insert(0, {"text": f"Processing {job['status']} at “{failed['label']}”: {(failed['detail'] or '')[:160]}. Open the run to retry." if failed
+                                   else f"Processing {job['status']}. Open the run to retry.", "href": f"/staff/processing/{job['id']}"})
+        st["steps"][0] = {**st["steps"][0], "state": "attention", "detail": f"processing {job['status']}", "href": f"/staff/processing/{job['id']}"}
     c = st["counts"]
     tags = set()
     if c["blocked"] or (job and job["status"] in ("failed", "blocked")): tags.add("blocked")
@@ -347,7 +353,8 @@ def staff(request: Request, item_id: str):
     groups["review"] = [r for r in groups["review"] if not r["escalation"]]
     pub = db.latest_publication(con, item_id)
     changes = db.unpublished_changes(con, rec)
-    pipeline_status = workflow.status(rec, db.load_item(item_id), reviews, pub, list(esc.values()), changes)
+    pipeline_status = workflow.status(rec, db.load_item(item_id), reviews, pub, list(esc.values()), changes,
+                                      summary.state(item_id, [c["sentence"] for c in pub["claims"]] if pub else []))
     history = con.execute("SELECT * FROM audit WHERE item_id = ? ORDER BY id DESC LIMIT 40", (item_id,)).fetchall()
     return templates.TemplateResponse(request, "staff.html", {"rec": rec, "groups": groups, "pipeline": pipeline_status, "user": user,
                                                               "publication": pub, "changes": changes, "history": history,

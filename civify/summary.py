@@ -207,6 +207,21 @@ def for_residents(item_id: str, live: list[str]) -> dict | None:
     return s if all(u in current for x in s["sentences"] for u in x["uses"]) else None
 
 
+def state(item_id: str, live: list[str]) -> dict:
+    """For the staff pipeline view: is a summary showing, held back (and why), or not made yet?"""
+    p = path_for(item_id)
+    if not live:
+        return {"state": "todo", "detail": "nothing live to summarise", "issues": []}
+    if not p.exists():
+        return {"state": "todo", "detail": "not made yet", "issues": []}
+    s = json.loads(p.read_text())
+    if s.get("status") == "held":
+        return {"state": "attention", "detail": "held back by its checks", "issues": s.get("issues", [])}
+    if for_residents(item_id, live) is None:
+        return {"state": "todo", "detail": "out of date; rebuilding", "issues": []}
+    return {"state": "done", "detail": "shown to residents", "issues": []}
+
+
 def refresh_item(db_path: str, item_id: str) -> None:
     """Background task after a staff decision: rebuild the summary for what is now live."""
     pub = db.latest_publication(db.connect(db_path), item_id)

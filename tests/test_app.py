@@ -271,3 +271,11 @@ def test_resident_page_shows_labelled_ai_summary_over_verified_sentences(staff, 
     assert "See each sentence with its source (1)" in page and live in page
     staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})                        # its source is gone: summary withdrawn
     assert "A plain summary of the change." not in staff.get(f"/items/{ITEM}").text
+
+
+def test_pipeline_view_is_visible_on_dashboard_and_item_page(staff):
+    for path in ("/staff", f"/staff/{ITEM}"):
+        t = staff.get(path).text
+        assert 'class="pipeline"' in t and "AI summary" in t and "Live for residents" in t
+        assert t.index('class="pipeline"') < t.index("Item details" if path == "/staff" else "Record details")
+    assert "What needs a person" in staff.get(f"/staff/{ITEM}").text

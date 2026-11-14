@@ -103,6 +103,11 @@
 .in-context > summary { font-size:13px; font-weight:500; }
 .excerpt { font-size:14px; line-height:1.65; color:#4a5347; white-space:pre-line; max-height:320px; overflow:auto; padding:12px 14px; background:#fff; border:1px solid var(--line); border-radius:7px; }
 .excerpt mark { background:#fbe9a6; color:var(--ink); padding:1px 2px; border-radius:2px; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+.worker-page .pipeline { margin:18px 0 12px; }
+.worker-page details.attention { font-size:13px; margin:0 0 18px; }
+.worker-page details.attention > summary { font-weight:500; color:#9a5b12; }
+.worker-page details.attention li { margin:6px 0; }
+.work-item .next-action { font-size:14px; margin:4px 0 8px; }
 @media(max-width:700px) {
  .ready-panel { flex-direction:column; }
  .ready-panel > form, .ready-panel button { width:100%; }

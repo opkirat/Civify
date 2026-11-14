@@ -8,6 +8,8 @@
 <div class="worker-heading"><div><h1>{{ rec.title|item_name }}</h1><p class="lead">Only the sentences the checks weren't sure about wait for you. Approving puts a sentence live.</p></div><a href="/items/{{ rec.item_id }}">Resident view ↗</a></div>
 {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
 {% if notice %}<p class="success" role="status">{{ notice }}</p>{% endif %}
+{{ pipeline_strip(pipeline.steps) }}
+{% if pipeline.attention %}<details class="attention"{% if pipeline.attention|length <= 3 %} open{% endif %}><summary>What needs a person ({{ pipeline.attention|length }})</summary><ul>{% for a in pipeline.attention %}<li>{% if a.href %}<a href="{{ a.href }}">{{ a.text }}</a>{% else %}{{ a.text }}{% endif %}</li>{% endfor %}</ul></details>{% endif %}
 {% set pending = (groups.escalated + groups.blocked + groups.review)|unique(attribute='index')|list %}
 <div class="review-progress"><span>{% if publication and publication.claims %}<strong>Live for residents:</strong> {{ publication.claims|length }} of {{ rec.claims|length }} sentences{% else %}<strong>Not live yet:</strong> nothing approved{% endif %}{% if pending %} · <strong>{{ pending|length }}</strong> waiting for you{% endif %}</span><progress value="{{ groups.live|length }}" max="{{ rec.claims|length or 1 }}" aria-label="Sentences live"></progress><a href="/items/{{ rec.item_id }}">See the resident page ↗</a></div>
 {% if changes.added or changes.removed %}<section id="publish" class="panel publish-panel"><div class="publish-summary"><p>{{ changes.added + changes.removed }} approved change(s) aren't on the resident page yet (made before decisions went live automatically).</p>
@@ -34,7 +36,7 @@
 <p><strong>Needs you</strong>: about taking part or a deadline, or either AI check raised something. The reason is on each card, often with suggested wording you can approve in one click.</p>
 <p><strong>Source check failed</strong>: the quote wasn't found or a number doesn't match. Edit it so it passes, or reject it.</p>
 <p>Every change makes a new numbered version of the resident page, listed in the history, so you can always see what residents saw and when.</p></details>
-<details class="fold worker-record"><summary>Record details and history</summary><p>{{ rec.title|item_topic }}</p><p><a href="{{ rec.official_url }}">Official item page ↗</a></p>{{ pipeline_strip(pipeline.steps) }}
+<details class="fold worker-record"><summary>Record details and history</summary><p>{{ rec.title|item_topic }}</p><p><a href="{{ rec.official_url }}">Official item page ↗</a></p>
 <details class="fold">
   <summary>Who residents are matched to</summary>
   <p>Residents see this item when they search {% if rec.citywide %}<strong>any ward or address</strong> (it is city-wide){% else %}<strong>Ward {{ rec.ward or 'not recorded' }}</strong>{% endif %}{% if rec.location %}, and by distance from <strong>{{ rec.location.address }}</strong> (located with the City's address service){% endif %}. Matching uses only ward and distance; no resident data is stored.</p>

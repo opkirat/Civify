@@ -3,7 +3,7 @@
 {% for s in steps %}
   <li class="step {{ s.state }}">
     <span class="step-dot" aria-hidden="true">{% if s.state == 'done' %}✓{% elif s.state == 'attention' %}!{% else %}{{ loop.index }}{% endif %}</span>
-    <span class="step-label">{{ s.label }}</span>
+    <span class="step-label">{% if s.href %}<a href="{{ s.href }}">{{ s.label }}</a>{% else %}{{ s.label }}{% endif %}</span>
     <span class="step-detail">{{ s.detail }}</span>
     <span class="visually-hidden">: {{ {'done': 'done', 'attention': 'needs attention', 'todo': 'not started'}[s.state] }}</span>
   </li>

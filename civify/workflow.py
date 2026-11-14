@@ -20,6 +20,7 @@ STEPS = [
     ("meaning", "Meaning check"),
     ("reviewed", "Unsure ones reviewed"),
     ("published", "Live for residents"),
+    ("summary", "AI summary"),
 ]
 
 
@@ -36,7 +37,8 @@ def lanes(record: dict) -> list[dict]:
 
 
 def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row],
-           publication: dict | None = None, escalations: list | None = None, changes: dict | None = None) -> dict:
+           publication: dict | None = None, escalations: list | None = None, changes: dict | None = None,
+           summary: dict | None = None) -> dict:
     iid = record["item_id"]
     claims = lanes(record)
     docs = (item or {}).get("documents", [])
@@ -85,6 +87,10 @@ def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row],
         attention.append({"text": f"{unpublished} approved change(s) are not on the resident page yet. Open the item and update it (version {nxt}).", "href": f"/staff/{iid}#publish"})
     if claims and not meaning_run:
         attention.append({"text": "Meaning check has not run. Review each sentence against its source.", "href": f"/staff/{iid}#review"})
+    summary = summary or {"state": "todo", "detail": "not made yet", "issues": []}
+    if summary["state"] == "attention":
+        why = "; ".join(summary["issues"])[:220]
+        attention.append({"text": f"The AI summary was held back by its checks ({why}). Residents see the verified sentences instead.", "href": f"/items/{iid}"})
     p = record.get("participation", {})
     if not p.get("council_has_decided") and not (p.get("written_comments_rule") or p.get("speaker_registration_rule")):
         attention.append({"text": "No item-specific rule for taking part was found. Confirm on the official item page before telling residents.", "href": record.get("official_url")})
@@ -96,14 +102,17 @@ def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row],
         "checked": ("attention" if any(c["lane"] == "blocked" for c in claims) else "done" if n else "todo",
                     f"{sum(1 for c in claims if c.get('verified'))}/{n} quotes found" if n else "-"),
         "meaning": ("done" if meaning_run else "attention" if n else "todo",
-                    f"{sum(c['lane'] == 'ready' for c in claims)} ready, {sum(c['lane'] == 'review' for c in claims)} to look at" if meaning_run else "not run"),
+                    f"{sum(c['lane'] == 'ready' for c in claims)} passed, {sum(c['lane'] == 'review' for c in claims)} unsure" if meaning_run else "not run"),
         "reviewed": ("done" if n and not (waiting or stale) else "attention" if n else "todo", f"{len(decided)}/{n} decided" if n else "-"),
         "published": ("attention" if unpublished else "done" if publication else "todo",
                       (f"version {publication['version']} live · {len(publication['claims'])} sentences" if publication else "nothing live yet")
                       + (f" · {unpublished} change(s) waiting" if unpublished else "")),
+        "summary": (summary["state"], summary["detail"]),
     }
+    links = {"checked": f"/staff/{iid}#review", "meaning": f"/staff/{iid}#review", "reviewed": f"/staff/{iid}#review",
+             "published": f"/items/{iid}", "summary": f"/items/{iid}"}
     return {
-        "steps": [{"key": k, "label": label, "state": state[k][0], "detail": state[k][1]} for k, label in STEPS],
+        "steps": [{"key": k, "label": label, "state": state[k][0], "detail": state[k][1], "href": links.get(k)} for k, label in STEPS],
         "attention": attention,
         "counts": {"ready": len(ready), "review": len(review), "blocked": len(blocked), "stale": len(stale),
                    "approved": approved, "decided": len(decided), "total": n, "escalated": len(escalations),

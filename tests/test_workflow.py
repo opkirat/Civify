@@ -67,3 +67,11 @@ def test_no_triage_falls_back_to_review():
     plain = {k: v for k, v in READY.items() if k not in ("lane", "reasons", "meaning")}
     st = workflow.status(rec([plain]), ITEM, {})
     assert st["counts"]["review"] == 1 and states(st)["meaning"] == "attention"
+
+
+def test_held_summary_is_a_step_needing_attention_with_its_reason():
+    held = {"state": "attention", "detail": "held back by its checks", "issues": ["summary sentence 2: guardrail held (states it as fact)"]}
+    st = workflow.status(rec([READY]), ITEM, {}, None, [], None, held)
+    assert states(st)["summary"] == "attention"
+    assert any("held back" in a["text"] and "states it as fact" in a["text"] for a in st["attention"])
+    assert states(workflow.status(rec([READY]), ITEM, {}))["summary"] == "todo"
