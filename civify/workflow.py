@@ -35,7 +35,8 @@ def lanes(record: dict) -> list[dict]:
     return out
 
 
-def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row]) -> dict:
+def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row],
+           publication: dict | None = None, escalations: list | None = None, changes: dict | None = None) -> dict:
     iid = record["item_id"]
     claims = lanes(record)
     docs = (item or {}).get("documents", [])
@@ -58,7 +59,11 @@ def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row]) -> 
     review = [c for c in waiting + stale if c["lane"] == "review"]
     ready = [c for c in waiting + stale if c["lane"] == "ready"]
 
+    escalations = escalations or []
+    escalated = {e["claim_index"] for e in escalations}
     attention = []
+    for e in escalations:
+        attention.append({"text": f"Sentence {e['claim_index'] + 1} was escalated by {e['raised_by']}: “{e['note']}”", "href": f"/staff/{iid}#claim-{e['claim_index']}"})
     for d in unknown:
         attention.append({"text": f"{d['filename']} was not recognised. Check what it is: {d['evidence'][:80]}", "href": None})
     if docs and not has_report:
@@ -68,9 +73,16 @@ def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row]) -> 
     for c in blocked:
         attention.append({"text": f"Sentence {c['index'] + 1} failed the source check ({c.get('reason')}). Edit so it passes, or reject.", "href": f"/staff/{iid}#claim-{c['index']}"})
     for c in review:
+        if c["index"] in escalated:
+            continue
         attention.append({"text": f"Sentence {c['index'] + 1} needs a look: {'; '.join(c['reasons'])}.", "href": f"/staff/{iid}#claim-{c['index']}"})
     if ready:
         attention.append({"text": f"{len(ready)} sentence(s) passed every check. Publish them with one click.", "href": f"/staff/{iid}#ready"})
+    changes = changes or {"added": 0, "removed": 0}
+    unpublished = changes["added"] + changes["removed"]
+    if unpublished:
+        nxt = (publication["version"] + 1) if publication else 1
+        attention.append({"text": f"{unpublished} approved change(s) are not visible to residents yet. Publish version {nxt}.", "href": f"/staff/{iid}#publish"})
     if claims and not meaning_run:
         attention.append({"text": "Meaning check has not run; every sentence will need a look. Run `python -m civify.triage`.", "href": None})
     p = record.get("participation", {})
@@ -86,11 +98,14 @@ def status(record: dict, item: dict | None, reviews: dict[int, sqlite3.Row]) -> 
         "meaning": ("done" if meaning_run else "attention" if n else "todo",
                     f"{sum(c['lane'] == 'ready' for c in claims)} ready, {sum(c['lane'] == 'review' for c in claims)} to look at" if meaning_run else "not run"),
         "reviewed": ("done" if n and not (waiting or stale) else "attention" if n else "todo", f"{len(decided)}/{n} decided" if n else "-"),
-        "published": ("done" if approved else "todo", f"{approved} sentence(s) live" if approved else "nothing live yet"),
+        "published": ("attention" if unpublished else "done" if publication else "todo",
+                      (f"version {publication['version']} live · {len(publication['claims'])} sentences" if publication else "nothing live yet")
+                      + (f" · {unpublished} change(s) waiting" if unpublished else "")),
     }
     return {
         "steps": [{"key": k, "label": label, "state": state[k][0], "detail": state[k][1]} for k, label in STEPS],
         "attention": attention,
         "counts": {"ready": len(ready), "review": len(review), "blocked": len(blocked), "stale": len(stale),
-                   "approved": approved, "decided": len(decided), "total": n},
+                   "approved": approved, "decided": len(decided), "total": n, "escalated": len(escalations),
+                   "unpublished": unpublished, "live_version": publication["version"] if publication else None},
     }
