@@ -63,3 +63,11 @@ Each entry: the choice, the alternatives considered, and the trade-off. Written 
 **Choice.** Show Council's motions with their text.
 **Alternative.** Diff committee recommendations against the Council decision.
 **Trade-off.** The diff was noisy (flagged "191-199" vs "191 to 199") and missed the substantive change; the motions state exactly what was altered, by whom, and whether it carried — and they are the record's own explanation.
+
+## D-12 · Confirm item identity independently of the meeting year
+
+The November 2026 Preservation Board agenda uses 2027 item IDs. The parser retains a short ID when the full ID is absent, rather than constructing a URL from the meeting year. A local record resolves an agenda entry only when short ID, body, meeting date and ward agree. This leaves some entries without direct links but prevents navigation to an unrelated or nonexistent item.
+
+## D-13 · Printable notices retain evidence and use official-page QR codes
+
+The print route uses the resident approval gate and includes complete approved sentences and their source quotes. Segno generates QR SVG locally, pointing to the official City item page so a phone does not need access to the demo's localhost. Long content can span multiple pages; fitting it by truncation could remove a condition or citation. Physical print layout and QR scanning still require manual verification.

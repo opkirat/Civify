@@ -1,27 +1,30 @@
 # Civify
 
-Civify turns municipal council decisions into plain-language explanations that residents can trust. Every sentence is paired with the exact passage of the official record it came from, the code checks that passage exists before anything is shown, and City staff approve every sentence before residents see it. Residents enter an address or ward to see what is proposed near them, what stage it is at, and what the Clerk's notice says about having a say.
+Civify turns municipal council decisions into plain-language explanations that residents can trust. Every sentence is paired with the exact passage of the official record it came from, the code checks that passage exists before anything is shown, and a named reviewer approves every sentence before residents see it. Residents enter an address or ward to see what is proposed near them, what stage it is at, and what the Clerk's notice says about having a say.
 
 Built for the "Making municipal decisions easier to understand" challenge, on real City of Toronto records.
 
 ## What works today
 
-- **Pipeline** on a folder of downloaded PDFs: extract text with page numbers → classify each file (staff report, Clerk's notice, draft by-law, Council bill, item page, declaration, public letter) → draft plain-language sentences with Gemini, each with an exact quote → verify every quote and number in code → build one `record.json` per item with three distinct stages, votes, motions and quoted participation rules.
+- **Pipeline** on a folder of downloaded PDFs: extract text with page numbers → classify each file (staff report, Clerk's notice, draft by-law, Council bill, item page, declaration, public letter) → draft plain-language sentences with Gemini, each with an exact quote → verify every quote and number in code → build one `record.json` per item with distinct staff, committee and Council stages, enacted by-laws where available, votes, motions and quoted participation rules.
 - **Staff review screen**: each sentence beside its quote and page; approve, reject, or edit (edits are re-checked). Nothing reaches residents until a named reviewer approves it.
 - **Resident view**: where the item stands, whether Council has decided, what the Clerk's notice says about taking part, what changed at Council, and the approved explanation with a source for every sentence.
 - **Near me**: address or ward → items in your ward, with distance. The address is looked up on the City's own API and never stored.
-- Demonstrated on item **2026.TE34.21** (191-199 College St rezoning): 10 documents classified, 19 of 19 drafted sentences verified, 23-0 Council vote and the Mayor's declared interest read from the record.
+- **Three saved item records**: `2026.TE34.21` (College Street rezoning, enacted); `2027.PB1.5` (19 Don Ridge Drive heritage designation); and `2027.PB1.6` (1337 Queen Street West demolition/new construction). The latter two records list a November 16, 2026 board meeting, with no board or Council decision yet. Their item IDs really use 2027; a meeting's year cannot determine its item IDs.
+- **Revised reports**: PB1.5 has three versions; drafting uses the newest dated report, November 13, 2026. Stored quote/number checks passed for 19/19 TE34.21 claims, 12/13 PB1.5 claims and 11/11 PB1.6 claims. Passing these checks does not establish meaning or staff approval.
+- **Public notices and agendas**: 14 saved Clerk notices and the six-item Preservation Board agenda, retrieved November 13, 2026. General participation rules are quoted separately from item-specific notices; no deadlines are calculated from meetings. Confirmed items link to their Civify record.
+- **Printable notice with QR code**: open an item's “Printable notice” link, then print or save as PDF. It includes approved sentences and full source quotes; the QR opens the official City item page. Long explanations may span multiple pages.
 
 ## Planned, not built
 
-Printable one-page notice with QR code · SMS alerts · translation · two further items (transit, budget) through the pipeline · appeal stage. See [docs/limitations.md](docs/limitations.md) for the full, honest list.
+SMS alerts · translation · transit/budget examples · appeal stage · guaranteed one-page print layout. See [docs/limitations.md](docs/limitations.md) for the full, honest list.
 
 ## Run it
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-pytest                                   # 62 tests; 19 skip if the source PDFs are absent
+pytest                                   # PDF-dependent checks skip when sources are absent
 
 # Pipeline (the saved Gemini reply lets you replay without a key)
 python -m civify.ingest data/2026.TE34.21 --retrieved 2026-11-13
@@ -33,10 +36,14 @@ python -m civify.verify                                 # demo: watch wrong summ
 uvicorn civify.app:app --reload          # http://127.0.0.1:8000
 ```
 
-Source PDFs are not in this repository (public letters carry residents' names). The pipeline's outputs for the demo item are committed, so the app runs from a fresh clone.
+Source PDFs are excluded from Git (public letters carry residents' names). The JSON records let the app display items without PDFs; drafting, replaying and approving require the original staff reports locally. Review decisions are in the local `civify.db`, not shared through Git. This demo has no staff authentication and should run locally.
+
+For a new item, save its official page as `data/<actual-item-id>/Agenda_Item_History.pdf`, run `python -m civify.fetch data/<actual-item-id>`, then `ingest`, `draft` and `record` as above. For a saved agenda, run `python -m civify.agenda data/agendas/<file>.pdf --retrieved YYYY-MM-DD`. Only full IDs confirmed by sources receive direct item links.
 
 ## Docs
 
+- [docs/testing.md](docs/testing.md) — five-minute resident/reviewer walkthrough
+- [docs/handoff.md](docs/handoff.md) — current state, constraints and next actions
 - [docs/requirements.md](docs/requirements.md) — numbered, testable requirements with status
 - [docs/architecture.md](docs/architecture.md) — pipeline, class, state and sequence diagrams drawn from the code
 - [docs/decisions.md](docs/decisions.md) — each design choice with alternatives and trade-offs

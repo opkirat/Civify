@@ -10,15 +10,16 @@ Running log. Each entry says what the gap is, whether it fails safe, and what a 
 
 ## Classification and parsing
 
-- **Rules were fitted to one item (2026.TE34.21).** Staff report and Clerk's notice rules rest on City templates and should carry over; the by-law, declaration-of-interest and item-page parsers are the likely ones to break on other items. Unrecognised files come back `unknown` (safe) rather than mislabelled.
+- **Rules have been exercised on three items (TE34.21, PB1.5 and PB1.6).** Staff report and Clerk's notice rules rest on City templates and should carry over; the by-law, declaration-of-interest and item-page parsers are the likely ones to break on other items. Unrecognised files come back `unknown` (safe) rather than mislabelled.
 - **The record parser is Toronto-shaped.** It keys on TMMIS headings ("City Council Decision", "Community Council Recommendations", "Vote (...)"). Another municipality needs its own parser producing the same `record.json` shape.
 - **Image-only (scanned) PDFs are not read.** They come back `unknown` with a note that OCR is needed.
 - **The "council bill" is not the enacted by-law.** It still has placeholders (`[###]`). The enacted by-laws are fetched separately (`civify/fetch.py`) and form the fourth stage, which is also where Strong Mayor written approval ("Mayoral Decision N-YYYY") is recorded.
 
 ## Participation
 
-- **Participation is quoted, never computed.** The app never derives a deadline. The only derived field is `council_has_decided`, read from the Tracking Status line. For a live item the app says "check the official item page", which is honest but thin.
-- **No open-window item yet.** TE34.21 is decided. 673-679 Coldstream Ave (community meeting 2026-12-14) is a candidate.
+- **Participation is quoted, never computed.** The app never derives a deadline. The Council outcome and next meeting are read from Tracking Status. A scheduled meeting does not establish an open comment window. Pending item pages explicitly show when no item-specific participation rule was found.
+- **Saved snapshots are not automatically refreshed.** The notices include a Kennedy Road speaker-registration rule dated November 24, 2026; the PB records list a November 16 meeting but no item-specific deadline. Neither a saved notice nor a general participation rule confirms current availability. Staff must check the official item page before presenting a window as open.
+- **Agenda IDs are not meeting years.** The November 2026 PB agenda contains 2027 item IDs. When a full ID is missing, the app retains the short ID and offers the City agenda index; it resolves a local item only when short ID, body, meeting date and ward agree.
 
 ## Data and access
 
@@ -30,5 +31,7 @@ Running log. Each entry says what the gap is, whether it fails safe, and what a 
 ## App
 
 - **Reviewer identity is a typed name, not a login.** Enough for a demo; a pilot needs municipal SSO.
-- **No "what changed" (amendment) view yet.** The record holds committee recommendations and the Council decision text, so the diff is one step away.
-- **No translation, no SMS, no print notice yet.** Planned; see README for the honest working-vs-planned split.
+- **Amendment view is verbatim, not a semantic diff.** Staff and resident screens show Council motions and their text. There is no automatic plain-language comparison of versions.
+- **No translation or SMS.** Printable notices with local QR generation are implemented; full approved sentences and quotes are retained, so lengthy notices can exceed one page. The UI refresh was checked in headless Chrome at desktop and 390px phone widths, and a sample print PDF was generated. Physical QR scanning and a full accessibility audit remain pending.
+- **Review decisions are keyed by claim index.** Replacing or reordering drafts after review can associate an old approval with a new claim. Do not regenerate reviewed items without clearing their reviews; a pilot needs content-bound approvals and review history.
+- **Official coordinates can be wrong.** The earlier source inspection found a Kennedy Road notice geocoded to Kennedy Avenue. Ward matching is useful context but does not establish parcel-level impact.

@@ -6,6 +6,8 @@ Diagrams are Mermaid (render on GitHub). Each one is drawn from the code as it i
 
 ```mermaid
 flowchart LR
+  saved[Saved item page] --> fetch[fetch.py: linked official PDFs]
+  fetch --> PDFs
   PDFs[(PDFs saved by hand<br/>data/&lt;item&gt;/)] --> extract[extract.py<br/>pages + sha256]
   extract --> classify[classify.py<br/>doc type, author, fields]
   classify --> item[item.json]
@@ -19,7 +21,10 @@ flowchart LR
   recjson --> app[app.py · FastAPI]
   db[(civify.db<br/>reviews)] <--> app
   app --> staff[/staff: review screen/]
-  app --> resident[/items, /near: resident views/]
+  notices[notices.py: Clerk feed] --> app
+  agendas[agenda.py: saved agendas + quoted rules] --> app
+  app --> resident[/items, /near, /notices, /meetings/ ]
+  app --> print[Printable approved claims + official-page QR]
   City -.ward lookup, not stored.-> app
 ```
 
@@ -30,7 +35,7 @@ classDiagram
   class Document { filename; sha256; pages: Page[]; text; first_lines(); first_page_flat }
   class Page { number: int; text: str }
   class Classification { doc_type: DocType; author; evidence; fields: dict }
-  class DocType { <<enum>> STAFF_REPORT; PUBLIC_NOTICE; DRAFT_BYLAW; COUNCIL_BILL; ITEM_PAGE; DECLARATION; PUBLIC_LETTER; UNKNOWN }
+  class DocType { <<enum>> STAFF_REPORT; PUBLIC_NOTICE; DRAFT_BYLAW; COUNCIL_BILL; ENACTED_BYLAW; ITEM_PAGE; DECLARATION; PUBLIC_LETTER; UNKNOWN }
   class Verifier { pages: (number, normalized)[]; check(sentence, quote) Result; _find(needle) }
   class Result { verified: bool; reason: str; page: int? }
   class DraftClaim { sentence; quote }
@@ -42,7 +47,7 @@ classDiagram
   Classification --> DocType
 ```
 
-`record.json` shape (one per item): `item_id, title, ward, location, retrieved, official_url, current_stage, stages[3]{stage, body, date, outcome|status, …, source{file, sha256}}, participation{written_comments_rule, speaker_registration_rule, public_meeting, council_has_decided, basis, source, note}, public_letters, claims[]{sentence, quote, verified, reason, page, source_file, source_sha256}`.
+`record.json` shape (one per item): `item_id, title, ward, location, retrieved, official_url, current_stage, stages[3 or 4]{stage, body, date, outcome|status, …, source{file, sha256}}, participation{written_comments_rule, speaker_registration_rule, public_meeting, council_has_decided, next_meeting, basis, source, note}, public_letters, claims[]{sentence, quote, verified, reason, page, source_file, source_sha256}`.
 
 ## 3. A claim's life (state)
 
@@ -66,11 +71,10 @@ stateDiagram-v2
   [*] --> StaffRecommendation : staff report dated
   StaffRecommendation --> CommitteeDecision : committee considers (may amend)
   CommitteeDecision --> CouncilDecision : Council considers (may amend)
-  CouncilDecision --> Closed : adopted / by-laws enacted
-  CouncilDecision --> Appeal : (not modelled yet)
+  CouncilDecision --> Enacted : downloaded enacted by-law records passage
 ```
 
-Stages are read from the item page's Tracking Status and section headings; the app never infers one.
+Appeals are not modelled. Pending board meetings retain the staff recommendation as the current stage. Staff report versions are ordered by their dates. Stages are read from the item page's Tracking Status and section headings; the app never infers one.
 
 ## 5. Staff approval (sequence)
 
@@ -90,7 +94,7 @@ sequenceDiagram
     App->>DB: INSERT OR REPLACE reviews(item, i, approved, sentence, reviewer, time)
     App-->>Clerk: 303 back to screen, claim marked approved
   end
-  Note over App,DB: /items/{item} reads only rows with status = approved
+  Note over App,DB: /items/{item} and /items/{item}/print read approved rows
 ```
 
 ## 6. Scalability notes
