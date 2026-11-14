@@ -84,6 +84,7 @@ def test_print_shares_review_gate_and_preserves_full_quotes(client):
     approved, rejected = rec["claims"][0], rec["claims"][1]
     db.save_review(con, item_id, 0, approved, "approved", approved["sentence"], "Test reviewer")
     db.save_review(con, item_id, 1, rejected, "rejected", rejected["sentence"], "Test reviewer")
+    db.publish(con, rec, "Test reviewer")
     page = client.get(f"/items/{item_id}/print").text
     assert approved["sentence"] in page
     assert approved["quote"] in page
@@ -92,6 +93,8 @@ def test_print_shares_review_gate_and_preserves_full_quotes(client):
     assert f'/items/{item_id}/qr.svg' in page
     assert "not an official City notice" in page
     db.save_review(con, item_id, 0, approved, "rejected", approved["sentence"], "Test reviewer")
+    db.save_review(con, item_id, 2, rec["claims"][2], "approved", rec["claims"][2]["sentence"], "Test reviewer")
+    db.publish(con, rec, "Test reviewer")                       # version 2 drops the now-rejected sentence
     assert approved["sentence"] not in client.get(f"/items/{item_id}/print").text
 
 

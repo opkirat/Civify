@@ -16,7 +16,20 @@
 
 {{ pipeline_strip(pipeline.steps) }}
 
+<section id="publish" class="panel publish-panel">
+  <div class="section-heading"><div>
+    <p class="eyebrow">What residents see</p>
+    {% if publication %}<h2>Version {{ publication.version }} is live</h2>
+      <p class="muted">Published {{ publication.published_at[:16].replace('T', ' ') }} by {{ publication.published_by }} · {{ publication.claims|length }} sentences.</p>
+    {% else %}<h2>Nothing is published yet</h2><p class="muted">Residents see the stages and official links, but no explanation, until you publish.</p>{% endif %}
+    {% if changes.added or changes.removed %}<p><strong>{{ changes.added }}</strong> approved sentence(s) to add{% if changes.removed %}, <strong>{{ changes.removed }}</strong> to remove{% endif %} in the next version.</p>{% endif %}
+  </div>
+  {% if changes.added or changes.removed %}<form method="post" action="/staff/{{ rec.item_id }}/publish"><button class="primary" type="submit">Publish version {{ (publication.version + 1) if publication else 1 }}</button></form>{% endif %}
+  </div>
+</section>
+
 <div class="lane-summary">
+  {% if groups.escalated %}<a href="#escalated" class="lane-count review"><strong>{{ groups.escalated|length }}</strong> escalated</a>{% endif %}
   <a href="#review" class="lane-count review"><strong>{{ groups.review|length }}</strong> need a look</a>
   <a href="#blocked" class="lane-count blocked"><strong>{{ groups.blocked|length }}</strong> blocked</a>
   <a href="#ready" class="lane-count ready"><strong>{{ groups.ready|length }}</strong> ready</a>
@@ -29,6 +42,14 @@
   <p><strong>Needs a look</strong>: any of those checks raised something. The reasons are listed on each one. Code cannot judge meaning, and the AI check can be wrong, so you decide.</p>
   <p><strong>Blocked</strong>: the quote wasn't found or a number doesn't match. It can't be approved as written: edit it so it passes, or reject it.</p>
 </details>
+
+{% if groups.escalated %}
+<section id="escalated" class="lane-section">
+  <h2>Escalated ({{ groups.escalated|length }})</h2>
+  <p class="muted">A reviewer asked for a second opinion. Approving or rejecting resolves the escalation.</p>
+  {% for r in groups.escalated %}{{ claim_card(rec, r) }}{% endfor %}
+</section>
+{% endif %}
 
 <section id="review" class="lane-section">
   <h2>Needs a look ({{ groups.review|length }})</h2>
@@ -59,6 +80,20 @@
   </details>
 </section>
 {% endif %}
+
+<details class="fold">
+  <summary>Who residents are matched to</summary>
+  <p>Residents see this item when they search <strong>Ward {{ rec.ward or 'not recorded' }}</strong>{% if rec.location %}, and by distance from <strong>{{ rec.location.address }}</strong> (located with the City's address service){% endif %}. Matching uses only ward and distance; no resident data is stored.</p>
+</details>
+
+<details class="fold">
+  <summary>History ({{ history|length }} most recent)</summary>
+  <table class="history"><thead><tr><th>When (UTC)</th><th>Who</th><th>Action</th><th>Sentence</th><th>Note</th></tr></thead><tbody>
+  {% for h in history %}<tr><td>{{ h.at[:16].replace('T', ' ') }}</td><td>{{ h.reviewer }}</td><td>{{ h.action }}</td>
+    <td>{% if h.claim_index >= 0 %}{{ h.claim_index + 1 }}{% else %}—{% endif %}</td><td>{{ h.note or '' }}</td></tr>
+  {% else %}<tr><td colspan="5" class="muted">No decisions yet.</td></tr>{% endfor %}
+  </tbody></table>
+</details>
 
 {% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
 {% if council and council.motions %}

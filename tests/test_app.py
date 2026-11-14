@@ -15,11 +15,15 @@ def test_index_lists_the_item(client):
     assert r.status_code == 200 and "191-199 College Street" in r.text
 
 
-def test_resident_view_is_empty_until_staff_approve(staff):
+def test_residents_see_nothing_until_staff_approve_and_publish(staff):
     assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
     staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
-    r = staff.get(f"/items/{ITEM}")
-    assert "31 storeys to 45 storeys" in r.text and "No approved explanation yet" not in r.text
+    assert "31 storeys to 45 storeys" not in staff.get(f"/items/{ITEM}").text      # approved but not published
+    r = staff.post(f"/staff/{ITEM}/publish", follow_redirects=False)
+    assert "Version+1" in r.headers["location"]
+    page = staff.get(f"/items/{ITEM}").text
+    assert "31 storeys to 45 storeys" in page and "Version 1, published" in page and "No approved explanation yet" not in page
+    assert "Clerk A" not in page                                                       # reviewer names stay internal
 
 
 def test_rejected_claim_never_shows_and_reviewer_comes_from_login(staff):
@@ -33,6 +37,7 @@ def test_edit_is_rechecked_against_the_quote(staff):
     assert bad.status_code == 303 and "Not+saved" in bad.headers["location"] and "54" in bad.headers["location"]
     assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
     staff.post(f"/staff/{ITEM}/1", data={"action": "edit", "sentence": "The building would go from 31 to 45 storeys."})
+    staff.post(f"/staff/{ITEM}/publish")
     assert "The building would go from 31 to 45 storeys." in staff.get(f"/items/{ITEM}").text
 
 
@@ -78,6 +83,7 @@ def test_approve_ready_publishes_only_ready_sentences(staff):
     assert ready and other
     r = staff.post(f"/staff/{ITEM}/approve-ready", follow_redirects=False)
     assert f"Published+{len(ready)}+ready" in r.headers["location"]
+    staff.post(f"/staff/{ITEM}/publish")
     page = staff.get(f"/items/{ITEM}").text
     assert all(c["sentence"] in page for c in ready)
     assert not any(c["sentence"] in page for c in other)
@@ -109,7 +115,7 @@ def test_every_decision_is_kept_in_the_audit_log(staff):
 
 def test_pipeline_view_lists_what_needs_a_person(staff):
     t = staff.get("/staff").text
-    assert "What needs you today" in t and "Needs a person" in t and "Plain-language draft" in t
+    assert "What needs you today" in t and "Next:" in t and "Plain-language draft" in t and "Add documents" in t
 
 
 def test_near_by_ward_lists_item_in_that_ward_and_stores_nothing(client, tmp_path):
@@ -151,3 +157,44 @@ def test_meetings_page_and_upcoming_items_in_ward(client):
     assert "register by 12:00 p.m. the day before" in t
     near = client.get("/near", params={"ward": "13"}).text
     assert "Coming up at a meeting, in your ward" in near and "66 Gerrard Street East" in near and "8 Arnold Avenue" not in near
+
+
+# --- publishing versions, escalation, dashboard ------------------------------------
+
+def test_publishing_freezes_a_version_and_later_approvals_wait_for_the_next(staff):
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
+    staff.post(f"/staff/{ITEM}/publish")
+    rec = db.load_record(ITEM)
+    staff.post(f"/staff/{ITEM}/2", data={"action": "approve"})
+    assert rec["claims"][2]["sentence"] not in staff.get(f"/items/{ITEM}").text   # still version 1
+    assert "Publish version 2" in staff.get(f"/staff/{ITEM}").text
+    staff.post(f"/staff/{ITEM}/publish")
+    page = staff.get(f"/items/{ITEM}").text
+    assert rec["claims"][2]["sentence"] in page and "Version 2" in page
+
+
+def test_publish_with_nothing_approved_is_refused(staff):
+    r = staff.post(f"/staff/{ITEM}/publish", follow_redirects=False)
+    assert "Approve+at+least+one" in r.headers["location"]
+
+
+def test_escalate_needs_a_note_stays_internal_and_resolves_on_decision(staff):
+    r = staff.post(f"/staff/{ITEM}/1", data={"action": "escalate"}, follow_redirects=False)
+    assert "Add+a+note" in r.headers["location"]
+    staff.post(f"/staff/{ITEM}/1", data={"action": "escalate", "note": "Check the storey count with planning"})
+    t = staff.get(f"/staff/{ITEM}").text
+    assert "Escalated (1)" in t and "Check the storey count with planning" in t
+    assert "Check the storey count" in staff.get("/staff").text                      # shows on the dashboard
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
+    staff.post(f"/staff/{ITEM}/publish")
+    assert "Escalated (" not in staff.get(f"/staff/{ITEM}").text
+    assert "Check the storey count" not in staff.get(f"/items/{ITEM}").text          # notes never reach residents
+
+
+def test_dashboard_search_and_filters(staff):
+    t = staff.get("/staff", params={"q": "College"}).text
+    assert "191-199 College Street" in t and "1337 Queen Street West" not in t
+    assert "1337 Queen Street West" not in staff.get("/staff", params={"show": "published"}).text
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"}); staff.post(f"/staff/{ITEM}/publish")
+    t = staff.get("/staff", params={"show": "published"}).text
+    assert "191-199 College Street" in t and "Version 1 live" in t

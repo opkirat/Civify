@@ -11,7 +11,7 @@
 <div class="detail-grid">
 <div>
 <section class="panel" id="explanation"><p class="eyebrow">The explanation</p><h2>What is proposed</h2>
-{% if claims %}<ol class="claim-list">{% for c in claims %}<li>{{ c.sentence }}<details><summary>Read the source · page {{ c.page }}</summary><blockquote>“{{ c.quote }}”<br><span class="source-file">{{ c.source_file }}, page {{ c.page }}</span></blockquote></details></li>{% endfor %}</ol><p class="muted">Each sentence passed quote and number checks and was approved by a named reviewer. Reviewer identity is not authenticated in this demo.</p>
+{% if claims %}<ol class="claim-list">{% for c in claims %}<li>{{ c.sentence }}<details><summary>Read the source · page {{ c.page }}</summary><blockquote>“{{ c.quote }}”<br><span class="source-file">{{ c.source_file }}, page {{ c.page }}</span></blockquote></details></li>{% endfor %}</ol><p class="muted">Version {{ publication.version }}, published {{ publication.published_at[:10] }}. Each sentence was checked against the quoted record and approved by City staff before publishing.</p>
 {% else %}<div class="empty-state"><h3>An explanation is on its way.</h3><p>No approved explanation yet. Staff are reviewing the drafts.</p><p class="muted">You can still explore the decision timeline or read the City’s original records.</p><a href="{{ rec.official_url }}">Read the official item →</a></div>{% endif %}
 </section>
 {% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}

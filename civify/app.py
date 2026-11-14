@@ -5,7 +5,10 @@ Run:  uvicorn civify.app:app --reload   then open http://127.0.0.1:8000
 Routes (staff routes require sign-in; resident routes are public)
   GET  /                         list of items
   GET  /login, POST /login, POST /logout
-  GET  /staff                    pipeline view: every item's progress and what needs a person
+  GET  /staff                    dashboard: every item's progress, what needs a person, search and filters
+  GET  /staff/intake, POST ...   upload PDFs, validate them, confirm the item, start processing
+  GET  /staff/processing/{job}   watch each pipeline step run; preliminary outputs; retry
+  POST /staff/{item_id}/publish  freeze the current approvals as the next version residents see
   GET  /staff/{item_id}          review screen, sorted by lane: needs a look, blocked, ready
   POST /staff/{item_id}/approve-ready   publish every "ready" sentence in one click
   POST /staff/{item_id}/{index}  save one decision
@@ -14,8 +17,8 @@ Routes (staff routes require sign-in; resident routes are public)
   GET  /notices/{notice_id}      one public notice: the Clerk's text as published, with how to take part
   GET  /meetings                 upcoming meetings from saved agendas: every item, by ward, with the City's rules quoted
 
-Rules enforced here: nothing reaches the resident view until a signed-in
-reviewer approved it; an approval counts only for the exact sentence and
+Rules enforced here: residents see only a published version, made of sentences a
+signed-in reviewer approved; an approval counts only for the exact sentence and
 evidence it was made on; and an edited sentence must still pass the verifier
 against the same quote (so an edit cannot introduce an unsupported number).
 """
@@ -28,13 +31,13 @@ from io import BytesIO
 
 import segno
 
-from fastapi import FastAPI, Form, HTTPException, Request
+from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, Request, UploadFile
 from urllib.parse import quote
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from civify import agenda, auth, db, geo, notices, workflow
+from civify import agenda, auth, db, geo, intake, notices, pipeline, workflow
 from civify.extract import extract
 from civify.verify import Verifier
 
@@ -118,16 +121,150 @@ def logout(request: Request):
 
 # --- staff ---------------------------------------------------------------------
 
+def _item_state(con, rec: dict) -> dict:
+    iid = rec["item_id"]
+    pub = db.latest_publication(con, iid)
+    esc = db.open_escalations(con, iid)
+    changes = db.unpublished_changes(con, rec)
+    st = workflow.status(rec, db.load_item(iid), db.reviews_for(con, iid), pub, esc, changes)
+    last = con.execute("SELECT MAX(at) FROM audit WHERE item_id = ?", (iid,)).fetchone()[0]
+    job = con.execute("SELECT * FROM jobs WHERE item_id = ? ORDER BY id DESC LIMIT 1", (iid,)).fetchone()
+    stamps = [x for x in (last, job["finished_at"] or job["created_at"] if job else None) if x]
+    c = st["counts"]
+    tags = set()
+    if c["blocked"] or (job and job["status"] in ("failed", "blocked")): tags.add("blocked")
+    if c["review"] or c["stale"] or c["escalated"]: tags.add("review")
+    if c["unpublished"]: tags.add("awaiting")
+    if pub: tags.add("published")
+    if job and job["status"] in ("queued", "running"): tags.add("processing")
+    return {**rec, "pipeline": st, "publication": pub, "job": dict(job) if job else None, "tags": tags,
+            "last_update": max(stamps) if stamps else rec.get("retrieved"),
+            "last_by": con.execute("SELECT reviewer FROM audit WHERE item_id = ? ORDER BY id DESC LIMIT 1", (iid,)).fetchone(),
+            "next_action": st["attention"][0]["text"] if st["attention"] else "Nothing to do."}
+
+
+FILTERS = {"all": "All items", "review": "Needs review", "blocked": "Blocked or failed", "awaiting": "Awaiting publishing",
+           "published": "Published", "processing": "Processing"}
+
+
 @app.get("/staff", response_class=HTMLResponse)
-def staff_queue(request: Request):
+def staff_queue(request: Request, q: str = "", show: str = "all", sort: str = "attention"):
     user = staff_user(request)
     con = db.connect(DB_PATH)
-    items = []
-    for rec in db.list_items():
-        st = workflow.status(rec, db.load_item(rec["item_id"]), db.reviews_for(con, rec["item_id"]))
-        items.append({**rec, "pipeline": st})
-    items.sort(key=lambda it: -len(it["pipeline"]["attention"]))
-    return templates.TemplateResponse(request, "staff_queue.html", {"items": items, "user": user})
+    items = [_item_state(con, rec) for rec in db.list_items()]
+    counts = {k: (len(items) if k == "all" else sum(k in it["tags"] for it in items)) for k in FILTERS}
+    if show in FILTERS and show != "all":
+        items = [it for it in items if show in it["tags"]]
+    if q.strip():
+        needle = q.strip().lower()
+        items = [it for it in items if needle in f"{it['item_id']} {it['title']} ward {it.get('ward')}".lower()]
+    if sort == "updated":
+        items.sort(key=lambda it: it["last_update"] or "", reverse=True)
+    elif sort == "ward":
+        items.sort(key=lambda it: int(it.get("ward") or 99))
+    else:
+        items.sort(key=lambda it: -len(it["pipeline"]["attention"]))
+    jobs = [j for j in pipeline.recent_jobs(con, 8) if j]
+    return templates.TemplateResponse(request, "staff_queue.html", {"items": items, "user": user, "q": q, "show": show,
+                                      "sort": sort, "filters": FILTERS, "counts": counts, "jobs": jobs})
+
+
+# --- intake: upload, validate, confirm, start --------------------------------------
+
+@app.get("/staff/intake", response_class=HTMLResponse)
+def intake_new(request: Request):
+    return templates.TemplateResponse(request, "intake.html", {"user": staff_user(request), "m": None, "max_mb": intake.MAX_BYTES // 2**20})
+
+
+async def _save_uploads(uid: str, files: list[UploadFile]) -> None:
+    for f in files:
+        if f.filename:
+            intake.add_file(uid, f.filename, await f.read())
+
+
+@app.post("/staff/intake")
+async def intake_create(request: Request, files: list[UploadFile] = File(default=[]), item_id: str = Form("")):
+    staff_user(request)
+    uid = intake.new_upload()
+    await _save_uploads(uid, files)
+    intake.set_meta(uid, item_id)
+    intake.validate(uid)
+    return RedirectResponse(f"/staff/intake/{uid}", status_code=303)
+
+
+@app.get("/staff/intake/{uid}", response_class=HTMLResponse)
+def intake_view(request: Request, uid: str):
+    user = staff_user(request)
+    try:
+        m = intake.load(uid)
+    except ValueError:
+        raise HTTPException(404, "no such upload")
+    return templates.TemplateResponse(request, "intake.html", {"user": user, "m": m, "max_mb": intake.MAX_BYTES // 2**20})
+
+
+@app.post("/staff/intake/{uid}/files")
+async def intake_add(request: Request, uid: str, files: list[UploadFile] = File(default=[])):
+    staff_user(request)
+    await _save_uploads(uid, files)
+    intake.validate(uid)
+    return RedirectResponse(f"/staff/intake/{uid}", status_code=303)
+
+
+@app.post("/staff/intake/{uid}/remove")
+def intake_remove(request: Request, uid: str, filename: str = Form(...)):
+    staff_user(request)
+    intake.remove_file(uid, filename)
+    intake.validate(uid)
+    return RedirectResponse(f"/staff/intake/{uid}", status_code=303)
+
+
+@app.post("/staff/intake/{uid}/meta")
+def intake_meta(request: Request, uid: str, item_id: str = Form("")):
+    staff_user(request)
+    intake.set_meta(uid, item_id)
+    intake.validate(uid)
+    return RedirectResponse(f"/staff/intake/{uid}", status_code=303)
+
+
+@app.post("/staff/intake/{uid}/start")
+def intake_start(request: Request, uid: str, background: BackgroundTasks):
+    user = staff_user(request)
+    m = intake.validate(uid)
+    if not m["ready"]:
+        return RedirectResponse(f"/staff/intake/{uid}", status_code=303)
+    con = db.connect(DB_PATH)
+    job_id = pipeline.create_job(con, uid, m["item_id"], user["name"])
+    background.add_task(pipeline.run, DB_PATH, job_id)
+    return RedirectResponse(f"/staff/processing/{job_id}", status_code=303)
+
+
+# --- processing: watch the steps, inspect preliminary outputs, retry ----------------
+
+@app.get("/staff/processing", response_class=HTMLResponse)
+def processing_list(request: Request):
+    user = staff_user(request)
+    return templates.TemplateResponse(request, "processing.html", {"user": user, "job": None, "jobs": pipeline.recent_jobs(db.connect(DB_PATH), 30)})
+
+
+@app.get("/staff/processing/{job_id}", response_class=HTMLResponse)
+def processing(request: Request, job_id: int):
+    user = staff_user(request)
+    j = pipeline.job(db.connect(DB_PATH), job_id)
+    if j is None:
+        raise HTTPException(404, "no such processing run")
+    files = intake.load(j["upload_id"]).get("files", [])
+    return templates.TemplateResponse(request, "processing.html", {"user": user, "job": j, "files": files, "jobs": None})
+
+
+@app.post("/staff/processing/{job_id}/retry")
+def processing_retry(request: Request, job_id: int, background: BackgroundTasks):
+    staff_user(request)
+    con = db.connect(DB_PATH)
+    if pipeline.job(con, job_id) is None:
+        raise HTTPException(404, "no such processing run")
+    pipeline.retry(con, job_id)
+    background.add_task(pipeline.run, DB_PATH, job_id)
+    return RedirectResponse(f"/staff/processing/{job_id}", status_code=303)
 
 
 @app.get("/staff/{item_id}", response_class=HTMLResponse)
@@ -145,8 +282,18 @@ def staff(request: Request, item_id: str):
         "ready": [r for r in rows if not r["review"] and r["lane"] == "ready"],
         "done": [r for r in rows if r["review"]],
     }
-    pipeline = workflow.status(rec, db.load_item(item_id), reviews)
-    return templates.TemplateResponse(request, "staff.html", {"rec": rec, "groups": groups, "pipeline": pipeline, "user": user,
+    con = db.connect(DB_PATH)
+    esc = {e["claim_index"]: e for e in db.open_escalations(con, item_id)}
+    for r in rows:
+        r["escalation"] = esc.get(r["index"])
+    groups["escalated"] = [r for r in rows if not r["review"] and r["escalation"]]
+    groups["review"] = [r for r in groups["review"] if not r["escalation"]]
+    pub = db.latest_publication(con, item_id)
+    changes = db.unpublished_changes(con, rec)
+    pipeline_status = workflow.status(rec, db.load_item(item_id), reviews, pub, list(esc.values()), changes)
+    history = con.execute("SELECT * FROM audit WHERE item_id = ? ORDER BY id DESC LIMIT 40", (item_id,)).fetchall()
+    return templates.TemplateResponse(request, "staff.html", {"rec": rec, "groups": groups, "pipeline": pipeline_status, "user": user,
+                                                              "publication": pub, "changes": changes, "history": history,
                                                               "error": request.query_params.get("error"), "notice": request.query_params.get("notice")})
 
 
@@ -168,16 +315,32 @@ def approve_ready(request: Request, item_id: str):
     return RedirectResponse(f"/staff/{item_id}?notice=Published+{n}+ready+sentence(s)", status_code=303)
 
 
+@app.post("/staff/{item_id}/publish")
+def publish(request: Request, item_id: str):
+    user = staff_user(request)
+    rec = record_or_404(item_id)
+    try:
+        version = db.publish(db.connect(DB_PATH), rec, user["name"])
+    except ValueError:
+        return RedirectResponse(f"/staff/{item_id}?error=Approve+at+least+one+sentence+before+publishing#publish", status_code=303)
+    return RedirectResponse(f"/staff/{item_id}?notice=Version+{version}+is+now+visible+to+residents#publish", status_code=303)
+
+
 @app.post("/staff/{item_id}/{index}")
-def decide(request: Request, item_id: str, index: int, action: str = Form(...), sentence: str = Form("")):
+def decide(request: Request, item_id: str, index: int, action: str = Form(...), sentence: str = Form(""), note: str = Form("")):
     user = staff_user(request)
     rec = record_or_404(item_id)
     if not 0 <= index < len(rec["claims"]):
         raise HTTPException(404, "no such claim")
     claim = rec["claims"][index]
     con = db.connect(DB_PATH)
-    if action == "reject":
-        db.save_review(con, item_id, index, claim, "rejected", claim["sentence"], user["name"])
+    note = note.strip() or None
+    if action == "escalate":
+        if not note:
+            return RedirectResponse(f"/staff/{item_id}?error=Add+a+note+saying+why+you+are+escalating#claim-{index}", status_code=303)
+        db.escalate(con, item_id, index, claim, note, user["name"])
+    elif action == "reject":
+        db.save_review(con, item_id, index, claim, "rejected", claim["sentence"], user["name"], note)
     elif action in ("approve", "edit"):
         final = sentence.strip() if action == "edit" else claim["sentence"]
         if not final:
@@ -185,7 +348,7 @@ def decide(request: Request, item_id: str, index: int, action: str = Form(...), 
         check = verifier_for(item_id, claim["source_file"]).check(final, claim["quote"])
         if not check.verified:
             return RedirectResponse(f"/staff/{item_id}?error=Not+saved:+{quote(check.reason)}#claim-{index}", status_code=303)
-        db.save_review(con, item_id, index, claim, "approved", final, user["name"])
+        db.save_review(con, item_id, index, claim, "approved", final, user["name"], note)
     else:
         raise HTTPException(400, "unknown action")
     return RedirectResponse(f"/staff/{item_id}#claim-{index}", status_code=303)
@@ -194,15 +357,15 @@ def decide(request: Request, item_id: str, index: int, action: str = Form(...), 
 @app.get("/items/{item_id}", response_class=HTMLResponse)
 def item(request: Request, item_id: str):
     rec = record_or_404(item_id)
-    claims = db.approved_claims(db.connect(DB_PATH), rec)
-    return templates.TemplateResponse(request, "item.html", {"rec": rec, "claims": claims})
+    pub = db.latest_publication(db.connect(DB_PATH), item_id)
+    return templates.TemplateResponse(request, "item.html", {"rec": rec, "claims": pub["claims"] if pub else [], "publication": pub})
 
 
 @app.get("/items/{item_id}/print", response_class=HTMLResponse)
 def print_item(request: Request, item_id: str):
     rec = record_or_404(item_id)
-    claims = db.approved_claims(db.connect(DB_PATH), rec)
-    return templates.TemplateResponse(request, "print.html", {"rec": rec, "claims": claims})
+    pub = db.latest_publication(db.connect(DB_PATH), item_id)
+    return templates.TemplateResponse(request, "print.html", {"rec": rec, "claims": pub["claims"] if pub else [], "publication": pub})
 
 
 @app.get("/items/{item_id}/qr.svg")

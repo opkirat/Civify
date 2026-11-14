@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% from 'staff_parts.html' import signed_in, status_pill %}
+{% block title %}Processing{% endblock %}
+{% block head_extra %}{% if job and job.status in ['queued', 'running'] %}<meta http-equiv="refresh" content="3">{% endif %}{% endblock %}
+{% block body %}
+<div class="page-head">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/staff">Staff workspace</a><span aria-hidden="true">/</span><a href="/staff/processing">Processing</a>{% if job %}<span aria-hidden="true">/</span><span>Run {{ job.id }}</span>{% endif %}</nav>
+  <p class="eyebrow">Processing and outputs</p>
+  {% if job %}<h1>{{ job.item_id }} · run {{ job.id }}</h1>{% else %}<h1>Processing runs</h1>{% endif %}
+  {{ signed_in(user) }}
+</div>
+
+{% if job %}
+<div class="meta-row run-meta">{{ status_pill(job.status) }}<span>Started by {{ job.started_by }} · {{ job.created_at[:16].replace('T', ' ') }} UTC</span>
+  {% if job.finished_at %}<span>Finished {{ job.finished_at[:16].replace('T', ' ') }}</span>{% endif %}
+  {% if job.status in ['queued', 'running'] %}<span class="muted">This page refreshes every few seconds.</span>{% endif %}</div>
+
+{% set done = job.steps | selectattr('status', 'in', ['done', 'skipped']) | list %}
+<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="{{ job.steps|length }}" aria-valuenow="{{ done|length }}" aria-label="Steps complete">
+  <span style="width: {{ (100 * done|length / job.steps|length)|round|int }}%"></span></div>
+<p class="muted">{{ done|length }} of {{ job.steps|length }} steps complete.</p>
+
+{% if job.status in ['failed', 'blocked'] %}
+<form method="post" action="/staff/processing/{{ job.id }}/retry" class="start-row"><button class="primary" type="submit">Retry from the {{ 'failed' if job.status == 'failed' else 'blocked' }} step</button>
+  <span class="muted">Completed steps are kept; saved AI output is reused when nothing it depends on changed.</span></form>
+{% elif job.status == 'done' %}
+<div class="success" role="status">Processing finished. <a href="/staff/{{ job.item_id }}">Begin review →</a></div>
+{% endif %}
+
+<ol class="run-steps">
+{% for s in job.steps %}
+<li class="run-step state-{{ s.status }}">
+  <div class="run-step-head">{{ status_pill(s.status) }} <strong>{{ s.label }}</strong>
+    {% if s.started_at and s.finished_at %}<span class="muted">{{ s.started_at[11:19] }}–{{ s.finished_at[11:19] }} UTC</span>{% endif %}</div>
+  {% if s.detail %}<p class="{{ 'warn' if s.status in ['failed', 'blocked'] else '' }}">{{ s.detail }}</p>{% endif %}
+  {% if s.output %}
+  <details><summary>Preliminary output</summary>
+    {% if s.output.documents %}<ul>{% for d in s.output.documents %}<li>{{ d.file }} · {{ d.type.replace('_', ' ') }} · {{ d.pages }} pp{% if d.author %} · {{ d.author }}{% endif %}</li>{% endfor %}</ul>{% endif %}
+    {% if s.output.files %}<ul>{% for f in s.output.files %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
+    {% if s.output.sentences %}<ol>{% for c in s.output.sentences %}<li>{% if c.verified %}<span class="ok">✓ p.{{ c.page }}</span>{% else %}<span class="warn">✗ {{ c.reason }}</span>{% endif %} {{ c.sentence }}</li>{% endfor %}</ol>
+      <p class="muted">Drafts only. Nothing here is visible to residents.</p>{% endif %}
+    {% if s.output.lanes %}<p>{{ s.output.lanes.ready }} ready · {{ s.output.lanes.review }} need a look · {{ s.output.lanes.blocked }} blocked</p>{% endif %}
+    {% if s.output.title %}<p>{{ s.output.title }}</p>{% endif %}
+    {% if s.output.trace %}<pre class="trace">{{ s.output.trace }}</pre>{% endif %}
+  </details>
+  {% endif %}
+</li>
+{% endfor %}
+</ol>
+
+{% if files %}<details class="fold"><summary>Uploaded documents ({{ files|length }})</summary>
+<ul>{% for f in files %}<li>{{ f.filename }} · {{ (f.doc_type or 'unknown').replace('_', ' ') }} · {{ f.pages or '?' }} pp{% if f.state != 'valid' %} · <span class="warn">{{ f.error }}</span>{% endif %}</li>{% endfor %}</ul></details>{% endif %}
+
+{% else %}
+<ul class="job-list">{% for j in jobs %}
+  <li>{{ status_pill(j.status) }} <a href="/staff/processing/{{ j.id }}">Run {{ j.id }} · {{ j.item_id }}</a> <span class="muted">by {{ j.started_by }} · {{ j.created_at[:16].replace('T', ' ') }}</span></li>
+{% else %}<li class="muted">No processing runs yet. <a href="/staff/intake">Add documents</a> to start one.</li>{% endfor %}</ul>
+{% endif %}
+{% endblock %}

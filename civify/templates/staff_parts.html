@@ -12,7 +12,16 @@
 {% endmacro %}
 
 {% macro signed_in(user) %}
-<form method="post" action="/logout" class="signed-in"><span class="muted">Signed in as <strong>{{ user.name }}</strong>. Your name is recorded on every decision.</span><button class="small" type="submit">Sign out</button></form>
+<div class="staff-bar">
+  <nav class="staff-nav-tabs" aria-label="Staff sections">
+    <a href="/staff">Dashboard</a><a href="/staff/intake">Add documents</a><a href="/staff/processing">Processing</a>
+  </nav>
+  <form method="post" action="/logout" class="signed-in"><span class="muted">Signed in as <strong>{{ user.name }}</strong></span><button class="small" type="submit">Sign out</button></form>
+</div>
+{% endmacro %}
+
+{% macro status_pill(state) %}
+<span class="pill state-{{ state }}">{{ {'queued': 'Queued', 'running': 'Running', 'done': 'Done', 'failed': 'Failed', 'blocked': 'Blocked', 'skipped': 'Skipped'}.get(state, state) }}</span>
 {% endmacro %}
 
 {% macro claim_card(rec, r) %}
@@ -24,7 +33,9 @@
     {% elif r.lane == 'review' %}<span class="pill warning">Needs a look</span>
     {% else %}<span class="pill proposed">Ready</span>{% endif %}
     {% if r.stale %}<span class="pill warning">Changed since last review</span>{% endif %}
+    {% if r.escalation %}<span class="pill warning">Escalated by {{ r.escalation.raised_by }}</span>{% endif %}
   </div>
+  {% if r.escalation %}<p class="escalation-note"><strong>Internal note:</strong> “{{ r.escalation.note }}”</p>{% endif %}
   {% if r.reasons and not r.review %}<ul class="reasons">{% for reason in r.reasons %}<li>{{ reason }}</li>{% endfor %}</ul>{% endif %}
   <div class="review-columns">
     <div><p class="eyebrow">Resident explanation</p><p>{{ r.review.sentence if r.review else r.sentence }}</p></div>
@@ -32,8 +43,11 @@
       <blockquote>“{{ r.quote }}” <span class="muted">— {{ r.source_file }}{% if r.page %}, page {{ r.page }}{% endif %}</span></blockquote></div>
   </div>
   <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
+    <label class="note-field">Internal note (optional; required to escalate; never shown to residents)
+      <input type="text" name="note" maxlength="500"></label>
     {% if r.lane != 'blocked' %}<button class="primary" name="action" value="approve">Approve as written</button>{% endif %}
     <button name="action" value="reject">Reject</button>
+    {% if not r.escalation %}<button name="action" value="escalate">Escalate</button>{% endif %}
     <details {% if r.lane == 'blocked' %}open{% endif %}>
       <summary>Edit, then approve</summary>
       <textarea name="sentence" rows="2" aria-label="Edited sentence">{{ r.review.sentence if r.review else r.sentence }}</textarea>
