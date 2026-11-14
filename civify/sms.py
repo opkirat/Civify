@@ -87,7 +87,7 @@ def begin(con: sqlite3.Connection, raw_phone: str, ward: str) -> tuple[str, str 
                 (phone, ward, _code_hash(phone, code), (now + timedelta(minutes=10)).isoformat(), now.isoformat()))
     con.commit()
     try:
-        send(phone, f"Civify code: {code}. Enter it on the signup page within 10 minutes. If you did not request this, ignore it.")
+        send(phone, code_body(code))
     except Exception:
         con.execute("DELETE FROM sms_subscriptions WHERE phone=? AND status='pending'", (phone,))
         con.commit()
@@ -128,9 +128,23 @@ def valid_twilio_signature(url: str, params: dict[str, str], signature: str) -> 
 
 
 def alert_body(rec: dict) -> str:
-    title = rec["title"].split(" - ", 2)[-1]
-    title = title[:55].rstrip() + ("..." if len(title) > 55 else "")
-    return f"Civify Ward {int(rec['ward'])}: {title}. City record: {rec['official_url']} Check current details there. Reply STOP to opt out."
+    """Short and plain: which ward, which place, and the official link. Never claims a comment period is open."""
+    parts = (rec.get("title") or "").split(" - ")
+    place = parts[1] if len(parts) > 1 else parts[0]
+    place = place[:60].rstrip() + ("..." if len(place) > 60 else "")
+    return f"Civify Ward {int(rec['ward'])}: new plain-language explanation for {place}. City record: {rec['official_url']} Reply STOP to opt out."
+
+
+def code_body(code: str) -> str:
+    return f"Civify code: {code}. Enter it on the signup page within 10 minutes. If you did not request this, ignore it."
+
+
+def inbox(con: sqlite3.Connection, raw_phone: str) -> list[dict]:
+    """Demo only: the simulated alerts one number has received, oldest first."""
+    phone = phone_number(raw_phone)
+    rows = con.execute("SELECT c.body, d.at FROM sms_deliveries d JOIN sms_campaigns c ON c.id = d.campaign_id "
+                       "WHERE d.phone = ? ORDER BY d.at", (phone,)).fetchall()
+    return [{"text": r["body"], "at": r["at"]} for r in rows]
 
 
 def send_item(con: sqlite3.Connection, rec: dict, publication: dict, reviewer: str) -> dict:

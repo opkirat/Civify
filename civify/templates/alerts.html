@@ -1,20 +1,20 @@
 {% extends "base.html" %}
+{% from 'components.html' import phone %}
 {% block title %}Text alerts{% endblock %}
 {% block body %}
 <section class="sms-page">
   <p class="eyebrow">Toronto pilot</p>
   <h1>Local updates by text</h1>
   <p class="lead">Get a short text when a reviewed issue in your ward is published. No app or address needed.</p>
-  {% if mode == 'demo' %}<p class="sms-note">Demo mode: no texts are sent. The confirmation code appears here for testing.</p>{% endif %}
+  {% if mode == 'demo' %}<p class="sms-note">Demo mode: texts are simulated on the phone shown on this page; nothing is sent.</p>{% endif %}
   {% if error %}<p class="sms-error" role="alert">{{ error }}</p>{% endif %}
-  {% if success %}<div class="sms-success" role="status"><h2>You're signed up</h2><p>We'll text you about new issues in your ward. Reply STOP to any alert to leave.</p></div>
-  {% elif pending %}<form class="sms-form" method="post" action="/alerts/confirm">
+  {% if success %}<div class="sms-success" role="status"><h2>You're signed up</h2><p>We'll text you about new issues in your ward. Reply STOP to any alert to leave.</p>{% if mode == 'demo' and confirmed_phone %}<p><a href="/alerts/phone?phone={{ confirmed_phone|urlencode }}">Open the demo phone</a> to see alerts as they arrive.</p>{% endif %}</div>
+  {% elif pending %}<div class="sms-split"><form class="sms-form" method="post" action="/alerts/confirm">
     <h2>Confirm your number</h2><p>Enter the six digit code we sent. It expires in 10 minutes.</p>
-    {% if demo_code %}<p class="sms-note">Demo code: <strong>{{ demo_code }}</strong></p>{% endif %}
     <input type="hidden" name="phone" value="{{ pending }}">
     <label for="sms-code">Code</label><input id="sms-code" name="code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required>
     <button type="submit">Confirm signup</button>
-  </form>{% endif %}
+  </form>{% if demo_code %}{{ phone([{'text': code_text}], 'Simulated text to ' ~ pending) }}{% endif %}</div>{% endif %}
   {% if not success %}<form class="sms-form" method="post" action="/alerts">
     <h2>Sign up</h2>
     <label for="sms-phone">Mobile number</label><input id="sms-phone" name="phone" type="tel" autocomplete="tel" placeholder="416 555 0123" required>

@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{% extends "staff_base.html" %}
+{% from 'components.html' import phone %}
 {% block title %}Text alerts · staff{% endblock %}
 {% block body %}
 <section class="sms-page sms-staff">
@@ -8,12 +9,14 @@
   {% if message %}<p class="sms-success" role="status">{{ message }}</p>{% endif %}
   {% for entry in items %}<article class="panel sms-item">
     <h2>{{ entry.rec.title|item_name }}</h2><p>Ward {{ entry.rec.ward }} · Publication version {{ entry.publication.version }} · {{ entry.count }} confirmed subscribers</p>
-    <blockquote>{{ entry.body }}</blockquote>
-    {% if entry.already %}<p class="muted">This item has already been sent.</p>{% else %}<form method="post" action="/staff/sms/send">
+    <div class="sms-split"><div>
+    {% if entry.already %}<p class="sms-success">{{ 'Simulated: delivered' if mode == 'demo' else 'Sent' }} to {{ entry.delivered }} confirmed subscriber{{ '' if entry.delivered == 1 else 's' }} in Ward {{ entry.rec.ward }}.</p>{% if mode == 'demo' %}<p><a href="/alerts/phone">Open the demo phone</a> to see it as a resident would.</p>{% endif %}
+    {% else %}<form method="post" action="/staff/sms/send">
       <input type="hidden" name="item_id" value="{{ entry.rec.item_id }}">
       <label class="sms-consent"><input type="checkbox" name="reviewed" value="yes" required><span>I checked the item, official link, and text above.</span></label>
       <button type="submit">{{ 'Simulate alert' if mode == 'demo' else 'Send alert' }}</button>
-    </form>{% endif %}
+    </form>{% endif %}</div>
+    {{ phone([{'text': entry.body}], 'What subscribers receive (' ~ entry.body|length ~ ' characters)') }}</div>
   </article>{% else %}<p>No published items are ready for alerts.</p>{% endfor %}
 </section>
 {% endblock %}

@@ -18,3 +18,14 @@
 <details class="ward-alternative" {% if ward %}open{% endif %}><summary>Or choose your ward</summary><form method="get" action="/near"><label for="ward" class="visually-hidden">Ward</label><div class="ward-search-row"><select id="ward" name="ward" required><option value="">Select an area</option>{% for num,name in wards.items() %}<option value="{{ num|int }}" {% if ward == num|int|string %}selected{% endif %}>{{ name }} · Ward {{ num|int }}</option>{% endfor %}</select><button type="submit">Find issues</button></div></form></details>
 </div>
 {% endmacro %}
+
+
+{% macro phone(messages, caption='', sender='Civify') %}
+<figure class="phone-mock" aria-label="Text message preview">
+<div class="phone-screen">
+<div class="phone-top"><span class="phone-avatar" aria-hidden="true">C</span><span class="phone-sender">{{ sender }}</span><span class="phone-sub">Text message</span></div>
+<div class="phone-thread">{% for m in messages %}<div class="bubble">{{ m.text }}</div>{% if m.at %}<div class="bubble-time">{{ m.at[:16].replace('T', ' ') }}</div>{% endif %}{% else %}<p class="phone-empty">No messages yet.</p>{% endfor %}</div>
+</div>
+{% if caption %}<figcaption>{{ caption }}</figcaption>{% endif %}
+</figure>
+{% endmacro %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from 'components.html' import phone as phone_mock %}
+{% block title %}Demo phone{% endblock %}
+{% block body %}
+<section class="sms-page">
+  <p class="eyebrow">Demo mode</p>
+  <h1>A resident's phone</h1>
+  <p class="lead">Alerts sent in demo mode arrive here instead of on a real phone.</p>
+  <form class="sms-form" method="get" action="/alerts/phone">
+    <label for="demo-phone">Phone number you signed up with</label>
+    <input id="demo-phone" name="phone" type="tel" value="{{ phone }}" placeholder="416 555 0123" required>
+    <button type="submit">Show messages</button>
+  </form>
+  {% if error %}<p class="sms-error" role="alert">{{ error }}</p>{% endif %}
+  {% if phone and not error %}{{ phone_mock(messages, (messages|length ~ ' alert' ~ ('' if messages|length == 1 else 's') ~ ' received')) }}{% endif %}
+</section>
+{% endblock %}

@@ -330,3 +330,20 @@ button[disabled] { opacity:.5; cursor:not-allowed; }
 .summary-breakdown { border-top:1px solid var(--line); padding-top:18px; margin-top:22px; }
 .summary-breakdown > summary { color:var(--ok); font-weight:650; cursor:pointer; }
 .summary-breakdown .claim-list { margin-top:18px; }
+
+/* Simulated phone for the SMS demo */
+.phone-mock { margin:24px auto; width:300px; max-width:100%; }
+.phone-screen { background:#fff; border:10px solid #1c2420; border-radius:36px; min-height:360px; overflow:hidden; box-shadow:0 12px 30px rgba(20,40,30,.14); }
+.phone-top { display:grid; justify-items:center; gap:2px; padding:16px 12px 12px; border-bottom:1px solid #eceeea; background:#f7f8f6; }
+.phone-avatar { width:38px; height:38px; border-radius:50%; background:var(--ok); color:#fff; display:grid; place-items:center; font-weight:700; }
+.phone-sender { font-weight:650; font-size:14px; }
+.phone-sub { font-size:11px; color:var(--muted); }
+.phone-thread { padding:16px 14px 22px; display:flex; flex-direction:column; align-items:flex-start; gap:4px; }
+.bubble { background:#e9ece8; color:#1c2420; border-radius:18px 18px 18px 4px; padding:10px 13px; font-size:14px; line-height:1.4; max-width:88%; overflow-wrap:anywhere; animation:bubble-in .35s ease-out both; }
+.bubble-time { font-size:10px; color:var(--muted); margin:0 0 10px 6px; }
+.phone-empty { color:var(--muted); font-size:13px; margin:auto; padding-top:60px; }
+.phone-mock figcaption { text-align:center; font-size:13px; color:var(--muted); margin-top:10px; }
+@keyframes bubble-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+@media (prefers-reduced-motion:reduce) { .bubble { animation:none; } }
+.sms-split { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:28px; align-items:start; }
+@media (max-width:760px) { .sms-split { grid-template-columns:1fr; } }

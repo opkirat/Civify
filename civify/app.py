@@ -151,7 +151,8 @@ def alerts_begin(request: Request, phone: str = Form(...), ward: str = Form(...)
         return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(), "error": str(exc)}, status_code=400)
     except Exception:
         return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(), "error": "We could not send a code right now. Please try later."}, status_code=503)
-    return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(), "pending": normalized, "demo_code": code})
+    return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(), "pending": normalized, "demo_code": code,
+                                                               "code_text": sms.code_body(code) if code else None})
 
 
 @app.post("/alerts/confirm")
@@ -161,9 +162,23 @@ def alerts_confirm(request: Request, phone: str = Form(...), code: str = Form(..
     except ValueError:
         confirmed = False
     return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(),
-                                      "success": confirmed, "pending": None if confirmed else phone,
+                                      "success": confirmed, "pending": None if confirmed else phone, "confirmed_phone": phone if confirmed else None,
                                       "error": None if confirmed else "That code is wrong or expired. Request a new code after two minutes."},
                                       status_code=200 if confirmed else 400)
+
+
+@app.get("/alerts/phone", response_class=HTMLResponse)
+def alerts_phone(request: Request, phone: str = ""):
+    """Demo mode only: a simulated phone showing the alerts a number has received."""
+    if sms.mode() != "demo":
+        raise HTTPException(404)
+    messages, error = [], None
+    if phone:
+        try:
+            messages = sms.inbox(db.connect(DB_PATH), phone)
+        except ValueError as exc:
+            error = str(exc)
+    return templates.TemplateResponse(request, "sms_phone.html", {"phone": phone, "messages": messages, "error": error})
 
 
 @app.post("/sms/twilio/inbound")
@@ -427,8 +442,9 @@ def staff_sms(request: Request):
         pub = db.latest_publication(con, rec["item_id"])
         if pub and pub["claims"] and rec.get("ward") and rec.get("official_url", "").startswith("https://"):
             count = con.execute("SELECT count(*) FROM sms_subscriptions WHERE status='active' AND ward=?", (str(rec["ward"]).zfill(2),)).fetchone()[0]
-            already = con.execute("SELECT 1 FROM sms_campaigns WHERE item_id=?", (rec["item_id"],)).fetchone() is not None
-            items.append({"rec": rec, "publication": pub, "count": count, "already": already, "body": sms.alert_body(rec)})
+            campaign = con.execute("SELECT id FROM sms_campaigns WHERE item_id=?", (rec["item_id"],)).fetchone()
+            delivered = con.execute("SELECT count(*) FROM sms_deliveries WHERE campaign_id=? AND status IN ('demo', 'accepted')", (campaign["id"],)).fetchone()[0] if campaign else 0
+            items.append({"rec": rec, "publication": pub, "count": count, "already": campaign is not None, "delivered": delivered, "body": sms.alert_body(rec)})
     return templates.TemplateResponse(request, "staff_sms.html", {"items": items, "mode": sms.mode(), "message": request.query_params.get("message")})
 
 
