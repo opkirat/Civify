@@ -1,29 +1,31 @@
 {% extends "base.html" %}
 {% block title %}{{ rec.title|item_name }}{% endblock %}
+{% block body_class %}resident-simple{% endblock %}
 {% block body %}
 <div class="page-head">
 <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Explore issues</a><span aria-hidden="true">/</span><span>{{ rec.item_id }}</span></nav>
 <div class="meta-row"><span class="pill {{ 'proposed' if rec.current_stage == 'staff_recommendation' else 'decided' }}">{{ rec.current_stage|stage_label }}</span><span>Ward {{ rec.ward or '?' }}</span><span>Records retrieved {{ rec.retrieved }}</span></div>
-<h1>{{ rec.title|item_name }}</h1><p class="lead">{{ rec.title|item_topic }}</p>
+<h1>{{ rec.title|item_name }}</h1><details class="official-title"><summary>Official item title</summary><p>{{ rec.title|item_topic }}</p></details>
 <div class="actions"><a class="button primary" href="{{ rec.official_url }}">Official item page ↗</a><a class="button" href="/items/{{ rec.item_id }}/print">Printable notice with QR code</a></div>
 </div>
-<nav class="anchor-nav" aria-label="On this page"><a href="#explanation">The explanation</a><a href="#participate">Have your say</a><a href="#timeline">Decision timeline</a></nav>
 <div class="detail-grid">
 <div>
-<section class="panel" id="explanation"><p class="eyebrow">The explanation</p><h2>What is proposed</h2>
-{% if claims %}<ol class="claim-list">{% for c in claims %}<li>{{ c.sentence }}<details><summary>Read the source · page {{ c.page }}</summary><blockquote>“{{ c.quote }}”<br><span class="source-file">{{ c.source_file }}, page {{ c.page }}</span></blockquote></details></li>{% endfor %}</ol><p class="muted">Version {{ publication.version }}, published {{ publication.published_at[:10] }}. Each sentence was checked against the quoted record and approved by City staff before publishing.</p>
-{% else %}<div class="empty-state"><h3>An explanation is on its way.</h3><p>No approved explanation yet. Staff are reviewing the drafts.</p><p class="muted">You can still explore the decision timeline or read the City’s original records.</p><a href="{{ rec.official_url }}">Read the official item →</a></div>{% endif %}
+<section class="panel" id="explanation"><h2>What is proposed</h2>
+{% if claims %}<ol class="claim-list">{% for c in claims %}<li>{{ c.sentence }}<details><summary>Read the source · page {{ c.page }}</summary><blockquote>“{{ c.quote }}”<br><span class="source-file">{{ c.source_file }}, page {{ c.page }}</span></blockquote></details></li>{% endfor %}</ol><p class="muted">Version {{ publication.version }}, published {{ publication.published_at[:10] }}. Each sentence was checked against the source and published by City staff. Expand a source to check the evidence.</p>
+{% else %}<div class="empty-state"><p>No approved explanation yet. Staff are reviewing the drafts.</p><a href="{{ rec.official_url }}">Read the official item →</a></div>{% endif %}
 </section>
 {% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
-{% if council.motions %}<section class="panel"><p class="eyebrow">Changes in the record</p><h2>What changed at Council</h2><p class="muted">These motions show the changes considered at Council, in the record’s own words.</p>{% for m in council.motions %}<details class="fold"><summary>{{ m.motion }} · {{ m.result }}</summary><p class="muted">Moved by {{ m.moved_by }}</p><blockquote style="white-space:pre-line">{{ m.text }}</blockquote></details>{% endfor %}</section>{% endif %}
+{% if council.motions %}<details class="panel"><summary>What changed at Council</summary><p class="muted">These motions show the changes considered at Council, in the record’s own words.</p>{% for m in council.motions %}<details class="fold"><summary>{{ m.motion }} · {{ m.result }}</summary><p class="muted">Moved by {{ m.moved_by }}</p><blockquote style="white-space:pre-line">{{ m.text }}</blockquote></details>{% endfor %}</details>{% endif %}
 </div>
 <aside>
-<section class="panel action-panel" id="participate"><p class="eyebrow">Your next step</p><h2>Can I still have a say?</h2>{% include 'participation.html' %}<p class="muted">Based on records retrieved {{ rec.retrieved }}. {{ rec.public_letters }} public letters are on file on the official item page.</p></section>
-<section class="panel" id="timeline"><p class="eyebrow">Decision timeline</p><h2>Where this stands</h2><ol class="stage">
+<section class="panel action-panel" id="participate"><h2>Can I still have a say?</h2>{% if rec.participation.council_has_decided %}<p><strong>City Council has already decided this item.</strong></p>{% else %}<p><strong>An open comment window has not been verified.</strong></p>{% if rec.participation.next_meeting %}<p class="muted">Meeting in saved record: {{ rec.participation.next_meeting.date }}. This is not a submission deadline.</p>{% endif %}{% endif %}
+<a class="button primary" href="{{ rec.official_url }}">Check with the City ↗</a>
+<details class="participation-detail"><summary>Participation details</summary>{% include 'participation.html' %}</details><p class="muted">Based on records retrieved {{ rec.retrieved }}.</p></section>
+<details class="panel" id="timeline"><summary>Decision timeline</summary><ol class="stage">
 {% for s in rec.stages %}<li class="{{ 'current' if s.stage == rec.current_stage }}"><strong>{{ s.stage.replace('_',' ')|capitalize }}{% if s.stage == rec.current_stage %} · current{% endif %}</strong>{{ s.date or 'No decision recorded' }}{% if s.status %} · {{ s.status }}{% endif %}
 {% if s.stage == 'enacted' %}<div class="muted">By-laws {{ s.bylaws|map(attribute='number')|join(', ') }}{% if s.mayoral_decision %} · written approval by Mayoral Decision {{ s.mayoral_decision }} ({{ s.mayoral_decision_date }}) under Strong Mayor powers{% endif %}</div>{% endif %}
 {% if s.stage == 'council_decision' and s.votes %}{% for v in s.votes if v.on == 'Adopt Item as Amended' %}<div class="muted">Vote: {{ v.yes.count }} yes, {{ v.no.count }} no, {{ v.absent.count }} absent</div>{% endfor %}{% if s.declared_interests %}<div class="muted">Declared interest: {{ s.declared_interests }}</div>{% endif %}{% endif %}
-<div class="muted source-file">Source: {{ s.source.file }}</div></li>{% endfor %}</ol></section>
+<div class="muted source-file">Source: {{ s.source.file }}</div></li>{% endfor %}</ol></details>
 </aside>
 </div>
 {% endblock %}

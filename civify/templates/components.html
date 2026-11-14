@@ -2,21 +2,19 @@
 <article class="issue-card">
 <div class="meta-row"><span class="pill {{ 'proposed' if it.current_stage == 'staff_recommendation' else 'decided' }}">{{ it.current_stage|stage_label }}</span><span>Ward {{ it.ward or '?' }}</span></div>
 <h3><a href="/items/{{ it.item_id }}">{{ it.title|item_name }}</a></h3>
-<p class="topic">{{ it.title|item_topic }}</p>
+<details class="card-topic"><summary>What’s this about?</summary><p class="topic">{{ it.title|item_topic }}</p></details>
 {% if same_ward %}<p class="muted"><span class="ok">In your ward</span>{% if km is not none %} · about {{ '%.1f'|format(km) }} km from your address{% endif %}</p>{% elif km is not none %}<p class="muted">About {{ '%.1f'|format(km) }} km from your address</p>{% endif %}
 <div class="card-bottom"><span>{{ 'Council has decided' if it.participation.council_has_decided else 'Participation: check details' }}</span><a href="/items/{{ it.item_id }}" aria-label="View issue: {{ it.title|item_name }}">View issue →</a></div>
 </article>
 {% endmacro %}
 
 {% macro search_form(wards, address='', ward='') %}
-<form method="get" action="/near" class="search-panel">
-<h2>Find out what’s happening near you</h2>
-<div class="search-grid">
-<label for="address">Toronto street address<input type="text" id="address" name="address" value="{{ address }}" placeholder="e.g. 100 Queen St W" autocomplete="street-address" aria-describedby="search-help"></label>
-<span class="or">or</span>
-<label for="ward">Choose your ward<select id="ward" name="ward"><option value="">Select a ward</option>{% for num,name in wards.items() %}<option value="{{ num|int }}" {% if ward == num|int|string %}selected{% endif %}>{{ num|int }} · {{ name }}</option>{% endfor %}</select></label>
-<button class="primary" type="submit">Find issues <span aria-hidden="true">→</span></button>
-</div>
-<p class="muted" id="search-help">No account needed. Address lookup uses the City’s service; choose a ward to search without an address. If both are entered, we use the address.</p>
+<div class="location-search">
+<form method="get" action="/near" class="address-search">
+<label for="address">Search your Toronto address</label>
+<div class="address-search-row"><input type="text" id="address" name="address" value="{{ address }}" required maxlength="250" placeholder="e.g. 100 Queen St W" autocomplete="street-address" aria-describedby="address-help"><button class="primary" type="submit">Find nearby issues</button></div>
+<p class="muted" id="address-help">Include East or West if your street has a direction.</p>
 </form>
+<details class="ward-alternative" {% if ward %}open{% endif %}><summary>Or choose your ward</summary><form method="get" action="/near"><label for="ward" class="visually-hidden">Ward</label><div class="ward-search-row"><select id="ward" name="ward" required><option value="">Select an area</option>{% for num,name in wards.items() %}<option value="{{ num|int }}" {% if ward == num|int|string %}selected{% endif %}>{{ name }} · Ward {{ num|int }}</option>{% endfor %}</select><button type="submit">Find issues</button></div></form></details>
+</div>
 {% endmacro %}

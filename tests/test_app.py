@@ -93,7 +93,7 @@ def test_approve_ready_publishes_only_ready_sentences(staff):
 def test_staff_page_groups_sentences_by_lane_with_reasons(staff):
     t = staff.get(f"/staff/{ITEM}").text
     assert "need a person" in t and "passed every check" in t and "Approve all" in t
-    assert "states a recommendation or decision" in t
+    assert "context check: held" in t and "Approve suggested wording" in t
     assert "Documents saved" in t and "Meaning check" in t
 
 
@@ -128,14 +128,14 @@ def test_near_by_ward_lists_item_in_that_ward_and_stores_nothing(client, tmp_pat
 
 
 def test_near_by_address_uses_city_lookup(client, monkeypatch):
-    monkeypatch.setattr(appmod.geo, "lookup", lambda a: {"address": "100 Queen St W", "ward": "10",
-                                                        "ward_name": "Spadina-Fort York", "lat": 43.6534, "lon": -79.3841})
+    monkeypatch.setattr(appmod.geo, "search_address", lambda a: {"status": "matched", "candidates": [], "match": {"address": "100 Queen St W", "ward": "10",
+                                                        "ward_name": "Spadina-Fort York", "lat": 43.6534, "lon": -79.3841}})
     r = client.get("/near", params={"address": "100 Queen St W"})
     assert "Ward 10, Spadina-Fort York" in r.text and "km from your address" in r.text
 
 
 def test_near_unknown_address_explains(client, monkeypatch):
-    monkeypatch.setattr(appmod.geo, "lookup", lambda a: None)
+    monkeypatch.setattr(appmod.geo, "search_address", lambda a: {"status":"not_found", "match":None, "candidates":[]})
     r = client.get("/near", params={"address": "1 Nowhere Rd"})
     assert "couldn't find that address" in r.text
 
@@ -214,3 +214,28 @@ def test_review_cards_link_to_the_pdf_page_and_show_the_quote_in_context(staff):
     staff.post("/logout")                                        # signed out: the PDF is staff-only
     r = staff.get(f"/staff/{ITEM}/source/{c['source_file']}", follow_redirects=False)
     assert r.status_code == 303 and r.headers["location"].startswith("/login")
+
+
+def test_auto_approval_counts_but_nothing_is_public_until_published(staff):
+    rec = db.load_record(ITEM)
+    con = db.connect(appmod.DB_PATH)
+    n = db.auto_approve(con, rec)
+    assert n == sum(1 for c in rec["claims"] if c.get("auto")) and n > 0
+    assert db.auto_approve(con, rec) == 0                                    # idempotent
+    page = staff.get(f"/staff/{ITEM}").text
+    assert f"Approved automatically ({n})" in page and "auto-check" not in staff.get(f"/items/{ITEM}").text
+    auto_sentence = next(c["sentence"] for c in rec["claims"] if c.get("auto"))
+    assert auto_sentence not in staff.get(f"/items/{ITEM}").text              # not public before publishing
+    staff.post(f"/staff/{ITEM}/publish")
+    assert auto_sentence in staff.get(f"/items/{ITEM}").text
+    i = next(i for i, c in enumerate(rec["claims"]) if c.get("auto"))
+    staff.post(f"/staff/{ITEM}/{i}", data={"action": "reject"})               # a person can overrule it
+    assert db.current_review(db.reviews_for(con, ITEM)[i], rec["claims"][i])["status"] == "rejected"
+    assert db.auto_approve(con, rec) == 0                                     # and it is not re-approved
+
+
+def test_held_sentence_offers_suggested_wording(staff):
+    rec = db.load_record(ITEM)
+    held = [c for c in rec["claims"] if c.get("confirm") and c["confirm"]["verdict"] == "hold" and c["confirm"]["suggestion"]]
+    if held:
+        assert "Approve suggested wording" in staff.get(f"/staff/{ITEM}").text

@@ -25,7 +25,8 @@
 <section class="claim lane-{{ r.lane }} {{ r.review.status if r.review }}" id="claim-{{ r.index }}" aria-labelledby="s{{ r.index }}" data-sentence="{{ r.index + 1 }}">
   <div class="claim-head" id="s{{ r.index }}">
     <strong>Sentence {{ r.index + 1 }}</strong>
-    {% if r.review %}<span class="pill decided">{{ r.review.status|capitalize }} by {{ r.review.reviewer }} · {{ r.review.reviewed_at[:16].replace('T', ' ') }}</span>
+    {% if r.review and r.review.reviewer == 'auto-check' %}<span class="pill proposed">Approved automatically · all checks agreed</span>
+    {% elif r.review %}<span class="pill decided">{{ r.review.status|capitalize }} by {{ r.review.reviewer }} · {{ r.review.reviewed_at[:16].replace('T', ' ') }}</span>
     {% elif r.lane == 'blocked' %}<span class="pill warning">Source check failed</span>
     {% elif r.lane == 'review' %}<span class="pill warning">Needs your review</span>
     {% else %}<span class="pill proposed">Checks passed</span>{% endif %}
@@ -45,6 +46,15 @@
         <p class="excerpt">{{ r.context.before }}<mark>{{ r.context.match }}</mark>{{ r.context.after }}</p></details>
       {% elif r.lane == 'blocked' %}<p class="muted">The quote could not be found in the file as extracted, so there is nothing to highlight. Open the PDF to check by hand.</p>{% endif %}</div>
   </div>
+  {% if not r.review and r.confirm and r.confirm.suggestion and r.confirm.suggestion != r.sentence %}
+  <form class="suggestion" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
+    <p class="eyebrow">Suggested wording, from the AI check that read the whole page</p>
+    <p class="draft-sentence">{{ r.confirm.suggestion }}</p>
+    <input type="hidden" name="sentence" value="{{ r.confirm.suggestion }}">
+    <button class="primary" name="action" value="edit">Approve suggested wording</button>
+    <span class="muted">Checked against the same quote before saving; refused if it adds a number the quote doesn't have.</span>
+  </form>
+  {% endif %}
   <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
     {% if r.lane != 'blocked' %}<button class="primary" name="action" value="approve">Approve sentence</button>{% endif %}
     <button name="action" value="reject">Reject</button>

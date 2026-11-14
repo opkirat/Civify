@@ -38,7 +38,7 @@
     {% if s.output.files %}<ul>{% for f in s.output.files %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
     {% if s.output.sentences %}<ol>{% for c in s.output.sentences %}<li>{% if c.verified %}<span class="ok">✓ p.{{ c.page }}</span>{% else %}<span class="warn">✗ {{ c.reason }}</span>{% endif %} {{ c.sentence }}</li>{% endfor %}</ol>
       <p class="muted">Drafts only. Nothing here is visible to residents.</p>{% endif %}
-    {% if s.output.lanes %}<p>{{ s.output.lanes.ready }} ready · {{ s.output.lanes.review }} need a look · {{ s.output.lanes.blocked }} blocked</p>{% endif %}
+    {% if s.output.lanes %}<p>{{ s.output.lanes.auto or 0 }} auto-approve · {{ s.output.lanes.review }} need a person · {{ s.output.lanes.blocked }} blocked</p>{% endif %}
     {% if s.output.title %}<p>{{ s.output.title }}</p>{% endif %}
     {% if s.output.trace %}<pre class="trace">{{ s.output.trace }}</pre>{% endif %}
   </details>

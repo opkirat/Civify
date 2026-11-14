@@ -1,27 +1,34 @@
 {% extends "base.html" %}
 {% from 'components.html' import issue_card, search_form %}
 {% block title %}Near me{% endblock %}
+{% block body_class %}resident-simple{% endblock %}
 {% block body %}
-<div class="page-head"><p class="eyebrow">Start with your neighbourhood</p><h1>What's being decided near me?</h1><p class="lead">Find issues and public notices in your ward. A small pilot, with a clearer view of what’s happening locally.</p></div>
+<div class="page-head near-heading"><h1>What’s near you?</h1><p class="lead">Find council issues and notices around your address.</p></div>
 {{ search_form(wards, address or '', ward or '') }}
 {% if searched %}
-{% if me %}<p class="results-label">You're in <strong>Ward {{ me.ward }}, {{ me.ward_name }}</strong>{% if me.address %} ({{ me.address }}){% endif %}.</p>
-{% elif address %}<p class="error" role="alert">We couldn't find that address in the City's address list. Try the house number and street name only, or pick your ward.</p>{% endif %}
-{% set local_items = results|selectattr('same_ward')|list %}
-{% set other_items = results|rejectattr('same_ward')|list %}
+{% if me %}<p class="results-label">Showing <strong>Ward {{ me.ward }}, {{ me.ward_name }}</strong>{% if me.address %} ({{ me.address }}){% endif %}.</p>
+{% elif address %}<div class="search-feedback" role="status">
+{% if lookup_result.status == 'unavailable' %}<h2>The City’s address service isn’t responding.</h2><p>Your address may be valid. Try again, or choose your ward above.</p>
+{% elif lookup_result.status == 'invalid' %}<h2>Add a street number and street name.</h2><p>For example: 100 Queen St W. You can also choose a ward above.</p>
+{% elif lookup_result.status == 'ambiguous' %}<h2>Which address did you mean?</h2><p>We found more than one match. Choose your street below.</p>
+{% else %}<h2>We couldn't find that address.</h2><p>Check the street number and spelling, or choose a ward above.</p>{% endif %}
+{% if lookup_result.candidates %}<ul class="address-choices">{% for candidate in lookup_result.candidates %}<li><a href="/near?address={{ candidate.address|urlencode }}">{{ candidate.address }} <span class="muted">· {{ candidate.ward_name }}</span> →</a></li>{% endfor %}</ul>{% endif %}</div>{% endif %}
+{% set local_items = results|selectattr('relevant')|list %}
+{% set other_items = results|rejectattr('relevant')|list %}
 {% if me %}
-<div class="section-heading"><div><h2>Issues in your ward</h2><p class="muted">Based on the ward listed in the saved City records.</p></div><span class="pill">{{ local_items|length }} {{ 'issue' if local_items|length == 1 else 'issues' }}</span></div>
-{% if local_items %}<div class="card-grid">{% for r in local_items %}{{ issue_card(r.rec, true, r.km) }}{% endfor %}</div>{% else %}<div class="empty-state"><h3>No council items on file for your ward yet.</h3><p>This pilot covers a small set of records. You may still find a meeting item or notice below.</p></div>{% endif %}
+<div class="section-heading"><div><h2>{{ "Nearby issues" if me.address else "Issues in your ward" }}</h2><p class="muted">{{ "Within 2 km, plus other issues in your ward." if me.address else "From saved City records." }}</p></div><span class="pill">{{ local_items|length }} {{ 'issue' if local_items|length == 1 else 'issues' }}</span></div>
+{% if local_items %}<div class="card-grid">{% for r in local_items %}{{ issue_card(r.rec, r.same_ward, r.km) }}{% endfor %}</div>{% else %}<div class="empty-state"><h3>No matching issues in this pilot yet.</h3><p>This does not mean nothing is happening nearby. <a href="/#browse-heading">Browse the saved issues</a> or check the notices below.</p></div>{% endif %}
 {% endif %}
 {% if upcoming %}
-<div class="section-heading"><div><h2>Coming up at a meeting, in your ward</h2><p class="muted">Meeting dates from saved agendas. Confirm current details with the City.</p></div></div>
+<details class="fold"><summary>Meeting items in your ward ({{ upcoming|length }})</summary><div class="section-heading"><div><h2>Coming up at a meeting, in your ward</h2><p class="muted">Meeting dates from saved agendas. Confirm current details with the City.</p></div></div>
 {% for u in upcoming %}<article class="panel"><div class="meta-row"><span class="pill">{{ u.item.id }}</span><span>{{ u.meeting.meeting_date }} · {{ u.meeting.meeting_time }}</span></div><h3 style="margin-top:14px">{% if u.item.official_url %}<a href="{{ u.item.local_url or u.item.official_url }}">{{ u.item.title }}</a>{% else %}{{ u.item.title }}{% endif %}</h3><p class="muted">{{ u.meeting.body }} · {{ u.meeting.location }} · {{ u.meeting.agenda_status }}</p>{% if not u.item.official_url %}<p class="muted">Find this item on the <a href="https://secure.toronto.ca/council/">City's meeting agendas</a>; its full ID is not confirmed.</p>{% endif %}{% for n in u.item.notes %}<div class="muted">{{ n.date }}: {{ n.note }}</div>{% endfor %}</article>{% endfor %}
 {% if rules.quotes %}<details class="fold"><summary>The City's general rules for taking part</summary><p class="muted">Quoted from <a href="{{ rules.source }}">toronto.ca</a>, retrieved {{ rules.retrieved }}. Confirm the rules for your specific item.</p>{% for q in rules.quotes %}<blockquote>{{ q }}</blockquote>{% endfor %}</details>{% endif %}
 {% endif %}
+{% if upcoming %}</details>{% endif %}
 {% set local_notices = nearby|selectattr('same_ward')|list %}
 {% set other_notices = nearby|rejectattr('same_ward')|list %}
 {% macro notice_row(r) %}<article class="panel"><div class="meta-row">{% if r.same_ward %}<span class="pill proposed">In your ward</span>{% else %}<span>Ward {{ r.n.ward or 'not stated' }}</span>{% endif %}<span>Posted {{ r.n.posted }}</span>{% if r.km is not none %}<span>About {{ '%.1f'|format(r.km) }} km from your address</span>{% endif %}</div><h3 style="margin-top:14px"><a href="/notices/{{ r.n.notice_id }}">{{ r.n.title }}</a></h3><div class="meta-row"><span>{{ r.n.decision_body or '' }}</span>{% if r.n.participation %}<span>Includes participation details</span>{% endif %}</div></article>{% endmacro %}
 {% if nearby %}<section class="notice-list"><div class="section-heading"><div><h2>Public notices from the City Clerk</h2><p class="muted">Saved notices, shown as published. Check each notice for its retrieval date.</p></div></div>{% for r in local_notices %}{{ notice_row(r) }}{% else %}<p class="muted">No saved notices matched your ward.</p>{% endfor %}{% if other_notices %}<details class="fold"><summary>Notices elsewhere in Toronto ({{ other_notices|length }})</summary>{% for r in other_notices %}{{ notice_row(r) }}{% endfor %}</details>{% endif %}</section>{% endif %}
 {% if other_items %}<details class="fold"><summary>Explore issues in other wards ({{ other_items|length }})</summary><div class="card-grid">{% for r in other_items %}{{ issue_card(r.rec, false, r.km) }}{% endfor %}</div></details>{% endif %}
-{% else %}<div class="trust-note"><strong>Not sure where to start?</strong><p>Try Ward 4 for 1337 Queen Street West, or Ward 15 for 19 Don Ridge Drive. You can also <a href="/">browse all three issues</a>.</p></div>{% endif %}
+{% else %}<p class="resident-footnote">Search your address or choose a ward above. You can also <a href="/#browse-heading">browse all issues</a>.</p>{% endif %}
 {% endblock %}

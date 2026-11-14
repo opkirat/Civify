@@ -9,7 +9,8 @@ Routes (staff routes require sign-in; resident routes are public)
   GET  /staff/intake, POST ...   upload PDFs, validate them, confirm the item, start processing
   GET  /staff/processing/{job}   watch each pipeline step run; preliminary outputs; retry
   POST /staff/{item_id}/publish  freeze the current approvals as the next version residents see
-  GET  /staff/{item_id}          review screen: sentences that need a person, each beside the passage in context
+  GET  /staff/{item_id}          review screen: sentences that need a person, each beside the passage in context;
+                                 auto-approved ones listed for spot-checks
   GET  /staff/{item_id}/source/{file}   the source PDF itself (open at a page with #page=N)
   POST /staff/{item_id}/approve-ready   publish every "ready" sentence in one click
   POST /staff/{item_id}/{index}  save one decision
@@ -287,7 +288,8 @@ def staff(request: Request, item_id: str):
         "review": [r for r in rows if not r["review"] and r["lane"] == "review"],
         "blocked": [r for r in rows if not r["review"] and r["lane"] == "blocked"],
         "ready": [r for r in rows if not r["review"] and r["lane"] == "ready"],
-        "done": [r for r in rows if r["review"]],
+        "done": [r for r in rows if r["review"] and r["review"]["reviewer"] != db.AUTO_REVIEWER],
+        "auto": [r for r in rows if r["review"] and r["review"]["reviewer"] == db.AUTO_REVIEWER],
     }
     con = db.connect(DB_PATH)
     esc = {e["claim_index"]: e for e in db.open_escalations(con, item_id)}
@@ -400,19 +402,25 @@ def near(request: Request, address: str = "", ward: str = ""):
     """Resident lookup. The address goes to the City's API for one request and is not kept."""
     address, ward = address.strip(), ward.strip()
     me = None
+    lookup_result = None
     if address:
-        me = geo.lookup(address)
-    elif ward:
+        lookup_result = geo.search_address(address)
+        me = lookup_result["match"]
+    elif ward and ward.zfill(2) in geo.WARDS:
         me = {"ward": ward.lstrip("0"), "ward_name": geo.WARDS.get(ward.zfill(2), ""), "address": None}
     results, nearby = [], []
     if me:
         for rec in db.list_items():
-            km = geo.distance_km(me, rec["location"]) if rec.get("location") and "lat" in me else None
-            results.append({"rec": rec, "same_ward": rec.get("ward") == me["ward"], "km": km})
-        results.sort(key=lambda r: (not r["same_ward"], r["km"] if r["km"] is not None else 1e9))
+            location = rec.get("location")
+            valid_location = location and str(location.get("ward")) == str(rec.get("ward"))
+            km = geo.distance_km(me, location) if valid_location and "lat" in me else None
+            results.append({"rec": rec, "same_ward": rec.get("ward") == me["ward"], "km": km,
+                            "relevant": rec.get("ward") == me["ward"] or (km is not None and km <= 2)})
+        results.sort(key=lambda r: (not r["relevant"], r["km"] if r["km"] is not None else 1e9))
         for n in notices.load():
-            kms = [geo.distance_km(me, a) for a in n["addresses"]] if "lat" in me else []
-            nearby.append({"n": n, "same_ward": n.get("ward") == me["ward"], "km": min(kms) if kms else None})
+            # Notice feed coordinates have known street/ward errors. Match by the
+            # stated ward until those points have been independently validated.
+            nearby.append({"n": n, "same_ward": n.get("ward") == me["ward"], "km": None})
         nearby.sort(key=lambda r: (not r["same_ward"], r["km"] if r["km"] is not None else 1e9))
     upcoming = []
     if me:
@@ -421,7 +429,7 @@ def near(request: Request, address: str = "", ward: str = ""):
                 if it.get("ward") == me["ward"]:
                     upcoming.append({"meeting": m, "item": it})
     return templates.TemplateResponse(request, "near.html", {
-        "wards": geo.WARDS, "address": address, "ward": ward, "me": me, "results": results, "nearby": nearby,
+        "wards": geo.WARDS, "address": address, "ward": ward, "me": me, "lookup_result": lookup_result, "results": results, "nearby": nearby,
         "upcoming": upcoming, "rules": agenda.load_rules(), "searched": bool(address or ward)})
 
 
