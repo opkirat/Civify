@@ -5,15 +5,7 @@ from pathlib import Path
 from xml.etree import ElementTree
 
 import pytest
-from fastapi.testclient import TestClient
-
 from civify import agenda, app as appmod, db, record
-
-
-@pytest.fixture
-def client(tmp_path, monkeypatch):
-    monkeypatch.setattr(appmod, "DB_PATH", str(tmp_path / "reviews.db"))
-    return TestClient(appmod.app)
 
 
 @pytest.mark.parametrize("item_id,ward,versions,source", [
@@ -71,17 +63,18 @@ def test_agenda_does_not_guess_item_year_and_requires_matching_meeting(tmp_path)
 
 
 @pytest.mark.parametrize("item_id", ["2027.PB1.5", "2027.PB1.6"])
-def test_pending_pages_show_unknown_participation_without_publishing_drafts(client, item_id):
+def test_pending_pages_show_unknown_participation_without_publishing_drafts(staff, item_id):
     rec = db.load_record(item_id)
     for suffix in ("", "/print"):
-        page = client.get(f"/items/{item_id}{suffix}")
+        page = staff.get(f"/items/{item_id}{suffix}")
         assert page.status_code == 200
         assert "November 16, 2026" in page.text
         assert "An open comment window has not been verified" in page.text
         assert "None" not in page.text
         assert "No approved explanation yet" in page.text
         assert rec["claims"][0]["sentence"] not in page.text
-    assert "3 staff report versions" in client.get("/staff/2027.PB1.5").text
+    if item_id == "2027.PB1.5":
+        assert "3 report versions" in staff.get("/staff/2027.PB1.5").text
 
 
 def test_print_shares_review_gate_and_preserves_full_quotes(client):
@@ -89,8 +82,8 @@ def test_print_shares_review_gate_and_preserves_full_quotes(client):
     rec = db.load_record(item_id)
     con = db.connect(appmod.DB_PATH)
     approved, rejected = rec["claims"][0], rec["claims"][1]
-    db.save_review(con, item_id, 0, "approved", approved["sentence"], "Test reviewer")
-    db.save_review(con, item_id, 1, "rejected", rejected["sentence"], "Test reviewer")
+    db.save_review(con, item_id, 0, approved, "approved", approved["sentence"], "Test reviewer")
+    db.save_review(con, item_id, 1, rejected, "rejected", rejected["sentence"], "Test reviewer")
     page = client.get(f"/items/{item_id}/print").text
     assert approved["sentence"] in page
     assert approved["quote"] in page
@@ -98,7 +91,7 @@ def test_print_shares_review_gate_and_preserves_full_quotes(client):
     assert approved["source_file"] in page
     assert f'/items/{item_id}/qr.svg' in page
     assert "not an official City notice" in page
-    db.save_review(con, item_id, 0, "rejected", approved["sentence"], "Test reviewer")
+    db.save_review(con, item_id, 0, approved, "rejected", approved["sentence"], "Test reviewer")
     assert approved["sentence"] not in client.get(f"/items/{item_id}/print").text
 
 

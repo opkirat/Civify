@@ -1,8 +1,28 @@
 {% extends 'base.html' %}
+{% from 'staff_parts.html' import pipeline_strip, signed_in %}
 {% block title %}Staff workspace{% endblock %}
 {% block body %}
-<div class="page-head"><p class="eyebrow">Staff workspace</p><h1>A clearer explanation starts here.</h1><p class="lead">Review each draft against its evidence before it reaches residents.</p><p class="muted">Demo workspace · Reviewer names are recorded; sign-in is not enabled.</p></div>
+<div class="page-head">
+  <p class="eyebrow">Staff workspace</p>
+  <h1>What needs you today</h1>
+  <p class="lead">Sentences that passed every check publish together in one click. Only the ones that are unsure, or that state a decision, condition or deadline, wait for you.</p>
+  {{ signed_in(user) }}
+</div>
 {% for it in items %}
-<article class="panel queue-row"><div><div class="meta-row"><span class="pill">{{ it.item_id }}</span><span>Ward {{ it.ward or '?' }}</span><span>{{ it.current_stage|stage_label }}</span></div><h2>{{ it.title|item_name }}</h2><p class="muted">{{ it.title|item_topic }}</p><p class="queue-count"><strong>{{ it.approved }}</strong> approved · {{ it.reviewed }} reviewed · {{ it.claims|length }} total sentences</p></div><div class="actions"><a class="button primary" href="/staff/{{ it.item_id }}">Review drafts →</a><a class="button" href="/items/{{ it.item_id }}">Resident view</a></div></article>
-{% else %}<div class="empty-state">No items are ready for review.</div>{% endfor %}
+{% set p = it.pipeline %}
+<article class="panel">
+  <div class="meta-row"><span class="pill">{{ it.item_id }}</span><span>Ward {{ it.ward or '?' }}</span><span>{{ it.current_stage|stage_label }}</span></div>
+  <h2 class="queue-title"><a href="/staff/{{ it.item_id }}">{{ it.title|item_name }}</a></h2>
+  <p class="muted">{{ it.title|item_topic }}</p>
+  {{ pipeline_strip(p.steps) }}
+  {% if p.attention %}
+  <div class="attention">
+    <p class="attention-title">Needs a person ({{ p.attention|length }})</p>
+    <ul>{% for a in p.attention[:4] %}<li>{% if a.href %}<a href="{{ a.href }}">{{ a.text }}</a>{% else %}{{ a.text }}{% endif %}</li>{% endfor %}
+    {% if p.attention|length > 4 %}<li><a href="/staff/{{ it.item_id }}">and {{ p.attention|length - 4 }} more →</a></li>{% endif %}</ul>
+  </div>
+  {% else %}<p class="ok">Nothing waiting. Everything drafted has been decided.</p>{% endif %}
+  <div class="actions"><a class="button primary" href="/staff/{{ it.item_id }}">Open review →</a><a class="button" href="/items/{{ it.item_id }}">Resident view</a></div>
+</article>
+{% else %}<div class="empty-state">No items yet. Save an item page into <code>data/&lt;item-id&gt;/</code> and run the pipeline.</div>{% endfor %}
 {% endblock %}

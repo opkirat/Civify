@@ -3,18 +3,11 @@
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
-
 from civify import app as appmod
+from civify import db
 
 pytestmark = pytest.mark.skipif(not Path("data/2026.TE34.21/backgroundfile-288412.pdf").exists(), reason="source PDFs not in this checkout")
 ITEM = "2026.TE34.21"
-
-
-@pytest.fixture
-def client(tmp_path, monkeypatch):
-    monkeypatch.setattr(appmod, "DB_PATH", str(tmp_path / "test.db"))  # fresh database per test
-    return TestClient(appmod.app)
 
 
 def test_index_lists_the_item(client):
@@ -22,42 +15,101 @@ def test_index_lists_the_item(client):
     assert r.status_code == 200 and "191-199 College Street" in r.text
 
 
-def test_resident_view_is_empty_until_staff_approve(client):
-    r = client.get(f"/items/{ITEM}")
-    assert "No approved explanation yet" in r.text
-    client.post(f"/staff/{ITEM}/1", data={"action": "approve", "reviewer": "Clerk A"})
-    r = client.get(f"/items/{ITEM}")
+def test_resident_view_is_empty_until_staff_approve(staff):
+    assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
+    r = staff.get(f"/items/{ITEM}")
     assert "31 storeys to 45 storeys" in r.text and "No approved explanation yet" not in r.text
 
 
-def test_rejected_claim_never_shows(client):
-    client.post(f"/staff/{ITEM}/1", data={"action": "reject", "reviewer": "Clerk A"})
-    assert "31 storeys to 45 storeys" not in client.get(f"/items/{ITEM}").text
-    assert "rejected by Clerk A" in client.get(f"/staff/{ITEM}").text
+def test_rejected_claim_never_shows_and_reviewer_comes_from_login(staff):
+    staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})
+    assert "31 storeys to 45 storeys" not in staff.get(f"/items/{ITEM}").text
+    assert "Rejected by Clerk A" in staff.get(f"/staff/{ITEM}").text
 
 
-def test_edit_is_rechecked_against_the_quote(client):
-    bad = client.post(f"/staff/{ITEM}/1", data={"action": "edit", "reviewer": "Clerk A",
-                      "sentence": "The height goes from 31 to 54 storeys."}, follow_redirects=False)
-    assert bad.status_code == 303 and "Edit+not+saved" in bad.headers["location"] and "54" in bad.headers["location"]
-    assert "No approved explanation yet" in client.get(f"/items/{ITEM}").text
-
-    good = client.post(f"/staff/{ITEM}/1", data={"action": "edit", "reviewer": "Clerk A",
-                       "sentence": "The building would go from 31 to 45 storeys."})
-    assert "The building would go from 31 to 45 storeys." in client.get(f"/items/{ITEM}").text
+def test_edit_is_rechecked_against_the_quote(staff):
+    bad = staff.post(f"/staff/{ITEM}/1", data={"action": "edit", "sentence": "The height goes from 31 to 54 storeys."}, follow_redirects=False)
+    assert bad.status_code == 303 and "Not+saved" in bad.headers["location"] and "54" in bad.headers["location"]
+    assert "No approved explanation yet" in staff.get(f"/items/{ITEM}").text
+    staff.post(f"/staff/{ITEM}/1", data={"action": "edit", "sentence": "The building would go from 31 to 45 storeys."})
+    assert "The building would go from 31 to 45 storeys." in staff.get(f"/items/{ITEM}").text
 
 
-def test_reviewer_name_is_required(client):
-    r = client.post(f"/staff/{ITEM}/1", data={"action": "approve", "reviewer": "  "}, follow_redirects=False)
-    assert "Enter+your+name" in r.headers["location"]
-    assert "No approved explanation yet" in client.get(f"/items/{ITEM}").text
-
-
-def test_staff_page_shows_stages_and_quoted_rules(client):
-    t = client.get(f"/staff/{ITEM}").text
-    assert "Staff recommendation" in t and "Council decision" in t
+def test_staff_page_shows_stages_and_quoted_rules(staff):
+    t = staff.get(f"/staff/{ITEM}").text
+    assert "Proposed" in t and "Council decided" in t
     assert "no later than 12:00 p.m. on July 7, 2026" in t
     assert "Council has decided: <strong>yes</strong>" in t
+
+
+# --- sign-in ---------------------------------------------------------------------
+
+def test_staff_pages_and_actions_require_sign_in(client):
+    for path in ("/staff", f"/staff/{ITEM}"):
+        r = client.get(path, follow_redirects=False)
+        assert r.status_code == 303 and r.headers["location"].startswith("/login?next=")
+    r = client.post(f"/staff/{ITEM}/1", data={"action": "approve"}, follow_redirects=False)
+    assert r.status_code == 303 and "/login" in r.headers["location"]
+    r = client.post(f"/staff/{ITEM}/approve-ready", follow_redirects=False)
+    assert "/login" in r.headers["location"]
+    assert "No approved explanation yet" in client.get(f"/items/{ITEM}").text   # nothing slipped through
+    assert client.get("/").status_code == 200 and client.get(f"/items/{ITEM}").status_code == 200  # residents unaffected
+
+
+def test_wrong_password_is_refused_and_logout_ends_the_session(staff, client):
+    client.post("/logout")
+    assert client.get("/staff", follow_redirects=False).status_code == 303
+    r = client.post("/login", data={"username": "clerka", "password": "wrong password!!"})
+    assert r.status_code == 401 and "username and password" in r.text
+
+
+def test_login_redirect_cannot_leave_the_staff_area(staff):
+    r = staff.post("/login", data={"username": "clerka", "password": "correct horse battery", "next": "//evil.example"}, follow_redirects=False)
+    assert r.headers["location"] == "/staff"
+
+
+# --- lanes, one-click publishing, and approvals bound to content ------------------
+
+def test_approve_ready_publishes_only_ready_sentences(staff):
+    rec = db.load_record(ITEM)
+    ready = [c for c in rec["claims"] if c.get("lane") == "ready"]
+    other = [c for c in rec["claims"] if c.get("lane") != "ready"]
+    assert ready and other
+    r = staff.post(f"/staff/{ITEM}/approve-ready", follow_redirects=False)
+    assert f"Published+{len(ready)}+ready" in r.headers["location"]
+    page = staff.get(f"/items/{ITEM}").text
+    assert all(c["sentence"] in page for c in ready)
+    assert not any(c["sentence"] in page for c in other)
+
+
+def test_staff_page_groups_sentences_by_lane_with_reasons(staff):
+    t = staff.get(f"/staff/{ITEM}").text
+    assert "Needs a look (" in t and "Ready (" in t and "Approve all" in t
+    assert "states a recommendation or decision" in t
+    assert "Documents saved" in t and "Meaning check" in t
+
+
+def test_approval_stops_counting_when_the_sentence_changes(staff, monkeypatch):
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
+    rec = db.load_record(ITEM)
+    changed = {**rec, "claims": [dict(c) for c in rec["claims"]]}
+    changed["claims"][1]["sentence"] = "A redrafted sentence about 31 and 45 storeys."
+    monkeypatch.setattr(appmod.db, "load_record", lambda item_id: changed)
+    assert "31 storeys to 45 storeys" not in staff.get(f"/items/{ITEM}").text
+    assert "Changed since last review" in staff.get(f"/staff/{ITEM}").text
+
+
+def test_every_decision_is_kept_in_the_audit_log(staff):
+    staff.post(f"/staff/{ITEM}/1", data={"action": "approve"})
+    staff.post(f"/staff/{ITEM}/1", data={"action": "reject"})
+    rows = db.connect(appmod.DB_PATH).execute("SELECT action, reviewer FROM audit ORDER BY id").fetchall()
+    assert [(r["action"], r["reviewer"]) for r in rows] == [("approved", "Clerk A"), ("rejected", "Clerk A")]
+
+
+def test_pipeline_view_lists_what_needs_a_person(staff):
+    t = staff.get("/staff").text
+    assert "What needs you today" in t and "Needs a person" in t and "Plain-language draft" in t
 
 
 def test_near_by_ward_lists_item_in_that_ward_and_stores_nothing(client, tmp_path):

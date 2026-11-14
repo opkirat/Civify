@@ -1,73 +1,95 @@
 {% extends "base.html" %}
+{% from 'staff_parts.html' import pipeline_strip, signed_in, claim_card %}
 {% block title %}Staff review · {{ rec.item_id }}{% endblock %}
 {% block body %}
-<div class="page-head"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/staff">Staff workspace</a><span aria-hidden="true">/</span><span>{{ rec.item_id }}</span></nav><p class="eyebrow">Review before publishing</p><h1>{{ rec.title|item_name }}</h1><p class="lead">{{ rec.title|item_topic }}</p><div class="actions"><a class="button" href="/items/{{ rec.item_id }}">Preview resident view →</a><a class="button" href="#drafts">Jump to draft sentences ↓</a></div></div>
-<p class="muted">Each sentence below was drafted by an AI model and then checked by code against the staff report.
-A green check means the quote exists in the report and the numbers match. <strong>Code cannot check meaning</strong>:
-read each sentence against its quote before approving. Only approved sentences reach residents.</p>
+<div class="page-head">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/staff">Staff workspace</a><span aria-hidden="true">/</span><span>{{ rec.item_id }}</span></nav>
+  <p class="eyebrow">Review before publishing</p>
+  <h1>{{ rec.title|item_name }}</h1>
+  <p class="lead">{{ rec.title|item_topic }}</p>
+  {{ signed_in(user) }}
+  <div class="actions"><a class="button" href="/items/{{ rec.item_id }}">Preview resident view →</a><a class="button" href="{{ rec.official_url }}">Official item page ↗</a></div>
+</div>
 
 {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+{% if notice %}<p class="success" role="status">{{ notice }}</p>{% endif %}
+
+{{ pipeline_strip(pipeline.steps) }}
+
+<div class="lane-summary">
+  <a href="#review" class="lane-count review"><strong>{{ groups.review|length }}</strong> need a look</a>
+  <a href="#blocked" class="lane-count blocked"><strong>{{ groups.blocked|length }}</strong> blocked</a>
+  <a href="#ready" class="lane-count ready"><strong>{{ groups.ready|length }}</strong> ready</a>
+  <a href="#done" class="lane-count done"><strong>{{ groups.done|length }}</strong> decided</a>
+</div>
+
+<details class="fold">
+  <summary>How sentences are sorted</summary>
+  <p><strong>Ready</strong>: the quote was found in the report, every number matches, a second AI check found the quote fully supports the sentence, and the sentence doesn't state a decision, condition, uncertainty or deadline. Publish these together.</p>
+  <p><strong>Needs a look</strong>: any of those checks raised something. The reasons are listed on each one. Code cannot judge meaning, and the AI check can be wrong, so you decide.</p>
+  <p><strong>Blocked</strong>: the quote wasn't found or a number doesn't match. It can't be approved as written: edit it so it passes, or reject it.</p>
+</details>
+
+<section id="review" class="lane-section">
+  <h2>Needs a look ({{ groups.review|length }})</h2>
+  {% for r in groups.review %}{{ claim_card(rec, r) }}{% else %}<p class="muted">Nothing here.</p>{% endfor %}
+</section>
+
+{% if groups.blocked %}
+<section id="blocked" class="lane-section">
+  <h2>Blocked ({{ groups.blocked|length }})</h2>
+  {% for r in groups.blocked %}{{ claim_card(rec, r) }}{% endfor %}
+</section>
+{% endif %}
+
+<section id="ready" class="lane-section">
+  <div class="section-heading"><div><h2>Ready ({{ groups.ready|length }})</h2><p class="muted">Passed every check. Skim them, then publish together.</p></div>
+  {% if groups.ready %}<form method="post" action="/staff/{{ rec.item_id }}/approve-ready"><button class="primary" type="submit">Approve all {{ groups.ready|length }} ready</button></form>{% endif %}</div>
+  {% if groups.ready %}
+  <details class="fold"><summary>Show the {{ groups.ready|length }} ready sentences</summary>
+    {% for r in groups.ready %}{{ claim_card(rec, r) }}{% endfor %}
+  </details>
+  {% else %}<p class="muted">Nothing here.</p>{% endif %}
+</section>
+
+{% if groups.done %}
+<section id="done" class="lane-section">
+  <details class="fold"><summary>Decided ({{ groups.done|length }})</summary>
+    {% for r in groups.done %}{{ claim_card(rec, r) }}{% endfor %}
+  </details>
+</section>
+{% endif %}
+
+{% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
+{% if council and council.motions %}
+<details class="fold">
+  <summary>What changed at Council ({{ council.motions|length }} motions)</summary>
+  {% for m in council.motions %}
+  <div class="panel"><strong>{{ m.motion }}</strong> · moved by {{ m.moved_by }} · <span class="{{ 'ok' if m.result == 'Carried' else 'warn' }}">{{ m.result }}</span>
+    <blockquote style="white-space: pre-line">{{ m.text }}</blockquote></div>
+  {% endfor %}
+</details>
+{% endif %}
 
 <details class="fold">
   <summary>Stages and report versions (from the record)</summary>
   <ol class="stage">
   {% for s in rec.stages %}
     <li class="{{ 'current' if s.stage == rec.current_stage }}">
-      <strong>{{ s.stage.replace('_',' ')|capitalize }}</strong> · {{ s.date or 'No decision recorded' }}
-      {% if s.status %} · {{ s.status }}{% endif %}
+      <strong>{{ s.stage|stage_label }}</strong> · {{ s.date or 'No decision recorded' }}{% if s.status %} · {{ s.status }}{% endif %}
       <div class="muted">{{ s.body or 'Body not recorded' }} · source: {{ s.source.file }}</div>
-      {% if s.versions and s.versions|length > 1 %}
-      <details><summary>{{ s.versions|length }} staff report versions — using {{ s.source.file }}</summary>
-      <ul>{% for version in s.versions %}<li>{{ version.date }} · {{ version.file }}</li>{% endfor %}</ul></details>
-      {% endif %}
+      {% if s.versions and s.versions|length > 1 %}<div class="muted">{{ s.versions|length }} report versions; drafted from {{ s.source.file }}</div>{% endif %}
     </li>
   {% endfor %}
   </ol>
 </details>
 
 <details class="fold">
-  <summary>Participation (quoted from the Clerk's notice, {{ rec.participation.source.file if rec.participation.source else 'no notice found' }})</summary>
+  <summary>Taking part (quoted from the Clerk's notice{% if rec.participation.source %}, {{ rec.participation.source.file }}{% endif %})</summary>
   <blockquote>{{ rec.participation.written_comments_rule or 'No written-comments rule found.' }}</blockquote>
   <blockquote>{{ rec.participation.speaker_registration_rule or 'No speaker-registration rule found.' }}</blockquote>
-  <div>Council has decided: <strong>{{ 'yes' if rec.participation.council_has_decided else 'no' }}</strong>
-    <span class="muted">(basis: “{{ rec.participation.basis or 'No Council outcome found' }}”)</span></div>
-  {% if rec.participation.next_meeting %}<p>Next meeting in the saved record: {{ rec.participation.next_meeting.body }} · {{ rec.participation.next_meeting.date }}. This is not a submission deadline.</p>{% endif %}
-  <div class="muted">{{ rec.participation.note }}</div>
+  <div>Council has decided: <strong>{{ 'yes' if rec.participation.council_has_decided else 'no' }}</strong></div>
+  {% if rec.participation.next_meeting %}<p>Next meeting in the record: {{ rec.participation.next_meeting.body }} · {{ rec.participation.next_meeting.date }}. This is not a submission deadline.</p>{% endif %}
+  <p class="muted">{{ rec.participation.note }}</p>
 </details>
-
-
-{% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
-{% if council.motions %}
-<h2>What changed at Council</h2>
-<p class="muted">Council did not simply adopt the committee's recommendation. These motions, from the official record, say what was changed:</p>
-{% for m in council.motions %}
-<div class="panel">
-  <strong>{{ m.motion }}</strong> · moved by {{ m.moved_by }} · <span class="{{ 'ok' if m.result == 'Carried' else 'warn' }}">{{ m.result }}</span>
-  <blockquote style="white-space: pre-line">{{ m.text }}</blockquote>
-</div>
-{% endfor %}
-{% endif %}
-<div class="section-heading" id="drafts"><div><p class="eyebrow">Review queue</p><h2>Draft sentences ({{ rows|length }})</h2></div><a href="/items/{{ rec.item_id }}">Preview resident view →</a></div>
-{% for r in rows %}
-<section class="claim {{ r.review.status if r.review }}" id="claim-{{ r.index }}" aria-labelledby="s{{ r.index }}">
-  <p id="s{{ r.index }}"><strong>{{ r.index + 1 }}.</strong>
-    {% if r.verified %}<span class="ok" title="quote found, numbers match">✓ verified</span>{% else %}<span class="warn">⚠ unverified: {{ r.reason }}</span>{% endif %}
-    {% if r.review %} · <em>{{ r.review.status }} by {{ r.review.reviewer }} at {{ r.review.reviewed_at }}</em>{% endif %}
-  </p>
-  <div class="review-columns"><div><p class="eyebrow">Resident explanation</p><p>{{ r.review.sentence if r.review else r.sentence }}</p></div><div><p class="eyebrow">Supporting source</p>
-  <blockquote>“{{ r.quote }}” <span class="muted">— {{ r.source_file }}{% if r.page %}, page {{ r.page }}{% endif %}</span></blockquote></div></div>
-  <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
-    <label>Reviewer <input type="text" name="reviewer" required value="{{ r.review.reviewer if r.review else '' }}"></label>
-    <button class="primary" name="action" value="approve">Approve as written</button>
-    <button name="action" value="reject">Reject</button>
-    <details style="flex-basis:100%">
-      <summary>Edit, then approve</summary>
-      <textarea name="sentence" rows="2" aria-label="Edited sentence">{{ r.review.sentence if r.review else r.sentence }}</textarea>
-      <button name="action" value="edit">Approve edited sentence</button>
-      <span class="muted">The edit is re-checked against the same quote.</span>
-    </details>
-  </form>
-</section>
-{% endfor %}
-<p><a href="/items/{{ rec.item_id }}">See what residents see</a></p>
 {% endblock %}

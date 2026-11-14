@@ -1,0 +1,45 @@
+{% macro pipeline_strip(steps) %}
+<ol class="pipeline" aria-label="Pipeline progress">
+{% for s in steps %}
+  <li class="step {{ s.state }}">
+    <span class="step-dot" aria-hidden="true">{% if s.state == 'done' %}✓{% elif s.state == 'attention' %}!{% else %}{{ loop.index }}{% endif %}</span>
+    <span class="step-label">{{ s.label }}</span>
+    <span class="step-detail">{{ s.detail }}</span>
+    <span class="visually-hidden">: {{ {'done': 'done', 'attention': 'needs attention', 'todo': 'not started'}[s.state] }}</span>
+  </li>
+{% endfor %}
+</ol>
+{% endmacro %}
+
+{% macro signed_in(user) %}
+<form method="post" action="/logout" class="signed-in"><span class="muted">Signed in as <strong>{{ user.name }}</strong>. Your name is recorded on every decision.</span><button class="small" type="submit">Sign out</button></form>
+{% endmacro %}
+
+{% macro claim_card(rec, r) %}
+<section class="claim lane-{{ r.lane }} {{ r.review.status if r.review }}" id="claim-{{ r.index }}" aria-labelledby="s{{ r.index }}">
+  <div class="claim-head" id="s{{ r.index }}">
+    <strong>Sentence {{ r.index + 1 }}</strong>
+    {% if r.review %}<span class="pill decided">{{ r.review.status|capitalize }} by {{ r.review.reviewer }} · {{ r.review.reviewed_at[:16].replace('T', ' ') }}</span>
+    {% elif r.lane == 'blocked' %}<span class="pill warning">Blocked</span>
+    {% elif r.lane == 'review' %}<span class="pill warning">Needs a look</span>
+    {% else %}<span class="pill proposed">Ready</span>{% endif %}
+    {% if r.stale %}<span class="pill warning">Changed since last review</span>{% endif %}
+  </div>
+  {% if r.reasons and not r.review %}<ul class="reasons">{% for reason in r.reasons %}<li>{{ reason }}</li>{% endfor %}</ul>{% endif %}
+  <div class="review-columns">
+    <div><p class="eyebrow">Resident explanation</p><p>{{ r.review.sentence if r.review else r.sentence }}</p></div>
+    <div><p class="eyebrow">Supporting source</p>
+      <blockquote>“{{ r.quote }}” <span class="muted">— {{ r.source_file }}{% if r.page %}, page {{ r.page }}{% endif %}</span></blockquote></div>
+  </div>
+  <form class="inline" method="post" action="/staff/{{ rec.item_id }}/{{ r.index }}">
+    {% if r.lane != 'blocked' %}<button class="primary" name="action" value="approve">Approve as written</button>{% endif %}
+    <button name="action" value="reject">Reject</button>
+    <details {% if r.lane == 'blocked' %}open{% endif %}>
+      <summary>Edit, then approve</summary>
+      <textarea name="sentence" rows="2" aria-label="Edited sentence">{{ r.review.sentence if r.review else r.sentence }}</textarea>
+      <button name="action" value="edit">Approve edited sentence</button>
+      <span class="muted">Your edit is re-checked against the same quote; a number the quote doesn't contain is refused.</span>
+    </details>
+  </form>
+</section>
+{% endmacro %}
