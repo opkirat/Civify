@@ -4,17 +4,17 @@
 {% block body %}
 <section class="sms-page sms-staff">
   <p class="eyebrow">Staff workspace</p><h1>Text alerts</h1>
-  <p>Review the copy before sending. Each item can be sent once; only confirmed subscribers in its ward receive it.</p>
+  <p>Alerts go out automatically the first time an item has a live explanation, to confirmed subscribers in its ward (every ward for city-wide items). New subscribers get what is already live in their ward. Each phone gets each item once, and at most one new-item alert a day. Use the button only if an automatic send didn't happen.</p>
   <p class="sms-note">Mode: <strong>{{ mode }}</strong>{% if mode == 'demo' %} · delivery is simulated{% endif %}</p>
   {% if message %}<p class="sms-success" role="status">{{ message }}</p>{% endif %}
   {% for entry in items %}<article class="panel sms-item">
-    <h2>{{ entry.rec.title|item_name }}</h2><p>Ward {{ entry.rec.ward }} · Publication version {{ entry.publication.version }} · {{ entry.count }} confirmed subscribers</p>
+    <h2>{{ entry.rec.title|item_name }}</h2><p>{{ entry.rec|ward_label }} · Publication version {{ entry.publication.version }} · {{ entry.count }} confirmed subscribers</p>
     <div class="sms-split"><div>
-    {% if entry.already %}<p class="sms-success">{{ 'Simulated: delivered' if mode == 'demo' else 'Sent' }} to {{ entry.delivered }} confirmed subscriber{{ '' if entry.delivered == 1 else 's' }} in Ward {{ entry.rec.ward }}.</p>{% if mode == 'demo' %}<p><a href="/alerts/phone">Open the demo phone</a> to see it as a resident would.</p>{% endif %}
+    {% if entry.already %}<p class="sms-success">{{ 'Simulated: delivered' if mode == 'demo' else 'Sent' }} to {{ entry.delivered }} confirmed subscriber{{ '' if entry.delivered == 1 else 's' }}.</p>{% if mode == 'demo' %}<p><a href="/alerts/phone">Open the demo phone</a> to see it as a resident would.</p>{% endif %}
     {% else %}<form method="post" action="/staff/sms/send">
       <input type="hidden" name="item_id" value="{{ entry.rec.item_id }}">
       <label class="sms-consent"><input type="checkbox" name="reviewed" value="yes" required><span>I checked the item, official link, and text above.</span></label>
-      <button type="submit">{{ 'Simulate alert' if mode == 'demo' else 'Send alert' }}</button>
+      <button type="submit">{{ 'Simulate alert now' if mode == 'demo' else 'Send alert now' }}</button>
     </form>{% endif %}</div>
     {{ phone([{'text': entry.body}], 'What subscribers receive (' ~ entry.body|length ~ ' characters)') }}</div>
   </article>{% else %}<p>No published items are ready for alerts.</p>{% endfor %}

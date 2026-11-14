@@ -8,7 +8,7 @@
   <p class="lead">Get a short text when a reviewed issue in your ward is published. No app or address needed.</p>
   {% if mode == 'demo' %}<p class="sms-note">Demo mode: texts are simulated on the phone shown on this page; nothing is sent.</p>{% endif %}
   {% if error %}<p class="sms-error" role="alert">{{ error }}</p>{% endif %}
-  {% if success %}<div class="sms-success" role="status"><h2>You're signed up</h2><p>We'll text you about new issues in your ward. Reply STOP to any alert to leave.</p>{% if mode == 'demo' and confirmed_phone %}<p><a href="/alerts/phone?phone={{ confirmed_phone|urlencode }}">Open the demo phone</a> to see alerts as they arrive.</p>{% endif %}</div>
+  {% if success %}<div class="sms-success" role="status"><h2>You're signed up</h2><p>We'll text you automatically when a new issue in your ward is explained. Reply STOP to any alert to leave.</p>{% if caught_up %}<p>We've also texted you {{ caught_up }} issue{{ '' if caught_up == 1 else 's' }} already explained in your ward.</p>{% endif %}{% if mode == 'demo' and confirmed_phone %}<p><a href="/alerts/phone?phone={{ confirmed_phone|urlencode }}">Open the demo phone</a> to see alerts as they arrive.</p>{% endif %}</div>
   {% elif pending %}<div class="sms-split"><form class="sms-form" method="post" action="/alerts/confirm">
     <h2>Confirm your number</h2><p>Enter the six digit code we sent. It expires in 10 minutes.</p>
     <input type="hidden" name="phone" value="{{ pending }}">

@@ -1,4 +1,4 @@
-"""Consent and dispatch gates use a fresh database and no external SMS provider."""
+"""Consent, automatic alerts and dispatch gates, on a fresh database with no external SMS provider."""
 
 import re
 
@@ -77,3 +77,56 @@ def test_alert_text_names_the_place_not_the_official_title():
     body = sms.alert_body({"title": "PB1.6 - 1337 Queen Street West - Demolition and New Construction", "ward": "4",
                            "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2027.PB1.6"})
     assert body.startswith("Civify Ward 4: new plain-language explanation for 1337 Queen Street West.") and "Reply STOP" in body
+
+
+def _signup(client, phone, ward):
+    page = client.post("/alerts", data={"phone": phone, "ward": ward, "consent": "yes"}).text
+    code = re.search(r"Civify code: (\d{6})", page).group(1)
+    return client.post("/alerts/confirm", data={"phone": phone, "code": code}).text
+
+
+def _publish(item_id, idx=0):
+    con = db.connect(appmod.DB_PATH)
+    rec = db.load_record(item_id)
+    db.save_review(con, item_id, idx, rec["claims"][idx], "approved", rec["claims"][idx]["sentence"], "Test reviewer")
+    db.sync_publication(con, rec, "Test reviewer")
+
+
+def test_new_subscriber_gets_what_is_already_live_in_their_ward(client):
+    _publish("2026.TE34.21")                       # Ward 11
+    _publish("2026.CC38.1")                        # city-wide
+    _publish("2027.PB1.6")                         # Ward 4
+    page = _signup(client, "4165550111", "11")
+    assert "texted you 2 issues already explained in your ward" in page
+    phone = client.get("/alerts/phone", params={"phone": "4165550111"}).text
+    assert "Civify Ward 11: new plain-language explanation for" in phone and "Civify city-wide:" in phone
+    assert "1337 Queen Street West" not in phone   # another ward's item never arrives
+    con = db.connect(appmod.DB_PATH)
+    assert con.execute("SELECT last_alert_at FROM sms_subscriptions").fetchone()[0] is None   # catch-up doesn't use the daily alert
+
+
+def test_staff_approval_texts_the_ward_automatically_once(staff):
+    _signup(staff, "4165550112", "11")
+    _signup(staff, "4165550113", "04")
+    assert "No messages yet." in staff.get("/alerts/phone", params={"phone": "4165550112"}).text
+    staff.post("/staff/2026.TE34.21/1", data={"action": "approve"})             # first live sentence: alert goes out
+    staff.post("/staff/2026.TE34.21/2", data={"action": "approve"})             # later versions: no second text
+    ward11 = staff.get("/alerts/phone", params={"phone": "4165550112"}).text
+    assert ward11.count("Civify Ward 11: new plain-language explanation for") == 1 and "1 alert received" in ward11
+    assert "No messages yet." in staff.get("/alerts/phone", params={"phone": "4165550113"}).text
+
+
+def test_city_wide_items_reach_every_ward():
+    rec = {"item_id": "t.cw", "title": "CC1.1 - Property Tax Rates", "ward": None, "citywide": True,
+           "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=t.cw"}
+    assert sms.alert_body(rec).startswith("Civify city-wide: new plain-language explanation for Property Tax Rates.")
+    assert sms.sendable(rec) and not sms.sendable({**rec, "citywide": None})
+
+
+def test_pipeline_publish_step_texts_subscribers(client):
+    con = db.connect(appmod.DB_PATH)
+    phone, code = sms.begin(con, "4165550114", "11")
+    assert sms.confirm(con, phone, code)
+    _publish("2026.TE34.21")
+    assert sms.alert_new_item(con, db.load_record("2026.TE34.21"))["sent"] == 1
+    assert sms.alert_new_item(con, db.load_record("2026.TE34.21"))["sent"] == 0

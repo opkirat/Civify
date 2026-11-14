@@ -36,7 +36,8 @@ flowchart LR
   reviews <--> app
   app --> staff["/staff: dashboard, pipeline view,<br/>review queue, PDF at page (FR-22, FR-28)"]
   app --> resident["/items, /near, /notices, /meetings<br/>AI summary + verified sentences"]
-  app --> alerts["/alerts: SMS sign-up (sms.py)"]
+  app --> alerts["/alerts: SMS sign-up, catch-up texts (sms.py)"]
+  pub --> texts["sms.alert_new_item<br/>text the ward, once per item (FR-17)"]
   City[(City Address Points API)] -. "ward, lat/lon; not stored" .-> app
   notices["notices.py, agenda.py<br/>saved Clerk notices, agendas"] --> app
 ```
@@ -292,6 +293,7 @@ sequenceDiagram
   P->>DB: auto_approve (ready + auto) as "auto-check", audit row each
   P->>DB: sync_publication → version N
   P->>G: summary write + guardrail (AI 4–5, up to 7)
+  P->>DB: sms.alert_new_item: text the ward's subscribers once
   P->>DB: each step's status, timing, detail
   Note over W,A: the Processing page refreshes while running. Retry resumes from a failed or blocked step
 ```
@@ -304,7 +306,7 @@ sequenceDiagram
   participant A as app.py decide()
   participant V as Verifier
   participant DB as civify.db
-  participant S as summary.refresh_item
+  participant S as Background tasks
   W->>A: POST /staff/{item}/{i} action=approve|edit|reject|escalate
   alt escalate without a note
     A-->>W: 303 with error, nothing saved
@@ -322,6 +324,7 @@ sequenceDiagram
   A->>DB: sync_publication → new frozen version if anything changed
   A-->>W: 303 "Approved. It is now live for residents."
   A-)S: background: rebuild the AI summary from what is live
+  A-)S: background: sms.alert_item texts the ward if this is the item's first live version
 ```
 
 ## 8. Scalability

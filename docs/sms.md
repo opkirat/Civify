@@ -2,7 +2,7 @@
 
 ## Test without sending texts
 
-Run the web app and open `/alerts`. Enter a test number and choose a ward; the demo displays the confirmation code on the page. Confirm it, sign in to `/staff/sms/overview`, and review the alert copy. A staff click records a simulated delivery for confirmed subscribers in the item's ward. Each item is sent at most once. The item needs a published explanation and official HTTPS link. `SMS_MODE` defaults to `demo`.
+Run the web app and open `/alerts`. Enter a test number and choose a ward (Ward 11 has the College Street item); the demo displays the confirmation code on the page. Confirm it, then open the demo phone (`/alerts/phone`): it already shows what is live in that ward plus city-wide items (up to 3). After that, whenever a staff approval or a processing run first puts an item live, its ward's subscribers are texted automatically. `/staff/sms/overview` shows what was sent and has a "send now" button only for items that were never sent. Each item reaches each phone at most once. `SMS_MODE` defaults to `demo`.
 
 ## Send real texts with Twilio
 
@@ -21,6 +21,6 @@ Restart the web server after changing `.env`. Keep `SMS_MODE=demo` until a sende
 
 Configure that exact HTTPS webhook URL as the Twilio number's **incoming message** webhook, using POST form data. The URL must be publicly reachable. The app verifies Twilio's signature and records STOP/UNSUBSCRIBE; Twilio also manages standard STOP replies. A local `127.0.0.1` URL cannot receive carrier webhooks. Test with your own opted-in phone before inviting residents. Twilio trial accounts can have recipient restrictions.
 
-Only staff can dispatch an alert. The SMS never claims an open comment period or calculates a deadline; it links to the official City item. Sending is manual after staff inspect the page and copy. A timeout is recorded as `unknown` and will not be retried automatically, avoiding duplicate messages. The provider's acceptance means the API accepted the message, not that a handset received it.
+Alerts are sent automatically when an item first goes live; the text is built in code from the record (ward, place, official link), with no AI-written content. The SMS never claims an open comment period or calculates a deadline; it links to the official City item. A timeout is recorded as `unknown` and will not be retried automatically, avoiding duplicate messages. The provider's acceptance means the API accepted the message, not that a handset received it.
 
 Phone numbers and consent timestamps are kept in local `civify.db`; addresses are not collected. A production pilot needs an approved retention/deletion process, delivery status callbacks, a secure hosted database, rate limits across multiple servers, and accessibility and language review. SMS is one access route: printable pages and in-person or phone assistance remain important for residents who do not use texting.

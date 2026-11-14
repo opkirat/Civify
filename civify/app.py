@@ -157,12 +157,14 @@ def alerts_begin(request: Request, phone: str = Form(...), ward: str = Form(...)
 
 @app.post("/alerts/confirm")
 def alerts_confirm(request: Request, phone: str = Form(...), code: str = Form(...)):
+    con = db.connect(DB_PATH)
     try:
-        confirmed = sms.confirm(db.connect(DB_PATH), phone, code)
+        confirmed = sms.confirm(con, phone, code)
     except ValueError:
         confirmed = False
+    caught_up = sms.catch_up(con, phone) if confirmed else 0      # what is already live in their ward, straight away
     return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(),
-                                      "success": confirmed, "pending": None if confirmed else phone, "confirmed_phone": phone if confirmed else None,
+                                      "success": confirmed, "caught_up": caught_up, "pending": None if confirmed else phone, "confirmed_phone": phone if confirmed else None,
                                       "error": None if confirmed else "That code is wrong or expired. Request a new code after two minutes."},
                                       status_code=200 if confirmed else 400)
 
@@ -440,8 +442,9 @@ def staff_sms(request: Request):
     items = []
     for rec in db.list_items():
         pub = db.latest_publication(con, rec["item_id"])
-        if pub and pub["claims"] and rec.get("ward") and rec.get("official_url", "").startswith("https://"):
-            count = con.execute("SELECT count(*) FROM sms_subscriptions WHERE status='active' AND ward=?", (str(rec["ward"]).zfill(2),)).fetchone()[0]
+        if pub and pub["claims"] and sms.sendable(rec):
+            count = (con.execute("SELECT count(*) FROM sms_subscriptions WHERE status='active'").fetchone()[0] if rec.get("citywide") else
+                     con.execute("SELECT count(*) FROM sms_subscriptions WHERE status='active' AND ward=?", (str(rec["ward"]).zfill(2),)).fetchone()[0])
             campaign = con.execute("SELECT id FROM sms_campaigns WHERE item_id=?", (rec["item_id"],)).fetchone()
             delivered = con.execute("SELECT count(*) FROM sms_deliveries WHERE campaign_id=? AND status IN ('demo', 'accepted')", (campaign["id"],)).fetchone()[0] if campaign else 0
             items.append({"rec": rec, "publication": pub, "count": count, "already": campaign is not None, "delivered": delivered, "body": sms.alert_body(rec)})
@@ -489,6 +492,7 @@ def approve_ready(request: Request, item_id: str, background: BackgroundTasks):
             n += 1
     if db.sync_publication(con, rec, user["name"]):
         background.add_task(summary.refresh_item, DB_PATH, item_id)
+        background.add_task(sms.alert_item, DB_PATH, item_id)
     return RedirectResponse(f"/staff/{item_id}?notice=Approved+{n}+sentence(s).+They+are+now+live+for+residents.#review", status_code=303)
 
 
@@ -535,6 +539,7 @@ def decide(request: Request, item_id: str, index: int, background: BackgroundTas
     if version:
         message += f" (Resident page updated to version {version}.)"
         background.add_task(summary.refresh_item, DB_PATH, item_id)
+        background.add_task(sms.alert_item, DB_PATH, item_id)      # first time it's live: text the ward
     return RedirectResponse(f"/staff/{item_id}?notice={quote(message)}#review", status_code=303)
 
 

@@ -1,4 +1,12 @@
-"""Consent-gated ward alerts. No automatic sends from the publication pipeline."""
+"""Consent-gated ward alerts, sent automatically.
+
+- A resident opts in for one ward and confirms a 6-digit code.
+- Right after confirming, they get what is already live in their ward (catch_up).
+- When an item first has a live explanation, its ward's subscribers get a text (alert_new_item);
+  city-wide items go to every subscriber. No person approves the text: it only names the
+  place and links the official record, and never claims a comment period is open.
+- Once per phone per item; at most one new-item alert per phone per 24 hours; STOP opts out.
+"""
 
 from __future__ import annotations
 
@@ -132,7 +140,8 @@ def alert_body(rec: dict) -> str:
     parts = (rec.get("title") or "").split(" - ")
     place = parts[1] if len(parts) > 1 else parts[0]
     place = place[:60].rstrip() + ("..." if len(place) > 60 else "")
-    return f"Civify Ward {int(rec['ward'])}: new plain-language explanation for {place}. City record: {rec['official_url']} Reply STOP to opt out."
+    where = "city-wide" if rec.get("citywide") else f"Ward {int(rec['ward'])}"
+    return f"Civify {where}: new plain-language explanation for {place}. City record: {rec['official_url']} Reply STOP to opt out."
 
 
 def code_body(code: str) -> str:
@@ -147,33 +156,95 @@ def inbox(con: sqlite3.Connection, raw_phone: str) -> list[dict]:
     return [{"text": r["body"], "at": r["at"]} for r in rows]
 
 
-def send_item(con: sqlite3.Connection, rec: dict, publication: dict, reviewer: str) -> dict:
-    """A signed-in staff action; one campaign per item, only to confirmed ward subscribers."""
-    if not publication or not publication["claims"] or not rec.get("ward") or not rec.get("official_url", "").startswith("https://"):
-        raise ValueError("This item needs a published explanation, ward, and official HTTPS link.")
-    body = alert_body(rec)
+AUTO_SENDER = "auto"   # alerts go out on their own; not a person
+
+
+def sendable(rec: dict) -> bool:
+    """An alert needs somewhere to go (a ward, or the whole city) and an official HTTPS link."""
+    return bool((rec.get("ward") or rec.get("citywide")) and rec.get("official_url", "").startswith("https://"))
+
+
+def _campaign(con: sqlite3.Connection, rec: dict, publication: dict, by: str) -> sqlite3.Row:
+    """One campaign (one alert text) per item, created the first time it is needed."""
     con.execute("INSERT OR IGNORE INTO sms_campaigns (item_id, publication_version, body, created_by, created_at) VALUES (?, ?, ?, ?, ?)",
-                (rec["item_id"], publication["version"], body, reviewer, db.now()))
+                (rec["item_id"], publication["version"], alert_body(rec), by, db.now()))
     con.commit()
-    campaign = con.execute("SELECT * FROM sms_campaigns WHERE item_id=?", (rec["item_id"],)).fetchone()
-    subscribers = con.execute("SELECT phone FROM sms_subscriptions WHERE status='active' AND ward=? AND "
-                              "(last_alert_at IS NULL OR last_alert_at < ?) ORDER BY phone",
-                              (str(rec["ward"]).zfill(2), (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat())).fetchall()
-    sent = 0
-    for sub in subscribers:
-        phone = sub["phone"]
-        if con.execute("SELECT 1 FROM sms_deliveries WHERE campaign_id=? AND phone=?", (campaign["id"], phone)).fetchone():
-            continue
-        # Reserve before calling the provider. A timeout stays 'unknown' rather than risking a duplicate text.
-        con.execute("INSERT INTO sms_deliveries VALUES (?, ?, 'unknown', NULL, ?)", (campaign["id"], phone, db.now()))
-        con.commit()
-        try:
-            provider_id = send(phone, body)
-        except Exception:
-            continue
-        con.execute("UPDATE sms_deliveries SET status=?, provider_id=?, at=? WHERE campaign_id=? AND phone=?",
-                    ("demo" if mode() == "demo" else "accepted", provider_id, db.now(), campaign["id"], phone))
+    return con.execute("SELECT * FROM sms_campaigns WHERE item_id=?", (rec["item_id"],)).fetchone()
+
+
+def _deliver(con: sqlite3.Connection, campaign: sqlite3.Row, phone: str, count_toward_limit: bool = True) -> bool:
+    """Text one phone, at most once per campaign. True if the provider accepted it (or it was simulated)."""
+    if con.execute("SELECT 1 FROM sms_deliveries WHERE campaign_id=? AND phone=?", (campaign["id"], phone)).fetchone():
+        return False
+    # Reserve before calling the provider. A timeout stays 'unknown' rather than risking a duplicate text.
+    con.execute("INSERT INTO sms_deliveries VALUES (?, ?, 'unknown', NULL, ?)", (campaign["id"], phone, db.now()))
+    con.commit()
+    try:
+        provider_id = send(phone, campaign["body"])
+    except Exception:
+        return False
+    con.execute("UPDATE sms_deliveries SET status=?, provider_id=?, at=? WHERE campaign_id=? AND phone=?",
+                ("demo" if mode() == "demo" else "accepted", provider_id, db.now(), campaign["id"], phone))
+    if count_toward_limit:
         con.execute("UPDATE sms_subscriptions SET last_alert_at=? WHERE phone=?", (db.now(), phone))
-        con.commit()
-        sent += 1
+    con.commit()
+    return True
+
+
+def send_item(con: sqlite3.Connection, rec: dict, publication: dict, sender: str) -> dict:
+    """Text an item's ward (every ward for a city-wide item): only confirmed subscribers, once per
+    phone per item, and at most one new-item alert per phone per 24 hours."""
+    if not publication or not publication["claims"] or not sendable(rec):
+        raise ValueError("This item needs a published explanation, a ward (or city-wide), and an official HTTPS link.")
+    campaign = _campaign(con, rec, publication, sender)
+    since = (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()
+    where, args = ("", (since,)) if rec.get("citywide") else ("ward=? AND ", (str(rec["ward"]).zfill(2), since))
+    subscribers = con.execute(f"SELECT phone FROM sms_subscriptions WHERE status='active' AND {where}"
+                              "(last_alert_at IS NULL OR last_alert_at < ?) ORDER BY phone", args).fetchall()
+    sent = sum(_deliver(con, campaign, sub["phone"]) for sub in subscribers)
     return {"sent": sent, "mode": mode()}
+
+
+def alert_new_item(con: sqlite3.Connection, rec: dict) -> dict | None:
+    """Automatic: once an item has a live explanation, text its ward's subscribers. No person
+    approves the text; it only names the place and links the official record (alert_body).
+    Never raises, so a text failure can't stop publishing."""
+    pub = db.latest_publication(con, rec["item_id"])
+    if not pub or not pub["claims"] or not sendable(rec):
+        return None
+    try:
+        return send_item(con, rec, pub, AUTO_SENDER)
+    except Exception:
+        return None
+
+
+def alert_item(db_path: str, item_id: str) -> None:
+    """Background task after a staff decision publishes a new version."""
+    rec = db.load_record(item_id)
+    if rec:
+        alert_new_item(db.connect(db_path), rec)
+
+
+CATCH_UP = 3   # texts right after sign-up, newest first
+
+
+def catch_up(con: sqlite3.Connection, raw_phone: str) -> int:
+    """Right after a resident confirms: text them what is already live in their ward (and
+    city-wide), newest first, at most CATCH_UP. Doesn't count toward the 24-hour limit, so
+    the next new item still reaches them. Returns how many were sent."""
+    phone = phone_number(raw_phone)
+    sub = con.execute("SELECT ward FROM sms_subscriptions WHERE phone=? AND status='active'", (phone,)).fetchone()
+    if not sub:
+        return 0
+    live = []
+    for rec in db.list_items():
+        if not sendable(rec) or not (rec.get("citywide") or str(rec.get("ward") or "").zfill(2) == sub["ward"]):
+            continue
+        pub = db.latest_publication(con, rec["item_id"])
+        if pub and pub["claims"]:
+            live.append((pub["published_at"], rec, pub))
+    live.sort(key=lambda x: x[0], reverse=True)
+    sent = 0
+    for _, rec, pub in reversed(live[:CATCH_UP]):   # oldest first, like a text thread
+        sent += _deliver(con, _campaign(con, rec, pub, AUTO_SENDER), phone, count_toward_limit=False)
+    return sent

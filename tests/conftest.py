@@ -29,3 +29,9 @@ def no_live_summaries(monkeypatch):
         raise RuntimeError("no model in tests")
     monkeypatch.setattr(summary, "WRITE_CALL", offline)
     monkeypatch.setattr(summary, "CHECK_CALL", offline)
+
+
+@pytest.fixture(autouse=True)
+def no_real_texts(monkeypatch):
+    """Whatever the local .env says, tests only ever simulate texts."""
+    monkeypatch.setenv("SMS_MODE", "demo")

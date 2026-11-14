@@ -128,3 +128,10 @@ The November 2026 Preservation Board agenda uses 2027 item IDs. The parser retai
 ## D-23 · Printable notices retain evidence and use official-page QR codes
 
 The print route uses the resident approval gate and includes complete approved sentences and their source quotes. Segno generates QR SVG locally, pointing to the official City item page so a phone does not need access to the demo's localhost. Long content can span multiple pages; fitting it by truncation could remove a condition or citation. Physical print layout and QR scanning still require manual verification.
+
+## D-24 · Text alerts go out automatically
+
+**Choice.** When an item first has a live explanation, its ward's confirmed subscribers get a text with no staff step (city-wide items go to every subscriber). A new subscriber is texted what is already live in their ward right after confirming, up to three items. Staff keep a "send now" button only for when an automatic send didn't happen.
+**Alternatives.** (a) Staff read and send every alert (the first version). (b) A daily digest instead of per-item texts.
+**Trade-off.** (a) added a manual step after publishing, which is the friction D-19 and D-20 removed for sentences. The alert text carries no AI-written content: it names the place, the ward and the official link, built in code from the record, so there is nothing new for a person to check; the explanation it points to has already passed its checks. (b) is gentler on phones but delays news residents may want quickly; the one-alert-per-phone-per-day limit gives most of that benefit. Catch-up texts don't count toward the daily limit, so the next new item still arrives.
+
