@@ -26,6 +26,7 @@
 <p class="muted records-date">From City records retrieved {{ rec.retrieved }}.</p>
 </section>
 {% set council = (rec.stages | selectattr('stage', 'equalto', 'council_decision') | first) %}
+{% if rec.public_letters %}<p class="muted input-count">The City received {{ rec.public_letters }} written submission{{ '' if rec.public_letters == 1 else 's' }} from the public on this item. Names are not shown here.</p>{% endif %}
 {% if council.motions %}<details class="panel"><summary>What changed at Council</summary><p class="muted">These motions show the changes considered at Council, in the record’s own words.</p>{% for m in council.motions %}<details class="fold"><summary>{{ m.motion }} · {{ m.result }}</summary><p class="muted">Moved by {{ m.moved_by }}</p><blockquote style="white-space:pre-line">{{ m.text }}</blockquote></details>{% endfor %}</details>{% endif %}
 </div>
 <aside>

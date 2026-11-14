@@ -35,7 +35,7 @@ pytest                                   # PDF-dependent checks skip when source
 python -m civify.ingest data/2026.TE34.21 --retrieved 2026-11-13
 python -m civify.draft  data/2026.TE34.21 --replay     # or set GEMINI_API_KEY in .env for a live run
 python -m civify.triage data/2026.TE34.21 --replay    # both AI checks + lanes (live without --replay)
-python -m civify.pipeline data/2026.TE34.21           # auto-approve what every check agreed on
+python -m civify.pipeline data/2026.TE34.21           # auto-approve what every check agreed on (CIVIFY_AUTO_APPROVE=0 turns this off)
 python -m civify.record data/2026.TE34.21
 python -m civify.verify                                 # demo: watch wrong summaries get rejected
 

@@ -279,3 +279,14 @@ def test_pipeline_view_is_visible_on_dashboard_and_item_page(staff):
         assert 'class="pipeline' in t and "AI summary" in t and "Live for residents" in t
         assert t.index('class="pipeline') < t.index("Item details" if path == "/staff" else "Record details")
     assert "What needs a person" in staff.get(f"/staff/{ITEM}").text
+
+
+def test_issue_page_counts_public_submissions_without_names(client):
+    rec = db.load_record(ITEM)
+    page = client.get(f"/items/{ITEM}").text
+    assert rec["public_letters"] > 0 and f"received {rec['public_letters']} written submission" in page
+
+
+def test_auto_approval_can_be_switched_off(staff, monkeypatch):
+    monkeypatch.setenv("CIVIFY_AUTO_APPROVE", "0")
+    assert db.auto_approve(db.connect(appmod.DB_PATH), db.load_record(ITEM)) == 0

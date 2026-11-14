@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -193,6 +194,8 @@ def auto_approve(con: sqlite3.Connection, record: dict) -> int:
     """Approve every sentence the triage marked "auto", unless a person already decided
     this exact sentence or it is escalated. Logged like any decision; a person can
     reject or edit it later. Callers publish afterwards with sync_publication."""
+    if os.environ.get("CIVIFY_AUTO_APPROVE", "1") == "0":   # a person approves every sentence; checks still guide them
+        return 0
     iid = record["item_id"]
     reviews = reviews_for(con, iid)
     escalated = {e["claim_index"] for e in open_escalations(con, iid)}
