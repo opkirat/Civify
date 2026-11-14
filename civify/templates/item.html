@@ -4,7 +4,7 @@
 {% block body %}
 <div class="page-head">
 <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Explore issues</a><span aria-hidden="true">/</span><span>{{ rec.item_id }}</span></nav>
-<div class="meta-row"><span class="pill {{ 'proposed' if rec.current_stage == 'staff_recommendation' else 'decided' }}">{{ rec.current_stage|stage_label }}</span><span>Ward {{ rec.ward or '?' }}</span><span>Records retrieved {{ rec.retrieved }}</span></div>
+<div class="meta-row"><span class="pill {{ 'proposed' if rec.current_stage == 'staff_recommendation' else 'decided' }}">{{ rec.current_stage|stage_label }}</span><span>{{ rec|ward_label }}</span><span>Records retrieved {{ rec.retrieved }}</span></div>
 <h1>{{ rec.title|item_name }}</h1><details class="official-title"><summary>Official item title</summary><p>{{ rec.title|item_topic }}</p></details>
 <div class="actions"><a class="button primary" href="{{ rec.official_url }}">Official item page ↗</a><a class="button" href="/items/{{ rec.item_id }}/print">Printable notice with QR code</a></div>
 </div>

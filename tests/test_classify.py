@@ -89,3 +89,12 @@ def test_enacted_bylaw_records_vote_date_and_mayoral_approval():
     assert c.fields["bylaw_number"] == "1234-2026"
     assert c.fields["council_vote_date"] == "July 30, 2026"
     assert c.fields["mayoral_decision"] == "13-2026" and c.fields["mayoral_decision_date"] == "July 30, 2026"
+
+
+def test_appendix_is_recognised_not_unknown():
+    from civify.extract import Document, Page
+    d = Document("backgroundfile-1.pdf", "x" * 64, [Page(1, "~TORONTO\nAppendix D\nLauren Birch\nDirector")])
+    c = classify(d)
+    assert c.doc_type is DocType.APPENDIX and c.fields["label"] == "Appendix D"
+    d = Document("backgroundfile-2.pdf", "x" * 64, [Page(1, "APPENDIX A\nSummary of New Chapter 441 Fees")])
+    assert classify(d).doc_type is DocType.APPENDIX

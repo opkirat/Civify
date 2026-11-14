@@ -243,3 +243,11 @@ def test_held_sentence_offers_suggested_wording(staff):
     held = [c for c in rec["claims"] if c.get("confirm") and c["confirm"]["verdict"] == "hold" and c["confirm"]["suggestion"]]
     if held:
         assert "Approve suggested wording" in staff.get(f"/staff/{ITEM}").text
+
+
+def test_citywide_item_shows_for_every_ward(client, monkeypatch):
+    rec = {**db.load_record(ITEM), "item_id": "2026.CC38.1", "ward": None, "citywide": True, "location": None}
+    monkeypatch.setattr(appmod.db, "list_items", lambda: [rec])
+    for ward in ("1", "25"):
+        page = client.get("/near", params={"ward": ward}).text
+        assert "City-wide" in page and "/items/2026.CC38.1" in page

@@ -185,7 +185,7 @@ def step_record(j, folder):
     n = db.auto_approve(con, rec)
     version = db.sync_publication(con, rec, db.AUTO_REVIEWER)
     live = f" · version {version} live for residents" if version else ""
-    return f"{rec['item_id']} · stage: {rec['current_stage'].replace('_', ' ')} · ward {rec.get('ward') or '?'} · {n} sentence(s) approved automatically{live}", \
+    return f"{rec['item_id']} · stage: {rec['current_stage'].replace('_', ' ')} · {'city-wide' if rec.get('citywide') else 'ward ' + str(rec.get('ward') or '?')} · {n} sentence(s) approved automatically{live}", \
         {"title": rec["title"], "stage": rec["current_stage"], "auto_approved": n, "version": version}, "done"
 
 

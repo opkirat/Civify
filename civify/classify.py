@@ -29,6 +29,7 @@ class DocType(str, Enum):
     ITEM_PAGE = "item_page"                # saved TMMIS page: tracking status, decisions, votes
     DECLARATION = "declaration_of_interest"
     PUBLIC_LETTER = "public_letter"        # correspondence from the public; never summarised
+    APPENDIX = "appendix"                  # "Appendix A ..." attached to a staff report; kept, not drafted from
     UNKNOWN = "unknown"
 
 
@@ -95,7 +96,12 @@ def classify(doc: Document) -> Classification:
     if "City Clerk's Office" in flat and len(flat) < 300:
         return Classification(DocType.DECLARATION, "City Clerk's Office", flat)
 
-    # 7. Public correspondence. Letters have no fixed layout, so the only signal we
+    # 7. Appendix to a report: its heading says so in the first few lines.
+    a = re.search(r"\bAppendix\s+[A-Z0-9]{1,3}\b", " ".join(lines[:4]), re.I)
+    if a:
+        return Classification(DocType.APPENDIX, "City staff (appendix to a report)", a.group(0), {"label": a.group(0)})
+
+    # 8. Public correspondence. Letters have no fixed layout, so the only signal we
     #    trust is the City's own file naming ("communicationfile-..."). Anything else
     #    we don't recognise is returned as UNKNOWN for staff, never guessed.
     if doc.filename.startswith("communicationfile-"):

@@ -53,6 +53,7 @@ STAGE_LABELS = {"staff_recommendation": "Proposed", "committee_decision": "Commi
                 "council_decision": "Council decided", "enacted": "By-laws enacted"}
 templates.env.filters["stage_label"] = lambda value: STAGE_LABELS.get(value, value.replace("_", " "))
 templates.env.filters["item_name"] = lambda title: (title or "Untitled item").split(" - ", 2)[1] if " - " in (title or "") else title
+templates.env.filters["ward_label"] = lambda rec: "City-wide" if rec.get("citywide") else f"Ward {rec.get('ward') or '?'}"
 templates.env.filters["item_topic"] = lambda title: (title or "").split(" - ", 2)[2] if (title or "").count(" - ") >= 2 else ""
 
 
@@ -496,7 +497,7 @@ def near(request: Request, address: str = "", ward: str = ""):
             valid_location = location and str(location.get("ward")) == str(rec.get("ward"))
             km = geo.distance_km(me, location) if valid_location and "lat" in me else None
             results.append({"rec": rec, "same_ward": rec.get("ward") == me["ward"], "km": km,
-                            "relevant": rec.get("ward") == me["ward"] or (km is not None and km <= 2)})
+                            "relevant": rec.get("ward") == me["ward"] or bool(rec.get("citywide")) or (km is not None and km <= 2)})
         results.sort(key=lambda r: (not r["relevant"], r["km"] if r["km"] is not None else 1e9))
         for n in notices.load():
             # Notice feed coordinates have known street/ward errors. Match by the

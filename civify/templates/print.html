@@ -24,7 +24,7 @@
 </style>
 <div class="print-actions"><button type="button" onclick="window.print()">Print or save as PDF</button><a href="/items/{{ rec.item_id }}">Back to item</a><span class="muted">Long explanations may span more than one page.</span></div>
 <h1>{{ rec.title }}</h1>
-<p><strong>Ward {{ rec.ward or 'not recorded' }}</strong> · {{ rec.item_id }} · Records retrieved {{ rec.retrieved }}</p>
+<p><strong>{{ rec|ward_label }}</strong> · {{ rec.item_id }} · Records retrieved {{ rec.retrieved }}</p>
 <p><strong>Stage in the saved record:</strong> {{ rec.current_stage.replace('_', ' ') }}.</p>
 <h2>Can I still have a say?</h2>
 {% include 'participation.html' %}

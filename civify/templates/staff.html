@@ -37,7 +37,7 @@
 <details class="fold worker-record"><summary>Record details and history</summary><p>{{ rec.title|item_topic }}</p><p><a href="{{ rec.official_url }}">Official item page ↗</a></p>{{ pipeline_strip(pipeline.steps) }}
 <details class="fold">
   <summary>Who residents are matched to</summary>
-  <p>Residents see this item when they search <strong>Ward {{ rec.ward or 'not recorded' }}</strong>{% if rec.location %}, and by distance from <strong>{{ rec.location.address }}</strong> (located with the City's address service){% endif %}. Matching uses only ward and distance; no resident data is stored.</p>
+  <p>Residents see this item when they search {% if rec.citywide %}<strong>any ward or address</strong> (it is city-wide){% else %}<strong>Ward {{ rec.ward or 'not recorded' }}</strong>{% endif %}{% if rec.location %}, and by distance from <strong>{{ rec.location.address }}</strong> (located with the City's address service){% endif %}. Matching uses only ward and distance; no resident data is stored.</p>
 </details>
 
 <details class="fold">

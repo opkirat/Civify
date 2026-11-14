@@ -221,12 +221,16 @@ def build(folder: Path) -> dict:
         "item_id": item["item_id"],
         "title": title_text,
         "ward": ward_number(staff.get("ward")),
+        # "Wards: All" on the item page: a city-wide item, shown to every ward.
+        "citywide": bool(re.search(r"^Wards?:\s*All\b", text, re.M)),
         "location": location,
         "retrieved": item["retrieved"],
         "official_url": f"https://secure.toronto.ca/council/agenda-item.do?item={item['item_id']}",
         "current_stage": ("enacted" if enacted else "council_decision" if council.get("date")
                           else "committee_decision" if stages[1]["status"] not in (None, "pending") else "staff_recommendation"),
-        "stages": stages,
+        # An item that went straight to Council has no committee stage; leave it out
+        # rather than show an empty step.
+        "stages": [s for s in stages if s["stage"] != "committee_decision" or s.get("body") or s.get("date") or s.get("status")],
         "participation": participation(by_type.get(DocType.PUBLIC_NOTICE.value), council, text),
         "public_letters": sum(d["doc_type"] == DocType.PUBLIC_LETTER.value for d in item["documents"]),
         "claims": with_triage(json.loads(drafts_path.read_text()) if drafts_path.exists() else [], folder / "triage.json"),
