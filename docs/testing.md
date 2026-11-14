@@ -48,3 +48,11 @@ Record where they hesitate. Separately, test at a narrow browser width and use T
 - Chrome generated a one-page PDF for the pending PB1.6 item with no approved sentences. This does not establish one-page output for longer explanations.
 
 A complete accessibility audit, physical QR scanning and an unassisted teammate test are still pending.
+
+## Address search update
+
+The resident search again accepts addresses. Live City API checks passed for 100 Queen St W, 1337 Queen Street West, 19 Don Ridge Drive and 191 College Street; lowercase, a Toronto suffix and `Unit 5, 100 Queen St W` also matched. `100 Queen St` requires choosing East or West. Service failures are distinguished from missing or incomplete addresses.
+
+Near me shows issues within 2 km plus other issues in the matched ward. Conflicting item/coordinate wards are excluded from distance calculations. The saved Queen Street West location was corrected from the erroneous Queen Street East match using the City API. Public notices use their stated wards, because their supplied coordinates have known errors. Coverage remains limited to the saved pilot records.
+
+The home heading and search are centered. Desktop Chrome screenshot inspected; the running app returned matched/ambiguous results for live search requests. Search URLs can appear in browser history and server access logs even though the application does not save resident addresses in its database.
