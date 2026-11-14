@@ -92,6 +92,33 @@ CREATE TABLE IF NOT EXISTS sessions (
     username   TEXT NOT NULL REFERENCES users(username),
     created_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS sms_subscriptions (
+    phone TEXT PRIMARY KEY,
+    ward TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('pending', 'active', 'stopped')),
+    code_hash TEXT,
+    code_expires TEXT,
+    code_attempts INTEGER NOT NULL DEFAULT 0,
+    requested_at TEXT NOT NULL,
+    confirmed_at TEXT,
+    last_alert_at TEXT
+);
+CREATE TABLE IF NOT EXISTS sms_campaigns (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_id TEXT NOT NULL UNIQUE,
+    publication_version INTEGER NOT NULL,
+    body TEXT NOT NULL,
+    created_by TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS sms_deliveries (
+    campaign_id INTEGER NOT NULL REFERENCES sms_campaigns(id),
+    phone TEXT NOT NULL REFERENCES sms_subscriptions(phone),
+    status TEXT NOT NULL,
+    provider_id TEXT,
+    at TEXT NOT NULL,
+    PRIMARY KEY (campaign_id, phone)
+);
 """
 
 
@@ -104,6 +131,8 @@ def connect(path: str = "civify.db") -> sqlite3.Connection:
         con.execute("ALTER TABLE reviews ADD COLUMN claim_hash TEXT")
     if "note" not in {r["name"] for r in con.execute("PRAGMA table_info(audit)")}:
         con.execute("ALTER TABLE audit ADD COLUMN note TEXT")
+    if "code_attempts" not in {r["name"] for r in con.execute("PRAGMA table_info(sms_subscriptions)")}:
+        con.execute("ALTER TABLE sms_subscriptions ADD COLUMN code_attempts INTEGER NOT NULL DEFAULT 0")
     return con
 
 

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Text alerts · staff{% endblock %}
+{% block body %}
+<section class="sms-page sms-staff">
+  <p class="eyebrow">Staff workspace</p><h1>Text alerts</h1>
+  <p>Review the copy before sending. Each item can be sent once; only confirmed subscribers in its ward receive it.</p>
+  <p class="sms-note">Mode: <strong>{{ mode }}</strong>{% if mode == 'demo' %} · delivery is simulated{% endif %}</p>
+  {% if message %}<p class="sms-success" role="status">{{ message }}</p>{% endif %}
+  {% for entry in items %}<article class="panel sms-item">
+    <h2>{{ entry.rec.title|item_name }}</h2><p>Ward {{ entry.rec.ward }} · Publication version {{ entry.publication.version }} · {{ entry.count }} confirmed subscribers</p>
+    <blockquote>{{ entry.body }}</blockquote>
+    {% if entry.already %}<p class="muted">This item has already been sent.</p>{% else %}<form method="post" action="/staff/sms/send">
+      <input type="hidden" name="item_id" value="{{ entry.rec.item_id }}">
+      <label class="sms-consent"><input type="checkbox" name="reviewed" value="yes" required><span>I checked the item, official link, and text above.</span></label>
+      <button type="submit">{{ 'Simulate alert' if mode == 'demo' else 'Send alert' }}</button>
+    </form>{% endif %}
+  </article>{% else %}<p>No published items are ready for alerts.</p>{% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Text alerts{% endblock %}
+{% block body %}
+<section class="sms-page">
+  <p class="eyebrow">Toronto pilot</p>
+  <h1>Local updates by text</h1>
+  <p class="lead">Get a short text when a reviewed issue in your ward is published. No app or address needed.</p>
+  {% if mode == 'demo' %}<p class="sms-note">Demo mode: no texts are sent. The confirmation code appears here for testing.</p>{% endif %}
+  {% if error %}<p class="sms-error" role="alert">{{ error }}</p>{% endif %}
+  {% if success %}<div class="sms-success" role="status"><h2>You're signed up</h2><p>We'll text you about new issues in your ward. Reply STOP to any alert to leave.</p></div>
+  {% elif pending %}<form class="sms-form" method="post" action="/alerts/confirm">
+    <h2>Confirm your number</h2><p>Enter the six digit code we sent. It expires in 10 minutes.</p>
+    {% if demo_code %}<p class="sms-note">Demo code: <strong>{{ demo_code }}</strong></p>{% endif %}
+    <input type="hidden" name="phone" value="{{ pending }}">
+    <label for="sms-code">Code</label><input id="sms-code" name="code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required>
+    <button type="submit">Confirm signup</button>
+  </form>{% endif %}
+  {% if not success %}<form class="sms-form" method="post" action="/alerts">
+    <h2>Sign up</h2>
+    <label for="sms-phone">Mobile number</label><input id="sms-phone" name="phone" type="tel" autocomplete="tel" placeholder="416 555 0123" required>
+    <label for="sms-ward">Your ward</label><select id="sms-ward" name="ward" required><option value="">Choose a ward</option>{% for number, name in wards.items() %}<option value="{{ number }}">Ward {{ number|int }} · {{ name }}</option>{% endfor %}</select>
+    <label class="sms-consent"><input type="checkbox" name="consent" value="yes" required><span>I agree to receive occasional Civify texts about newly published local issues in my chosen ward. Message and data rates may apply. Reply STOP to unsubscribe.</span></label>
+    <button type="submit">Send confirmation code</button>
+  </form>{% endif %}
+  <p class="muted sms-foot">Civify is an independent prototype. Alerts link to City records; they do not promise an open comment period. You can also browse issues here or ask someone to print an issue page for you.</p>
+</section>
+{% endblock %}

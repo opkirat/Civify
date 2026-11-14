@@ -40,7 +40,7 @@ from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Resp
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from civify import agenda, auth, db, geo, intake, notices, pipeline, source, workflow
+from civify import agenda, auth, db, geo, intake, notices, pipeline, sms, source, workflow
 from civify.extract import extract
 from civify.verify import Verifier
 
@@ -76,6 +76,52 @@ def record_or_404(item_id: str) -> dict:
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
     return templates.TemplateResponse(request, "index.html", {"items": db.list_items(), "wards": geo.WARDS})
+
+
+@app.get("/alerts", response_class=HTMLResponse)
+def alerts(request: Request):
+    return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode()})
+
+
+@app.post("/alerts")
+def alerts_begin(request: Request, phone: str = Form(...), ward: str = Form(...), consent: str = Form("")):
+    if consent != "yes":
+        return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(), "error": "Please choose the consent box to sign up."}, status_code=400)
+    try:
+        normalized, code = sms.begin(db.connect(DB_PATH), phone, ward)
+    except ValueError as exc:
+        return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(), "error": str(exc)}, status_code=400)
+    except Exception:
+        return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(), "error": "We could not send a code right now. Please try later."}, status_code=503)
+    return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(), "pending": normalized, "demo_code": code})
+
+
+@app.post("/alerts/confirm")
+def alerts_confirm(request: Request, phone: str = Form(...), code: str = Form(...)):
+    try:
+        confirmed = sms.confirm(db.connect(DB_PATH), phone, code)
+    except ValueError:
+        confirmed = False
+    return templates.TemplateResponse(request, "alerts.html", {"wards": geo.WARDS, "mode": sms.mode(),
+                                      "success": confirmed, "pending": None if confirmed else phone,
+                                      "error": None if confirmed else "That code is wrong or expired. Request a new code after two minutes."},
+                                      status_code=200 if confirmed else 400)
+
+
+@app.post("/sms/twilio/inbound")
+async def twilio_inbound(request: Request):
+    form = await request.form()
+    params = {str(k): str(v) for k, v in form.items()}
+    # The public URL must match Twilio's configured URL exactly behind a proxy.
+    url = __import__("os").getenv("SMS_WEBHOOK_URL") or str(request.url)
+    if sms.mode() != "twilio" or not sms.valid_twilio_signature(url, params, request.headers.get("X-Twilio-Signature", "")):
+        raise HTTPException(403, "invalid webhook signature")
+    if params.get("Body", "").strip().upper() in {"STOP", "STOPALL", "UNSUBSCRIBE", "CANCEL", "END", "QUIT"} or params.get("OptOutType") == "STOP":
+        try:
+            sms.stop(db.connect(DB_PATH), params.get("From", ""))
+        except ValueError:
+            pass
+    return Response("<Response/>", media_type="application/xml")
 
 
 # --- sign-in -----------------------------------------------------------------
@@ -305,6 +351,34 @@ def staff(request: Request, item_id: str):
     return templates.TemplateResponse(request, "staff.html", {"rec": rec, "groups": groups, "pipeline": pipeline_status, "user": user,
                                                               "publication": pub, "changes": changes, "history": history,
                                                               "error": request.query_params.get("error"), "notice": request.query_params.get("notice")})
+
+
+@app.get("/staff/sms/overview", response_class=HTMLResponse)
+def staff_sms(request: Request):
+    staff_user(request)
+    con = db.connect(DB_PATH)
+    items = []
+    for rec in db.list_items():
+        pub = db.latest_publication(con, rec["item_id"])
+        if pub and pub["claims"] and rec.get("ward") and rec.get("official_url", "").startswith("https://"):
+            count = con.execute("SELECT count(*) FROM sms_subscriptions WHERE status='active' AND ward=?", (str(rec["ward"]).zfill(2),)).fetchone()[0]
+            already = con.execute("SELECT 1 FROM sms_campaigns WHERE item_id=?", (rec["item_id"],)).fetchone() is not None
+            items.append({"rec": rec, "publication": pub, "count": count, "already": already, "body": sms.alert_body(rec)})
+    return templates.TemplateResponse(request, "staff_sms.html", {"items": items, "mode": sms.mode(), "message": request.query_params.get("message")})
+
+
+@app.post("/staff/sms/send")
+def staff_sms_send(request: Request, item_id: str = Form(...), reviewed: str = Form("")):
+    user = staff_user(request)
+    if reviewed != "yes":
+        raise HTTPException(400, "Review the SMS copy and confirm before sending.")
+    rec = record_or_404(item_id)
+    con = db.connect(DB_PATH)
+    try:
+        result = sms.send_item(con, rec, db.latest_publication(con, item_id), user["name"])
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    return RedirectResponse(f"/staff/sms/overview?message={quote(str(result['sent']) + ' alerts processed in ' + result['mode'] + ' mode')}", status_code=303)
 
 
 @app.get("/staff/{item_id}/source/{filename}")

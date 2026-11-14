@@ -17,6 +17,7 @@
 <a href="/" {% if request.url.path == '/' or request.url.path.startswith('/items/') %}aria-current="page"{% endif %}>Explore issues</a>
 <a href="/near" {% if request.url.path == '/near' or request.url.path.startswith('/notices/') %}aria-current="page"{% endif %}>Near me</a>
 <a href="/meetings" {% if request.url.path == '/meetings' %}aria-current="page"{% endif %}>Meetings</a>
+<a href="/alerts" {% if request.url.path == '/alerts' %}aria-current="page"{% endif %}>Text alerts</a>
 <a class="staff-nav" href="/staff" aria-label="Staff workspace" {% if request.url.path.startswith('/staff') %}aria-current="page"{% endif %}><span class="nav-long">Staff workspace</span><span class="nav-short">Staff</span></a>
 </nav>{% endblock %}
 </div>
