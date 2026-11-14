@@ -6,6 +6,8 @@ Built for the "Making municipal decisions easier to understand" challenge, on re
 
 ## Try it
 
+**Demo video (3 min): https://www.youtube.com/watch?v=QD35MKg3tvI**
+
 **Live demo: https://humidity-sydney-landing-giants.trycloudflare.com**
 
 The demo runs from the team's laptop through a Cloudflare tunnel during judging. If the link doesn't load, run it locally in two minutes (see [Run it](#run-it)).
