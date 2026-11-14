@@ -1,0 +1,38 @@
+{
+ "status": "ok",
+ "based_on": [
+  "Staff recommend that City Council state its intention to designate the property at 70 Gerrard Street East under Part IV, Section 29 of the Ontario Heritage Act.",
+  "If there are no objections to the designation, staff recommend that City Council authorize the City Solicitor to introduce a bill to designate the property.",
+  "The property at 70 Gerrard Street East is on the north side of Gerrard Street East, at the northeast corner of Church Street, in the Downtown Yonge East neighbourhood.",
+  "The building was constructed around 1845 in the Georgian style and was substantially altered in 1886 in the Queen Anne Revival style.",
+  "Staff and a heritage consultant determined that the property has cultural heritage value and meets six of the nine provincial criteria for municipal heritage designation.",
+  "A property may be designated if it meets two or more of the nine provincial criteria.",
+  "Heritage designation allows City Council to review proposed alterations or demolitions to the property and enforce heritage property standards and maintenance.",
+  "There are no financial impacts to the City resulting from the recommendations in this report."
+ ],
+ "sentences": [
+  {
+   "text": "Staff recommend that City Council state its intention to designate the property at 70 Gerrard Street East, in the Downtown Yonge East neighbourhood, under the Ontario Heritage Act.",
+   "uses": [
+    "Staff recommend that City Council state its intention to designate the property at 70 Gerrard Street East under Part IV, Section 29 of the Ontario Heritage Act.",
+    "The property at 70 Gerrard Street East is on the north side of Gerrard Street East, at the northeast corner of Church Street, in the Downtown Yonge East neighbourhood."
+   ]
+  },
+  {
+   "text": "Heritage designation allows City Council to review proposed alterations or demolitions and enforce heritage maintenance standards.",
+   "uses": [
+    "Heritage designation allows City Council to review proposed alterations or demolitions to the property and enforce heritage property standards and maintenance."
+   ]
+  },
+  {
+   "text": "If there are no objections, staff recommend authorizing the City Solicitor to introduce the designation bill.",
+   "uses": [
+    "If there are no objections to the designation, staff recommend that City Council authorize the City Solicitor to introduce a bill to designate the property."
+   ]
+  }
+ ],
+ "issues": [],
+ "generated_at": "2026-11-14T06:06:40+00:00",
+ "model": "gemini-4-argon",
+ "attempts": 2
+}

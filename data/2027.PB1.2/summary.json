@@ -1,0 +1,42 @@
+{
+ "status": "held",
+ "based_on": [
+  "City staff recommend that City Council state its intention to designate the property at 106 Beverley Street under Part IV, Section 29 of the Ontario Heritage Act.",
+  "The property at 106 Beverley Street is on the west side of Beverley Street, south of Dundas Street West, in the Grange neighbourhood of downtown Toronto.",
+  "The property has a three-storey detached house that was built in 1855 for lawyer James Esten.",
+  "Staff and a heritage consultant agree that 106 Beverley Street has cultural heritage value and meets five of the provincial criteria for designation.",
+  "A property may be designated if it meets two or more of the nine provincial criteria.",
+  "Heritage designation allows City Council to review proposed changes or demolitions and enforce maintenance standards.",
+  "If there are no objections to the designation, staff recommend that City Council authorize the City Solicitor to introduce a bill to designate the property.",
+  "There are no financial impacts to the City from these recommendations."
+ ],
+ "sentences": [
+  {
+   "text": "City staff recommend that City Council state its intention to give heritage designation to 106 Beverley Street in the Grange neighbourhood.",
+   "uses": [
+    "City staff recommend that City Council state its intention to designate the property at 106 Beverley Street under Part IV, Section 29 of the Ontario Heritage Act.",
+    "The property at 106 Beverley Street is on the west side of Beverley Street, south of Dundas Street West, in the Grange neighbourhood of downtown Toronto."
+   ]
+  },
+  {
+   "text": "The property has a three-storey detached house built in 1855 that meets five of the nine provincial criteria for designation.",
+   "uses": [
+    "The property has a three-storey detached house that was built in 1855 for lawyer James Esten.",
+    "Staff and a heritage consultant agree that 106 Beverley Street has cultural heritage value and meets five of the provincial criteria for designation.",
+    "A property may be designated if it meets two or more of the nine provincial criteria."
+   ]
+  },
+  {
+   "text": "If there are no objections, staff recommend that City Council authorize the City Solicitor to introduce a bill to designate the property.",
+   "uses": [
+    "If there are no objections to the designation, staff recommend that City Council authorize the City Solicitor to introduce a bill to designate the property."
+   ]
+  }
+ ],
+ "issues": [
+  "summary sentence 2: guardrail held (States as a settled fact that the property meets five criteria, whereas the source attributes this to staff and a heritage consultant's agreement.)"
+ ],
+ "generated_at": "2026-11-14T06:05:14+00:00",
+ "model": "gemini-4-argon",
+ "attempts": 2
+}

@@ -1,0 +1,38 @@
+{
+ "status": "ok",
+ "based_on": [
+  "Staff recommend that City Council state its intention to designate the property at 66 Gerrard Street East under Part IV, Section 29 of the Ontario Heritage Act.",
+  "This property includes entrance addresses at 366, 368, and 370 Church Street and 64 Gerrard Street East.",
+  "The property is located at the northwest corner of Gerrard Street East and Church Street in the Downtown Yonge East neighbourhood.",
+  "If there are no objections to the designation, staff recommend that City Council let the City Solicitor introduce a bill to designate the property.",
+  "Designation lets City Council review proposed changes or demolitions and enforce heritage maintenance standards.",
+  "The property has historical value because of its direct links to a person and businesses significant to Toronto's LGBTQ+ community.",
+  "There are no financial impacts to the City from the recommendations in this report."
+ ],
+ "sentences": [
+  {
+   "text": "Staff recommend that City Council state its intention to designate 66 Gerrard Street East, in the Downtown Yonge East neighbourhood, under the Ontario Heritage Act.",
+   "uses": [
+    "Staff recommend that City Council state its intention to designate the property at 66 Gerrard Street East under Part IV, Section 29 of the Ontario Heritage Act.",
+    "The property is located at the northwest corner of Gerrard Street East and Church Street in the Downtown Yonge East neighbourhood."
+   ]
+  },
+  {
+   "text": "The property is linked to a person and businesses important to Toronto's LGBTQ+ community, and designation lets City Council review changes or demolitions.",
+   "uses": [
+    "Designation lets City Council review proposed changes or demolitions and enforce heritage maintenance standards.",
+    "The property has historical value because of its direct links to a person and businesses significant to Toronto's LGBTQ+ community."
+   ]
+  },
+  {
+   "text": "If there are no objections, staff recommend letting the City Solicitor introduce a bill to designate the property.",
+   "uses": [
+    "If there are no objections to the designation, staff recommend that City Council let the City Solicitor introduce a bill to designate the property."
+   ]
+  }
+ ],
+ "issues": [],
+ "generated_at": "2026-11-14T06:05:48+00:00",
+ "model": "gemini-4-argon",
+ "attempts": 1
+}

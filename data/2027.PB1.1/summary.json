@@ -1,0 +1,41 @@
+{
+ "status": "ok",
+ "based_on": [
+  "City staff recommend that City Council state its intention to designate the property at 8 Arnold Avenue under Part IV, Section 29 of the Ontario Heritage Act.",
+  "The property at 8 Arnold Avenue is located south of Lambton Avenue in the Rockcliffe-Smythe neighbourhood.",
+  "The house is a red-brick Ontario Farmhouse-style building from the 1870s or 1880s known as the George Marshall Residence.",
+  "The building is the earliest known house in the Mount Dennis community.",
+  "On August 19, 2026, Toronto Building received an application to demolish the house at 8 Arnold Avenue.",
+  "The property owner must give at least 60 days' written notice to Heritage Planning of their intention to demolish a structure on a listed property.",
+  "At the time of the report, the property owner had not yet submitted this notice to Heritage Planning.",
+  "Staff found that the property meets three of the nine provincial criteria required for municipal heritage designation.",
+  "A property may be designated if it meets two or more of the nine criteria.",
+  "Designation allows City Council to review proposed changes or demolitions and enforce heritage maintenance standards.",
+  "If there are no objections to the designation, staff recommend that City Council allow the City Solicitor to introduce a bill to designate the property."
+ ],
+ "sentences": [
+  {
+   "text": "City staff recommend that City Council state its intention to designate the property at 8 Arnold Avenue in the Rockcliffe-Smythe neighbourhood under the Ontario Heritage Act.",
+   "uses": [
+    "City staff recommend that City Council state its intention to designate the property at 8 Arnold Avenue under Part IV, Section 29 of the Ontario Heritage Act.",
+    "The property at 8 Arnold Avenue is located south of Lambton Avenue in the Rockcliffe-Smythe neighbourhood."
+   ]
+  },
+  {
+   "text": "This follows an application to demolish the 1870s or 1880s house on the property.",
+   "uses": [
+    "The house is a red-brick Ontario Farmhouse-style building from the 1870s or 1880s known as the George Marshall Residence.",
+    "On August 19, 2026, Toronto Building received an application to demolish the house at 8 Arnold Avenue."
+   ]
+  },
+  {
+   "text": "If there are no objections, staff recommend allowing the City Solicitor to introduce a bill to designate the property.",
+   "uses": [
+    "If there are no objections to the designation, staff recommend that City Council allow the City Solicitor to introduce a bill to designate the property."
+   ]
+  }
+ ],
+ "issues": [],
+ "generated_at": "2026-11-14T06:02:47+00:00",
+ "model": "gemini-4-argon"
+}

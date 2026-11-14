@@ -1,0 +1,41 @@
+{
+ "status": "ok",
+ "based_on": [
+  "The property at 1337 Queen Street West is located on the south side of Queen Street West between Dunn Avenue and Cowan Avenue.",
+  "This property is known as the West Block of the Parkdale Hub project and currently has a one-storey building on it.",
+  "The proposal is to tear down the existing building and build a 16-storey mixed-use tower with a 4-storey podium.",
+  "The new building will stay owned by the City and will include purpose-built affordable housing.",
+  "The demolition and new building are proposed to create new affordable rental housing, better community facilities, and updated public spaces.",
+  "City Council previously approved a heritage permit for this project on June 24 and 25, 2026.",
+  "The updated proposal raises the height of the 4-storey podium by 1.2m to allow for taller ceilings in the ground floor community space.",
+  "A separate minor variance application is also needed for the proposed changes."
+ ],
+ "sentences": [
+  {
+   "text": "A proposal at 1337 Queen Street West would tear down a one-storey building to build a City-owned 16-storey mixed-use tower with a 4-storey podium.",
+   "uses": [
+    "The property at 1337 Queen Street West is located on the south side of Queen Street West between Dunn Avenue and Cowan Avenue.",
+    "This property is known as the West Block of the Parkdale Hub project and currently has a one-storey building on it.",
+    "The proposal is to tear down the existing building and build a 16-storey mixed-use tower with a 4-storey podium.",
+    "The new building will stay owned by the City and will include purpose-built affordable housing."
+   ]
+  },
+  {
+   "text": "The project is proposed to create new affordable rental housing, better community facilities, and updated public spaces.",
+   "uses": [
+    "The demolition and new building are proposed to create new affordable rental housing, better community facilities, and updated public spaces."
+   ]
+  },
+  {
+   "text": "An updated proposal raises the podium height by 1.2m, which needs a separate minor variance application.",
+   "uses": [
+    "The updated proposal raises the height of the 4-storey podium by 1.2m to allow for taller ceilings in the ground floor community space.",
+    "A separate minor variance application is also needed for the proposed changes."
+   ]
+  }
+ ],
+ "issues": [],
+ "generated_at": "2026-11-14T06:07:39+00:00",
+ "model": "gemini-4-argon",
+ "attempts": 2
+}

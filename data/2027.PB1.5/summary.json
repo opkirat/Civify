@@ -1,0 +1,38 @@
+{
+ "status": "ok",
+ "based_on": [
+  "City staff recommend that City Council state its intention to designate the property at 19 Don Ridge Drive under the Ontario Heritage Act.",
+  "If there are no objections to the designation, staff recommend that City Council let the City Solicitor introduce the designating bill.",
+  "The property at 19 Don Ridge Drive is known as St. John's York Mills Anglican Church and is on the east side of Yonge Street, north of York Mills Road, in North York.",
+  "This report focuses on the original 1843–44 church building, and not on later additions, other buildings, or the burial grounds.",
+  "A property may be designated if it meets two or more of the nine criteria.",
+  "The property has historical value for its direct links to the founding of the Anglican Church in Upper Canada and St. John’s York Mills parish.",
+  "Heritage designation allows City Council to review proposed changes or demolitions on the property and enforce maintenance standards.",
+  "There are no financial impacts for the City from the recommendations in this report."
+ ],
+ "sentences": [
+  {
+   "text": "City staff recommend that City Council state its intention to designate 19 Don Ridge Drive, known as St. John's York Mills Anglican Church in North York, under the Ontario Heritage Act.",
+   "uses": [
+    "City staff recommend that City Council state its intention to designate the property at 19 Don Ridge Drive under the Ontario Heritage Act.",
+    "The property at 19 Don Ridge Drive is known as St. John's York Mills Anglican Church and is on the east side of Yonge Street, north of York Mills Road, in North York."
+   ]
+  },
+  {
+   "text": "The report focuses on the original 1843–44 church building, and heritage designation allows Council to review proposed changes or demolitions.",
+   "uses": [
+    "This report focuses on the original 1843–44 church building, and not on later additions, other buildings, or the burial grounds.",
+    "Heritage designation allows City Council to review proposed changes or demolitions on the property and enforce maintenance standards."
+   ]
+  },
+  {
+   "text": "If there are no objections, staff recommend letting the City Solicitor introduce the designating bill.",
+   "uses": [
+    "If there are no objections to the designation, staff recommend that City Council let the City Solicitor introduce the designating bill."
+   ]
+  }
+ ],
+ "issues": [],
+ "generated_at": "2026-11-14T06:03:37+00:00",
+ "model": "gemini-4-argon"
+}

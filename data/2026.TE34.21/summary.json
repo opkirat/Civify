@@ -1,0 +1,47 @@
+{
+ "status": "ok",
+ "based_on": [
+  "The site is at the southwest corner of College Street and Henry Street, covering about 1,617 square metres.",
+  "The application proposes to increase the approved building height from 31 storeys to 45 storeys.",
+  "The proposal increases the total number of residential units from 490 to 684, which includes 545 affordable rental units.",
+  "The proposal adds 137 affordable two-bedroom rental units, which would have affordable rents for 40 years.",
+  "The 137 additional affordable units may qualify for financial incentives from the City, such as waived fees and charges.",
+  "The development will continue to provide 12 replacement rental dwelling rooms, and eligible tenants would keep the right to return at similar rents.",
+  "The designated heritage properties on the site are to be kept and built into the new development.",
+  "The proposal includes 6 vehicle parking spaces at ground level.",
+  "A total of 695 bicycle parking spaces are proposed for the building.",
+  "An Official Plan Amendment is needed to change Site and Area Specific Policy 533 to allow the new building height.",
+  "A Zoning By-law Amendment is needed to change Exception CR 1010 to allow the increased density, height, massing, and other standards.",
+  "Staff recommend that City Council amend the Official Plan for 191-199 College Street and 74-76 Henry Street.",
+  "Staff recommend that City Council amend Zoning By-law 569-2013 for the site.",
+  "Staff recommend that City Council allow the City Solicitor to update or replace existing agreements for dwelling room replacement and affordable housing.",
+  "Staff recommend putting a holding provision on the Zoning By-law until the Functional Servicing and Stormwater Management Report is revised, reviewed, and accepted.",
+  "The owner must pay cash-in-lieu for parkland dedication before the first above-ground building permit is issued."
+ ],
+ "sentences": [
+  {
+   "text": "An application for the southwest corner of College Street and Henry Street proposes increasing the approved building height from 31 storeys to 45 storeys.",
+   "uses": [
+    "The site is at the southwest corner of College Street and Henry Street, covering about 1,617 square metres.",
+    "The application proposes to increase the approved building height from 31 storeys to 45 storeys."
+   ]
+  },
+  {
+   "text": "This increases the total residential units from 490 to 684, including 545 affordable rental units.",
+   "uses": [
+    "The proposal increases the total number of residential units from 490 to 684, which includes 545 affordable rental units."
+   ]
+  },
+  {
+   "text": "Staff recommend that City Council amend the Official Plan and Zoning By-law, with a holding provision until a servicing report is accepted.",
+   "uses": [
+    "Staff recommend that City Council amend the Official Plan for 191-199 College Street and 74-76 Henry Street.",
+    "Staff recommend that City Council amend Zoning By-law 569-2013 for the site.",
+    "Staff recommend putting a holding provision on the Zoning By-law until the Functional Servicing and Stormwater Management Report is revised, reviewed, and accepted."
+   ]
+  }
+ ],
+ "issues": [],
+ "generated_at": "2026-11-14T06:02:36+00:00",
+ "model": "gemini-4-argon"
+}
