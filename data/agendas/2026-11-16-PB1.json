@@ -1,0 +1,69 @@
+{
+ "body": "Toronto Preservation Board",
+ "meeting_date": "2026-11-16",
+ "meeting_time": "9:30 AM",
+ "meeting_status": "Scheduled (Preview)",
+ "location": "Committee Room 1, City Hall/Video Conference",
+ "agenda_status": "Agenda Published",
+ "items": [
+  {
+   "id": "2026.PB1.1",
+   "title": "8 Arnold Avenue - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
+   "ward": "5",
+   "notes": [],
+   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.1"
+  },
+  {
+   "id": "2026.PB1.2",
+   "title": "106 Beverley Street - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
+   "ward": "10",
+   "notes": [],
+   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.2"
+  },
+  {
+   "id": "2026.PB1.3",
+   "title": "66 Gerrard Street East - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
+   "ward": "13",
+   "notes": [],
+   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.3"
+  },
+  {
+   "id": "2026.PB1.4",
+   "title": "70 Gerrard Street East - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
+   "ward": "13",
+   "notes": [],
+   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.4"
+  },
+  {
+   "id": "2026.PB1.5",
+   "title": "19 Don Ridge Drive - Notice of Intention to Designate a Property under Part IV, Section 29 of the Ontario Heritage Act",
+   "ward": "15",
+   "notes": [
+    {
+     "date": "2026-11-10",
+     "note": "A revised report from the Senior Manager, Heritage Planning, Urban Design, City Planning was posted as corrections were made to Pages 1 and 7."
+    },
+    {
+     "date": "2026-11-13",
+     "note": "A revised report from the Senior Manager, Heritage Planning, Urban Design, City Planning was posted as corrections were made to the historic opening and construction dates of the church."
+    },
+    {
+     "date": "2026-11-13",
+     "note": "A communication was posted."
+    }
+   ],
+   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.5"
+  },
+  {
+   "id": "2026.PB1.6",
+   "title": "1337 Queen Street West - Demolition and New Construction on a Designated Heritage Property under Part V, Section 42 of the Ontario Heritage Act - Approval",
+   "ward": "4",
+   "notes": [],
+   "official_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PB1.6"
+  }
+ ],
+ "source": {
+  "file": "2026-11-16-PB1.pdf",
+  "retrieved": "2026-11-13"
+ }
+}
